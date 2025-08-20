@@ -1,0 +1,114 @@
+:root {
+  /* Container max width */
+  --container-max-width: 80rem; /* 1280px */
+
+  /* Layout spacing */
+  --layout-spacing: var(--spacing-md);
+  --layout-spacing-lg: var(--spacing-lg);
+  --layout-spacing-xl: var(--spacing-xl);
+  --layout-section-spacing: var(--spacing-section-margin);
+}
+
+#root {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: var(--layout-spacing);
+  @apply bg-base-100 text-base-content;
+}
+
+/* Layout container */
+.container {
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 var(--layout-spacing);
+}
+
+/* Section spacing */
+.section {
+  padding: var(--layout-section-spacing) 0;
+}
+
+
+/* Smooth animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.animate-fade-in-left {
+  animation: fadeInLeft 0.5s ease-out forwards;
+}
+
+/* Header styles */
+.header {
+  @apply mb-6 pb-4 border-b border-base-200;
+}
+
+.header h1 {
+  @apply text-2xl font-bold text-base-content;
+}
+
+.header p {
+  @apply text-base-content/70 mt-2;
+}
+
+/* Section headers */
+.section-header {
+  @apply mb-6;
+}
+
+.section-header-content {
+  @apply flex items-center justify-between mb-4;
+}
+
+.section-header-title {
+  @apply text-xl font-semibold text-base-content;
+}
+
+.section-header-action {
+  @apply text-sm text-primary flex items-center;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  #root {
+    padding: var(--layout-spacing-lg);
+  }
+
+  .container {
+    padding: 0 var(--layout-spacing-lg);
+  }
+
+}
+
+@media (min-width: 1024px) {
+  #root {
+    padding: var(--layout-spacing-xl);
+  }
+
+  .container {
+    padding: 0 var(--layout-spacing-xl);
+  }
+}

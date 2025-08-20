@@ -1,0 +1,5 @@
+{
+  "name": "SagaLearn",
+  "description": "An interactive learning adventure powered by AI. Choose between a structured Quiz Adventure or an open-ended Free Exploration mode to learn new things in an immersive, visually rich world.",
+  "requestFramePermissions": []
+}

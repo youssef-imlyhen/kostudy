@@ -1,0 +1,5 @@
+type,question,category,difficulty,options,correctAnswer,explanation
+multiple-choice,"What is the largest ocean on Earth?",Geography,easy,"Atlantic Ocean;Indian Ocean;Arctic Ocean;Pacific Ocean",Pacific Ocean,"The Pacific Ocean is the largest and deepest of the world's five oceans."
+true-false,"The Great Wall of China is visible from space with the naked eye.",History,medium,,false,"This is a common misconception. The Great Wall is not visible from space without aid."
+fill-in-the-blank,"The chemical symbol for gold is ____.",Chemistry,hard,,Au,"The symbol 'Au' for gold comes from its Latin name, 'aurum'."
+multiple-choice,"Which of these is a primary color?",Art,easy,"Green;Orange;Blue;Purple",Blue,"The primary colors in the RYB color model are red, yellow, and blue."

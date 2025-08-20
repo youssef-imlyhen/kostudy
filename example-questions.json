@@ -1,0 +1,30 @@
+[
+  {
+    "question": "What is the capital of France?",
+    "category": "Geography",
+    "difficulty": "easy",
+    "options": ["London", "Berlin", "Paris", "Madrid"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which planet is known as the Red Planet?",
+    "category": "Science",
+    "difficulty": "easy",
+    "options": ["Earth", "Mars", "Jupiter", "Venus"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "What is the powerhouse of the cell?",
+    "category": "Biology",
+    "difficulty": "medium",
+    "options": ["Nucleus", "Ribosome", "Mitochondrion"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Who wrote 'To Kill a Mockingbird'?",
+    "category": "Literature",
+    "difficulty": "hard",
+    "options": ["Harper Lee", "J.K. Rowling", "Ernest Hemingway", "F. Scott Fitzgerald"],
+    "correctAnswer": 0
+  }
+]

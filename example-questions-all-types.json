@@ -1,0 +1,36 @@
+[
+  {
+    "type": "multiple-choice",
+    "question": "What is the largest ocean on Earth?",
+    "category": "Geography",
+    "difficulty": "easy",
+    "options": ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+    "correctAnswer": "Pacific Ocean",
+    "explanation": "The Pacific Ocean is the largest and deepest of the world's five oceans."
+  },
+  {
+    "type": "true-false",
+    "question": "The Great Wall of China is visible from space with the naked eye.",
+    "category": "History",
+    "difficulty": "medium",
+    "correctAnswer": false,
+    "explanation": "This is a common misconception. The Great Wall is not visible from space without aid."
+  },
+  {
+    "type": "fill-in-the-blank",
+    "question": "The chemical symbol for gold is ____.",
+    "category": "Chemistry",
+    "difficulty": "hard",
+    "correctAnswer": "Au",
+    "explanation": "The symbol 'Au' for gold comes from its Latin name, 'aurum'."
+  },
+  {
+    "type": "multiple-choice",
+    "question": "Which of these is a primary color?",
+    "category": "Art",
+    "difficulty": "easy",
+    "options": ["Green", "Orange", "Blue", "Purple"],
+    "correctAnswer": "Blue",
+    "explanation": "The primary colors in the RYB color model are red, yellow, and blue."
+  }
+]
