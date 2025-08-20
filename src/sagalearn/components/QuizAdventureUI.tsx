@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import type { Scene, WorldState } from '../types';
 import { QuizAdventureEngine } from '../services/geminiService';
 import { Spinner, BackpackIcon, VictoryIcon, DefeatIcon, TalkIcon, MoveIcon, ExamineIcon, UseIcon, QuestionIcon } from './icons';
@@ -116,7 +116,7 @@ export const QuizAdventureUI: React.FC<QuizAdventureUIProps> = ({ scene, engine,
             <span className="ml-2 text-gray-300">{scene.missionObjective || translate('sagaLearnScreen.quizAdventureUI.survive')}</span>
           </div>
           <div className="text-sm font-semibold text-gray-300">
-             {translate('sagaLearnScreen.quizAdventureUI.turnsRemaining', { count: scene.turnsRemaining })}
+             {translate('sagaLearnScreen.quizAdventureUI.turnsRemaining', { count: scene.turnsRemaining?.toString() || '0' })}
           </div>
       </div>
 

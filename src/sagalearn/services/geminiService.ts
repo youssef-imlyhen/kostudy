@@ -66,7 +66,7 @@ abstract class GeminiGameEngine {
         },
       });
 
-      const textData = JSON.parse(textResponse.text);
+      const textData = JSON.parse(textResponse.text || '{}');
       const imagePrompt = textData.imagePrompt;
       let imageBase64: string | null = null;
       
@@ -91,10 +91,10 @@ abstract class GeminiGameEngine {
           },
         });
         
-        if (imageGenResponse.candidates && imageGenResponse.candidates[0].content.parts) {
+        if (imageGenResponse.candidates && imageGenResponse.candidates[0] && imageGenResponse.candidates[0].content && imageGenResponse.candidates[0].content.parts) {
             for (const part of imageGenResponse.candidates[0].content.parts) {
-                if (part.inlineData) {
-                    imageBase64 = part.inlineData.data;
+                if (part.inlineData && part.inlineData.data) {
+                    imageBase64 = part.inlineData.data || null;
                     break;
                 }
             }

@@ -1,20 +1,6 @@
 import { useLanguage } from '../context/LanguageContext';
-import { AcademicCapIcon, BookOpenIcon, GlobeAmericasIcon, SparklesIcon, TrophyIcon } from '@heroicons/react/24/outline';
 import { CategoryPerformance } from '../screens/AchievementsScreen';
 import { getCategoryEmoji } from '../data/questions';
-
-// Dynamic icon component
-function CategoryIcon({ iconKey }: { iconKey: string }) {
-  const className = "w-6 h-6 text-base-content/80";
-  switch (iconKey) {
-    case 'sparkles': return <SparklesIcon className={className} />;
-    case 'academic': return <AcademicCapIcon className={className} />;
-    case 'book': return <BookOpenIcon className={className} />;
-    case 'globe': return <GlobeAmericasIcon className={className} />;
-    case 'trophy': return <TrophyIcon className={className} />;
-    default: return <TrophyIcon className={className} />;
-  }
-}
 
 // Color based on accuracy percentage
 const getAccuracyColor = (accuracy: number) => {

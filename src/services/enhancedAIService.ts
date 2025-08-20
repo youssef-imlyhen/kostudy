@@ -1,5 +1,5 @@
 import { GoogleGenAI } from '@google/genai';
-import { GenerationRequest, GenerationResponse, ModelConfig } from '../types/aiGenerator';
+import { GenerationRequest, GenerationResponse } from '../types/aiGenerator';
 import { Question } from '../types/question';
 
 export interface AIModelConfig {
@@ -96,8 +96,6 @@ GENERATION INSTRUCTIONS:
 7. Include educational elements if the context suggests learning goals
 
 Generate a complete, self-contained HTML application that fulfills this request.`;
-
-      const modelConfig = AVAILABLE_MODELS[this.selectedModel];
       const result = await this.genAI.models.generateContent({
         model: this.selectedModel,
         contents: [{

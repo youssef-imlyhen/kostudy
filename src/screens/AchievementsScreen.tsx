@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { TrophyIcon, GlobeAmericasIcon, SparklesIcon, LockClosedIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import { TrophyIcon, GlobeAmericasIcon, SparklesIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import { useUser } from '../context/UserContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useLocalStorage } from '../hooks/useLocalStorage';
@@ -183,7 +183,7 @@ export default function AchievementsScreen() {
   const navigate = useNavigate();
   const { username } = useUser();
   const { t } = useLanguage();
-  const { getAchievementStats, getUnlockedAchievements, getLockedAchievements } = useAchievements();
+  const { getAchievementStats, getUnlockedAchievements } = useAchievements();
   const [progress] = useLocalStorage<Progress>('quizProgress', {});
   const [mistakes] = useLocalStorage<Mistakes>('quizMistakes', {});
   // Calculate performance data

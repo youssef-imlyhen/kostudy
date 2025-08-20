@@ -7,7 +7,6 @@ import {
   ShareIcon,
   TrashIcon,
   GlobeAltIcon,
-  ChevronRightIcon,
   MoonIcon,
   SunIcon,
   CpuChipIcon,

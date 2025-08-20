@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLanguage } from '../context/LanguageContext';
 import { AIOrchestrator, GenerationRequest, OrchestrationResult, ConversationTurn, TaskStep } from '../services/aiOrchestrator';
 import { useQuestions } from '../hooks/useQuestions';
 import { useCustomQuestions } from '../hooks/useCustomQuestions';
 import { 
   CpuChipIcon, 
   UserIcon, 
-  PlayIcon, 
-  PauseIcon,
+  PlayIcon,
   CheckCircleIcon,
   ExclamationCircleIcon,
   ClockIcon,
@@ -25,9 +23,8 @@ interface AIDevAgentProps {
 }
 
 const AIDevAgent: React.FC<AIDevAgentProps> = ({ apiKey, onResult }) => {
-  const { t } = useLanguage();
   const { getCategories, allQuestions } = useQuestions();
-  const { customQuestions } = useCustomQuestions();
+  useCustomQuestions();
   
   const [orchestrator] = useState(() => new AIOrchestrator(apiKey));
   const [isProcessing, setIsProcessing] = useState(false);

@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { GameMode } from './types';
-import type { Scene, Question, WorldPreset, QuestionPack, HeroPreset, WorldState } from './types';
+import type { Scene, Question, WorldState } from './types';
 import { QuizAdventureUI } from './components/QuizAdventureUI';
 import { FreeExplorationUI } from './components/FreeExplorationUI';
 import { ContinuePrompt } from './components/ContinuePrompt';

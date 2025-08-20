@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-import { useLanguage } from '../context/LanguageContext';
 import { OrchestrationResult } from '../services/aiOrchestrator';
 import { 
   DocumentTextIcon,
@@ -32,7 +31,6 @@ const AIResultsViewer: React.FC<AIResultsViewerProps> = ({
   onSave, 
   onShare 
 }) => {
-  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<'content' | 'images' | 'app' | 'metadata'>('content');
   const [isLiked, setIsLiked] = useState(false);
   const [feedbackText, setFeedbackText] = useState('');

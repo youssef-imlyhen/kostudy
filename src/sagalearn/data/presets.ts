@@ -1,4 +1,3 @@
-import React from 'react';
 import type { WorldPreset, QuestionPack, HeroPreset } from '../types';
 import { ForestIcon, CyberpunkIcon, DesertIcon, DetectiveIcon, MysticIcon, GardenerIcon, SolarSystemIcon, RomeIcon, PlantsIcon } from '../components/icons';
 

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useLanguage } from '../context/LanguageContext';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { OrchestrationResult } from '../services/aiOrchestrator';
 import AIDevAgent from './AIDevAgent';
@@ -18,7 +17,6 @@ interface AIOrchestrationHubProps {
 }
 
 const AIOrchestrationHub: React.FC<AIOrchestrationHubProps> = ({ onClose }) => {
-  const { t } = useLanguage();
   const [geminiApiKey] = useLocalStorage('geminiApiKey', '');
   const [currentResult, setCurrentResult] = useState<OrchestrationResult | null>(null);
   const [resultHistory, setResultHistory] = useState<OrchestrationResult[]>([]);

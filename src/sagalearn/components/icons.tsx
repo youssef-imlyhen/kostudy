@@ -1,4 +1,4 @@
-import React from 'react';
+// Icons component - no React import needed as we're only exporting SVG components
 
 // UI & Loaders
 export const Spinner = () => (

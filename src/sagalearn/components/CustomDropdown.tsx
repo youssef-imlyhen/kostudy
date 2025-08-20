@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { QuestionPack } from '../types';
 import { ChevronDownIcon } from './icons';
 
 interface DropdownOption {

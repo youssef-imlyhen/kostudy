@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useAchievements } from '../hooks/useAchievements';
 import { useLanguage } from '../context/LanguageContext';
-import { TrophyIcon, ChevronRightIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import { ChevronRightIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 
 interface AchievementNotificationProps {
   onNotificationClose?: () => void;

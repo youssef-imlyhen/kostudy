@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { GameMode } from '../types';
-import type { QuestionPack, HeroPreset, WorldPreset } from '../types';
+import type { QuestionPack, WorldPreset, HeroPreset } from '../types';
 import { worldPresets, questionPacks, heroPresets } from '../data/presets';
 import { Spinner, CheckmarkIcon, GlobeIcon, UserIcon, BookIcon } from './icons';
 import { CustomDropdown } from './CustomDropdown';
@@ -13,14 +13,7 @@ interface AdventureConfiguratorProps {
   t?: (key: string) => string;
 }
 
-const SelectionCard: React.FC<{preset: WorldPreset | HeroPreset, isSelected: boolean, onSelect: () => void, t?: (key: string) => string}> = ({ preset, isSelected, onSelect, t }) => {
-  // Fallback function for translations
-  const translate = t || ((key: string) => {
-    const fallbacks: Record<string, string> = {
-      // No specific fallbacks needed for this component as it uses preset data
-    };
-    return fallbacks[key] || key;
-  });
+const SelectionCard: React.FC<{preset: WorldPreset | HeroPreset, isSelected: boolean, onSelect: () => void}> = ({ preset, isSelected, onSelect }) => {
 
   return (
     <button onClick={onSelect}
@@ -66,7 +59,7 @@ export const AdventureConfigurator: React.FC<AdventureConfiguratorProps> = ({ mo
   const availableQuestionPacks = customQuestionPacks && customQuestionPacks.length > 0 ? customQuestionPacks : questionPacks;
   const [selectedWorld, setSelectedWorld] = useState(worldPresets[0]);
   const [selectedPack, setSelectedPack] = useState<QuestionPack | null>(mode === GameMode.QUIZ_ADVENTURE ? availableQuestionPacks[0] : null);
-  const [selectedHero, setSelectedHero] = useState(heroPresets[0]);
+  const [selectedHero, setSelectedHero] = useState<HeroPreset | null>(heroPresets[0]);
   const [customHeroDescription, setCustomHeroDescription] = useState('');
   const [selectedLearningPack, setSelectedLearningPack] = useState<QuestionPack | null>(null);
 
@@ -105,7 +98,7 @@ export const AdventureConfigurator: React.FC<AdventureConfiguratorProps> = ({ mo
           {stepHeader(GlobeIcon, translate('sagaLearnScreen.adventureConfigurator.chooseWorld'))}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {worldPresets.map(preset => (
-              <SelectionCard key={preset.id} preset={preset} isSelected={selectedWorld.id === preset.id} onSelect={() => setSelectedWorld(preset)} t={t} />
+              <SelectionCard key={preset.id} preset={preset} isSelected={selectedWorld.id === preset.id} onSelect={() => setSelectedWorld(preset)} />
             ))}
           </div>
         </div>
@@ -114,7 +107,7 @@ export const AdventureConfigurator: React.FC<AdventureConfiguratorProps> = ({ mo
            {stepHeader(UserIcon, translate('sagaLearnScreen.adventureConfigurator.selectHero'))}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {heroPresets.map(preset => (
-                    <SelectionCard key={preset.id} preset={preset} isSelected={selectedHero?.id === preset.id} onSelect={() => { setSelectedHero(preset); setCustomHeroDescription(''); }} t={t} />
+                    <SelectionCard key={preset.id} preset={preset} isSelected={selectedHero?.id === preset.id} onSelect={() => { setSelectedHero(preset); setCustomHeroDescription(''); }} />
                 ))}
                  <button onClick={() => setSelectedHero(null)}
                     className={`relative p-5 rounded-xl text-left transition-all duration-200 border-2 text-white h-full
