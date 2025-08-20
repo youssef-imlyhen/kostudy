@@ -25,6 +25,10 @@ After that, I joined an ed‑tech startup working with AI and robotics to teach 
 
 [Link to live demo]
 
+
+https://github.com/user-attachments/assets/6f3066c1-657b-4e5f-b002-2f2f06004002
+
+
 ## Features
 
 ### AI-Powered Features
@@ -107,9 +111,7 @@ The application provides extensive localization support for a multitude of langu
 - Czech
 - And many more
 
-## Screenshots
 
-[Add screenshots of the app here]
 
 ## Getting Started
 
@@ -315,3 +317,20 @@ Contributions are welcome! To contribute:
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Screenshots
+
+![frame_048_139 32s](https://github.com/user-attachments/assets/40722e46-2b7e-41ee-9dbc-49361e45a5c8)
+![frame_046_132 42s](https://github.com/user-attachments/assets/20ac1a5d-a560-400b-b4fb-29ff0215744d)
+![frame_041_118 64s](https://github.com/user-attachments/assets/98141dc2-a1d0-4ab4-aa5d-42298381cef6)
+![frame_040_115 81s](https://github.com/user-attachments/assets/c82b7e39-b6e5-4cd5-a990-21b57b8e3241)
+![frame_023_112 59s](https://github.com/user-attachments/assets/cf0110cc-8c58-4bb8-9077-38f750a7822d)
+![frame_023_67 56s](https://github.com/user-attachments/assets/aaea8589-bdec-44d9-9c47-4e5cc8d0e8ec)
+![frame_022_104 55s](https://github.com/user-attachments/assets/1ee9957e-5295-4bb0-912c-6287ec5147f4)
+![frame_015_43 43s](https://github.com/user-attachments/assets/e5dd4171-6b74-442f-a25a-d1837d789a3c)
+![frame_012_112 59s](https://github.com/user-attachments/assets/dc900847-03d8-4e80-bd15-6c25807e8de2)
+![frame_009_28 95s](https://github.com/user-attachments/assets/a2e919f1-c3c8-4c99-9719-188487fa56da)
+![frame_008_80 42s](https://github.com/user-attachments/assets/bee9a784-07e1-480d-a94c-fb50c5d9acb1)
+![frame_006_64 34s](https://github.com/user-attachments/assets/7c4a4d31-d6e6-4290-bfec-82ff535540a0)
+![frame_005_15 23s](https://github.com/user-attachments/assets/be63b0ed-1bc5-4c35-a3ab-768044c84823)
+
