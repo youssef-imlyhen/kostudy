@@ -41,6 +41,12 @@
     margin: 0 auto;
     max-width: var(--container-max-width);
   }
+  /* Full-width override only while LandingPage is mounted */
+  body.landing-active {
+    max-width: 100% !important;
+    width: 100vw;
+    overflow-x: hidden;
+  }
 
   /* Typography hierarchy */
   h1, h2, h3, h4, h5, h6 {

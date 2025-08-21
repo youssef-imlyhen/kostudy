@@ -17,7 +17,7 @@ export default function BottomNav() {
   const currentPath = location.pathname;
 
   const navItems = [
-    { path: '/', icon: HomeIcon, activeIcon: HomeIconSolid, label: t('nav.dashboard') },
+    { path: '/dashboard', icon: HomeIcon, activeIcon: HomeIconSolid, label: t('nav.dashboard') },
     { path: '/achievements', icon: TrophyIcon, activeIcon: TrophyIconSolid, label: t('nav.achievements') },
     { path: '/categories', icon: BookOpenIcon, activeIcon: BookOpenIconSolid, label: t('nav.categories') },
     { path: '/questions', icon: CircleStackIcon, activeIcon: CircleStackIconSolid, label: t('nav.questions') },
