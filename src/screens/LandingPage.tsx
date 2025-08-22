@@ -6,7 +6,7 @@ export default function LandingPage() {
   const [isVisible, setIsVisible] = useState(false);
   const [currentScreenshot, setCurrentScreenshot] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const carouselRef = useRef(null);
+  const carouselRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setIsVisible(true);
@@ -15,8 +15,8 @@ export default function LandingPage() {
 
     // Auto-rotate screenshots
     const interval = setInterval(() => {
-      setCurrentScreenshot(prev => (prev + 1) % 13);
-    }, 3000);
+      setCurrentScreenshot((prev) => (prev + 1) % 13);
+    }, 3500);
 
     return () => {
       clearInterval(interval);
@@ -28,6 +28,7 @@ export default function LandingPage() {
     navigate('/dashboard');
   };
 
+  // Screenshots (from /public/assets/screenshots)
   const screenshots = [
     { id: 1, src: "/assets/screenshots/frame_005_15.23s.jpg", title: "Dashboard Overview", description: "Get a comprehensive view of your learning progress" },
     { id: 2, src: "/assets/screenshots/frame_006_64.34s.jpg", title: "Quiz Interface", description: "Interactive quizzes with multiple question types" },
@@ -42,268 +43,367 @@ export default function LandingPage() {
     { id: 11, src: "/assets/screenshots/frame_041_118.64s.jpg", title: "SagaLearn Adventure", description: "Interactive choose-your-own-adventure learning" },
     { id: 12, src: "/assets/screenshots/frame_046_132.42s.jpg", title: "AI App Studio", description: "Create custom learning apps with AI" },
     { id: 13, src: "/assets/screenshots/frame_048_139.32s.jpg", title: "Performance Chart", description: "Visualize your learning progress over time" }
- ];
+  ];
 
-  // Features data
+  // AI features (detailed, accurate per README)
   const aiFeatures = [
     {
-      title: "🤖 AI Question Generation",
-      description: "Dynamically generate challenging questions on any topic using Google Gemini API",
+      title: "AI Question Generation",
+      subtitle: "Context-aware questions from your materials",
+      description:
+        "Generate challenging questions on any topic using the Google Gemini API. Bring your own context: YouTube links or videos, PDFs, web articles, or audio files—Kostudy ingests them to produce relevant, high‑quality questions and explanations.",
+      bullets: [
+        "Multiple question types including multi-select and image options",
+        "Leverages rich media context for higher relevance",
+        "Great for rapid course creation and study prep"
+      ],
       icon: "🧠",
-      color: "from-purple-500 to-indigo-600"
+      color: "from-purple-500/20 to-indigo-600/20"
     },
     {
-      title: "💬 AI Chat Assistant",
-      description: "Interactive chat with AI that explains quiz concepts with rich media context",
-      icon: "🗨️",
-      color: "from-blue-500 to-cyan-600"
+      title: "AI Chat Assistant",
+      subtitle: "Explain, tutor, and clarify with context",
+      description:
+        "Chat with an AI that references the same context you provide to quizzes (videos, PDFs, audio). Get step‑by‑step explanations, alternative takes, and practical examples tied to your materials.",
+      bullets: [
+        "Cites details drawn from your uploaded context",
+        "Great for “explain like I’m 5” or deep‑dive answers",
+        "Works alongside quizzes for targeted learning"
+      ],
+      icon: "💬",
+      color: "from-blue-500/20 to-cyan-600/20"
     },
     {
-      title: "📞 Live AI Call",
-      description: "Real-time voice conversations with AI for dynamic Q&A sessions",
+      title: "Live AI Call",
+      subtitle: "Real-time voice tutoring",
+      description:
+        "Hold real‑time voice conversations with the AI for dynamic Q&A and quick iterations. Perfect when you want to talk through problems instead of typing.",
+      bullets: [
+        "Instant verbal feedback and guidance",
+        "Pairs with quizzes for hands‑on practice",
+        "Great for language learning and interview prep"
+      ],
       icon: "🎙️",
-      color: "from-green-500 to-emerald-600"
+      color: "from-emerald-500/20 to-green-600/20"
     },
     {
-      title: "🎮 AI App Studio",
-      description: "Generate complete game apps from scratch based on user prompts",
-      icon: "🔧",
-      color: "from-yellow-500 to-orange-600"
+      title: "AI App Studio",
+      subtitle: "Generate complete learning mini‑apps",
+      description:
+        "Turn ideas into interactive learning or game apps. Provide prompts, lessons learned from mistakes, or curated inputs—the studio scaffolds a playable experience to accelerate experimentation.",
+      bullets: [
+        "Rapid prototyping for edu‑games",
+        "Saves and previews generated apps",
+        "Shareable experiences for cohorts"
+      ],
+      icon: "🎮",
+      color: "from-amber-500/20 to-orange-600/20"
     },
     {
-      title: "📖 Interactive SagaLearn",
-      description: "Choose-your-own-adventure style games with evolving storylines",
+      title: "SagaLearn Adventure",
+      subtitle: "Choose‑your‑own‑adventure learning",
+      description:
+        "A narrative mode that blends quizzes with branching stories. Your choices influence the plot while your performance adapts the challenge.",
+      bullets: [
+        "Immersive learning through narrative",
+        "Adaptive difficulty with feedback",
+        "Great for engagement and retention"
+      ],
       icon: "📜",
-      color: "from-red-500 to-pink-600"
+      color: "from-rose-500/20 to-pink-600/20"
     }
   ];
 
+  // Core features (expanded per README)
   const coreFeatures = [
     {
-      title: "📝 Multiple Question Types",
-      description: "Multiple Choice, True/False, Fill-in-the-Blank with image options",
+      title: "Multiple Question Types",
+      subtitle: "MCQ, True/False, Fill‑in‑the‑Blank",
+      description:
+        "Single or multi‑select, rich image options, and optional question images. Designed for recall, recognition, and conceptual understanding.",
+      bullets: [
+        "Support for images on options and questions",
+        "Configurable difficulty per item",
+        "Detailed explanations for each answer"
+      ],
       icon: "📋",
-      color: "from-indigo-500 to-purple-600"
+      color: "from-indigo-500/20 to-purple-600/20"
     },
     {
-      title: "🏷️ Custom Questions & Categories",
-      description: "Easily add, edit, and delete questions with emoji categories",
+      title: "Question Bank & Categories",
+      subtitle: "Create, edit, import, export",
+      description:
+        "Intuitive UI for CRUD operations, plus import/export via JSON or CSV. Organize by emoji categories with smart fallbacks.",
+      bullets: [
+        "Bulk import for fast setup",
+        "Export for backup or sharing",
+        "Emoji‑mapped categories"
+      ],
       icon: "✏️",
-      color: "from-pink-500 to-rose-600"
+      color: "from-pink-500/20 to-rose-600/20"
     },
     {
-      title: "🎨 Dynamic Theming",
-      description: "Switch between light and dark themes with customizable colors",
-      icon: "🌈",
-      color: "from-amber-500 to-yellow-600"
+      title: "Achievements & Analytics",
+      subtitle: "Progress, badges, and insights",
+      description:
+        "Earn points and badges, review mistakes, and track performance trends. Feedback loops that guide deliberate practice.",
+      bullets: [
+        "Achievement notifications",
+        "Mistake review workflow",
+        "Charts to visualize progress"
+      ],
+      icon: "🏆",
+      color: "from-amber-500/20 to-yellow-600/20"
     },
     {
-      title: "🌐 Localization Support",
-      description: "Supports 15+ languages including English, French, Spanish, Arabic",
+      title: "Themes & PWA",
+      subtitle: "Dynamic theming + installable app",
+      description:
+        "Light/dark themes, primary color customization, and PWA support for offline, installable experiences.",
+      bullets: [
+        "One‑file theme configuration",
+        "Fast Vite build with Tailwind",
+        "Responsive on all devices"
+      ],
+      icon: "🎨",
+      color: "from-emerald-500/20 to-green-600/20"
+    },
+    {
+      title: "Localization",
+      subtitle: "Learn in your language",
+      description:
+        "Broad localization coverage including English, French, Spanish, Arabic, German, Hindi, Portuguese, Chinese, Russian, Japanese, Korean, Italian, Dutch, Polish, Turkish, Czech, and more.",
+      bullets: [
+        "Switch languages on the fly",
+        "Community‑friendly translations",
+        "Accessible UI patterns"
+      ],
       icon: "🌍",
-      color: "from-teal-500 to-cyan-600"
+      color: "from-teal-500/20 to-cyan-600/20"
     },
     {
-      title: "📱 Responsive Design",
-      description: "Optimized for devices from mobile phones to desktops",
-      icon: "💻",
-      color: "from-emerald-500 to-green-600"
+      title: "Data Import/Export",
+      subtitle: "Own your data",
+      description:
+        "Backup and restore questions, progress, and settings. Move seamlessly between devices or share setups for classes and teams.",
+      bullets: [
+        "Portable learning setups",
+        "Great for cohorts & teams",
+        "JSON/CSV compatibility"
+      ],
+      icon: "🗂️",
+      color: "from-sky-500/20 to-blue-600/20"
     }
   ];
 
   const useCases = [
     {
-      title: "👤 Personal Learning",
-      description: "Feed your own materials and learn interactively with quizzes, explanations, chat, and voice",
+      title: "Personal Learning",
+      description:
+        "Feed your own materials (notes, PDFs, videos, links) and learn interactively with quizzes, explanations, chat, and voice.",
       icon: "📚",
-      color: "from-blue-500 to-indigo-600"
+      color: "from-blue-500/20 to-indigo-600/20"
     },
     {
-      title: "👨‍👩‍👧‍👦 Family & Kids",
-      description: "Set up profiles for family members with age-appropriate content and track progress",
+      title: "Family & Kids",
+      description:
+        "Set up profiles for family members or children, curate age‑appropriate content, and track progress.",
       icon: "👪",
-      color: "from-pink-500 to-rose-600"
+      color: "from-pink-500/20 to-rose-600/20"
     },
     {
-      title: "🏫 Classroom & Cohorts",
-      description: "Teachers prepare question banks and share via import/export for students",
+      title: "Classroom & Cohorts",
+      description:
+        "Teachers prepare question banks and share via import/export so students can practice anywhere.",
       icon: "🎓",
-      color: "from-amber-500 to-yellow-600"
+      color: "from-amber-500/20 to-yellow-600/20"
     },
     {
-      title: "💼 Teams & Onboarding",
-      description: "Curate domain knowledge and SOPs to train new hires quickly",
+      title: "Teams & Onboarding",
+      description:
+        "Curate domain knowledge, SOPs, and product docs to train new hires quickly with measurable progress.",
       icon: "👥",
-      color: "from-emerald-500 to-green-600"
+      color: "from-emerald-500/20 to-green-600/20"
     }
   ];
 
   const technologies = [
     { name: "React", icon: "⚛️", color: "text-blue-500" },
     { name: "TypeScript", icon: "📝", color: "text-blue-600" },
-    { name: "Tailwind CSS", icon: "🎨", color: "text-cyan-50" },
+    { name: "Tailwind CSS", icon: "🎨", color: "text-cyan-500" },
     { name: "Vite", icon: "⚡", color: "text-yellow-500" },
     { name: "daisyUI", icon: "🌸", color: "text-pink-500" },
     { name: "Google Gemini API", icon: "🔮", color: "text-purple-500" }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-base-100 to-base-200 overflow-x-hidden w-screen max-w-full">
-      {/* Animated background elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/3 right-1/4 w-[40rem] h-[40rem] bg-accent/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-secondary/5 rounded-full blur-3xl animate-pulse delay-500"></div>
+    <div className="min-h-screen bg-base-100 overflow-x-hidden w-screen max-w-full">
+      {/* Layered animated background */}
+      <div className="fixed inset-0 -z-10 pointer-events-none">
+        {/* Gradient mesh blobs */}
+        <div className="absolute top-[-10%] left-[-10%] w-[40rem] h-[40rem] bg-gradient-to-br from-primary/20 to-accent/20 blur-3xl rounded-full animate-pulse"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50rem] h-[50rem] bg-gradient-to-br from-secondary/20 to-primary/10 blur-3xl rounded-full animate-pulse delay-700"></div>
+        {/* Subtle radial grid mask */}
+        <div className="absolute inset-0 [background:radial-gradient(ellipse_at_center,theme(colors.gray.200)/.35,transparent_60%)] dark:[background:radial-gradient(ellipse_at_center,theme(colors.gray.700)/.25,transparent_60%)]"></div>
+        {/* Animated conic highlight */}
+        <div className="absolute inset-0 opacity-[0.07] [mask-image:radial-gradient(circle_at_center,black,transparent_70%)] bg-[conic-gradient(from_0deg,theme(colors.primary.DEFAULT)_0%,theme(colors.accent)_25%,theme(colors.secondary)_50%,theme(colors.primary.DEFAULT)_75%,theme(colors.accent)_100%)] animate-[spin_30s_linear_infinite]"></div>
       </div>
 
-      {/* Floating elements */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-20 left-10 text-6xl opacity-10 animate-bounce delay-300">🎓</div>
-        <div className="absolute top-40 right-20 text-5xl opacity-10 animate-bounce delay-700">📚</div>
-        <div className="absolute bottom-40 left-20 text-7xl opacity-10 animate-bounce delay-1000">🧠</div>
-        <div className="absolute bottom-20 right-10 text-5xl opacity-10 animate-bounce delay-500">🎯</div>
-      </div>
-
-      <div className="relative z-10 pt-4 pb-20 w-full max-w-full">
+      <div className="relative z-10 pt-2 pb-16 w-full max-w-full">
         {/* Navigation */}
-        <nav className="px-4 md:px-8 py-6 flex justify-between items-center">
+        <nav className="px-4 md:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center">
-            <div className="bg-gradient-to-br from-primary to-accent p-1 rounded-xl">
+            <div className="bg-gradient-to-br from-primary to-accent p-[2px] rounded-xl">
               <div className="bg-base-100 rounded-lg p-2">
-                <img src="/kostudy.png" alt="Kostudy logo" className="w-12 h-12 rounded-lg" />
+                <img src="/kostudy.png" alt="Kostudy logo" className="w-9 h-9 rounded-lg" />
               </div>
             </div>
-            <span className="ml-3 text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+            <span className="ml-2 text-xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
               Kostudy
             </span>
           </div>
-          
-          <div className="hidden md:flex space-x-8">
+
+          <div className="hidden md:flex items-center gap-6 text-sm">
             <a href="#features" className="font-medium hover:text-primary transition-colors">Features</a>
             <a href="#screenshots" className="font-medium hover:text-primary transition-colors">Screenshots</a>
             <a href="#about" className="font-medium hover:text-primary transition-colors">About</a>
             <a href="#contact" className="font-medium hover:text-primary transition-colors">Contact</a>
           </div>
-          
-          <button 
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden btn btn-ghost btn-circle"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
+
+          <div className="flex items-center gap-3">
+            <a
+              href="https://youtu.be/VsXnGYEopW0?si=qPlHpDq75T32G-RJ"
+              target="_blank"
+              rel="noreferrer"
+              className="hidden sm:inline-flex btn btn-ghost btn-sm"
+            >
+              ▶ Demo
+            </a>
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden btn btn-ghost btn-circle"
+              aria-label="Open menu"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
         </nav>
 
         {/* Mobile menu */}
         {isMenuOpen && (
-          <div className="md:hidden px-4 pb-6">
-            <div className="bg-base-100 rounded-2xl shadow-xl p-6">
-              <a href="#features" className="block py-3 font-medium hover:text-primary transition-colors">Features</a>
-              <a href="#screenshots" className="block py-3 font-medium hover:text-primary transition-colors">Screenshots</a>
-              <a href="#about" className="block py-3 font-medium hover:text-primary transition-colors">About</a>
-              <a href="#contact" className="block py-3 font-medium hover:text-primary transition-colors">Contact</a>
+          <div className="md:hidden px-4 pb-4">
+            <div className="bg-base-100 rounded-2xl shadow-xl p-4">
+              <a href="#features" className="block py-2 font-medium hover:text-primary transition-colors">Features</a>
+              <a href="#screenshots" className="block py-2 font-medium hover:text-primary transition-colors">Screenshots</a>
+              <a href="#about" className="block py-2 font-medium hover:text-primary transition-colors">About</a>
+              <a href="#contact" className="block py-2 font-medium hover:text-primary transition-colors">Contact</a>
             </div>
           </div>
         )}
 
         {/* Hero Section */}
-        <section className="px-4 md:px-8 min-h-screen flex items-center justify-center py-16">
-          <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <section className="px-4 md:px-8 min-h-[70vh] flex items-center justify-center py-10">
+          <div className={`transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             <div className="text-center">
-              <div className="flex justify-center mb-8">
+              <div className="flex justify-center mb-6">
                 <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent rounded-3xl blur-xl opacity-30 animate-pulse"></div>
-                  <div className="bg-gradient-to-br from-primary to-accent p-1.5 rounded-3xl shadow-2xl relative">
-                    <div className="bg-base-100 rounded-2xl p-5">
-                      <img src="/kostudy.png" alt="Kostudy logo" className="w-32 h-32 rounded-2xl" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent rounded-3xl blur-xl opacity-25 animate-pulse"></div>
+                  <div className="bg-gradient-to-br from-primary to-accent p-1 rounded-3xl shadow-xl relative">
+                    <div className="bg-base-100 rounded-2xl p-4">
+                      <img src="/kostudy.png" alt="Kostudy logo" className="w-20 h-20 rounded-2xl" />
                     </div>
                   </div>
                 </div>
               </div>
-              
-              <h1 className="text-5xl md:text-7xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
-                Kostudy
+
+              <h1 className="text-4xl md:text-5xl font-extrabold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+                AI‑First Learning, Built Right
               </h1>
-              
-              <p className="text-2xl md:text-4xl font-bold mb-6 text-base-content">
-                AI-Powered Learning Platform 🚀
+
+              <p className="text-lg md:text-xl font-semibold mb-3 text-base-content">
+                Personalized quizzes, interactive modes, chat and voice—powered by the Google Gemini API.
               </p>
-              
-              <p className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto text-base-content/80">
-                Transform your learning experience with cutting-edge AI technology.
-                Personalized quizzes, interactive lessons, and intelligent feedback all in one place.
+
+              <p className="text-base md:text-lg mb-8 max-w-2xl mx-auto text-base-content/80">
+                Bring your own materials (videos, PDFs, audio, links). Kostudy generates targeted questions and explanations,
+                tracks progress, and keeps you engaged with achievements and narrative learning.
               </p>
-              
-              <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mx-auto">
+
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mx-auto">
                 <button
                   onClick={handleGetStarted}
-                  className="btn btn-primary btn-lg"
+                  className="btn btn-primary btn-md"
                 >
-🚀 Get Started Free
+                  🚀 Get Started Free
                 </button>
-                
-             
+                <a
+                  href="https://github.com/youssef-imlyhen/kostudy"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn btn-outline btn-md"
+                >
+                  ⭐ Star on GitHub
+                </a>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Screenshots Carousel */}
-        <section id="screenshots" className="px-4 md:px-8 mb-24">
-          <div className={`transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        {/* Screenshots + Video */}
+        <section id="screenshots" className="px-4 md:px-8 mb-16">
+          <div className={`transition-all duration-700 delay-150 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             <div className="max-w-6xl mx-auto">
-              <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center">See Kostudy In Action 📸</h2>
-              
-        {/* Video Section */}
-        <section className="px-4 md:px-8 mt-6">
-          <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-2xl border border-base-200">
-              <div className="relative w-full pb-[56.25%] bg-black">
-                <iframe
-                  className="absolute top-0 left-0 w-full h-full"
-                  src="https://www.youtube-nocookie.com/embed/VsXnGYEopW0?rel=0"
-                  title="Kostudy Demo"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                ></iframe>
+              <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">See Kostudy In Action</h2>
+
+              {/* Video */}
+              <div className="max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-xl border border-base-200 mb-8">
+                <div className="relative w-full pb-[56.25%] bg-black">
+                  <iframe
+                    className="absolute top-0 left-0 w-full h-full"
+                    src="https://www.youtube-nocookie.com/embed/VsXnGYEopW0?rel=0"
+                    title="Kostudy Demo"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  ></iframe>
+                </div>
               </div>
-            </div>
-          </div>
-        </section>
-              <div className="relative">
-                {/* Main screenshot */}
-                <div className="relative h-[500px] rounded-3xl overflow-hidden shadow-2xl border-8 border-base-100">
+
+              {/* Carousel */}
+              <div className="relative" ref={carouselRef}>
+                <div className="relative h-[420px] rounded-2xl overflow-hidden shadow-xl border-8 border-base-100">
                   <img
                     src={screenshots[currentScreenshot].src}
                     alt={screenshots[currentScreenshot].title}
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-8">
-                    <h3 className="text-2xl font-bold text-white">{screenshots[currentScreenshot].title}</h3>
-                    <p className="text-white/90">{screenshots[currentScreenshot].description}</p>
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+                    <h3 className="text-xl md:text-2xl font-bold text-white">{screenshots[currentScreenshot].title}</h3>
+                    <p className="text-white/90 text-sm md:text-base">{screenshots[currentScreenshot].description}</p>
                   </div>
                 </div>
-                
+
                 {/* Thumbnails */}
-                <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-13 gap-4">
+                <div className="mt-6 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-3">
                   {screenshots.map((screenshot, index) => (
-                    <div
+                    <button
+                      aria-label={`Show ${screenshot.title}`}
                       key={screenshot.id}
                       onClick={() => setCurrentScreenshot(index)}
-                      className={`cursor-pointer rounded-2xl overflow-hidden shadow-lg border-4 transition-all duration-300 ${
+                      className={`cursor-pointer rounded-xl overflow-hidden shadow-md border-2 transition-all duration-300 ${
                         index === currentScreenshot
-                          ? 'border-primary scale-105 shadow-primary/30'
-                          : 'border-base-20 hover:border-primary/50'
+                          ? 'border-primary scale-[1.03] shadow-primary/30'
+                          : 'border-base-200 hover:border-primary/50'
                       }`}
                     >
                       <img
                         src={screenshot.src}
                         alt={screenshot.title}
-                        className="w-full h-24 object-cover"
+                        className="w-full h-20 object-cover"
                       />
-                    </div>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -312,38 +412,57 @@ export default function LandingPage() {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="px-4 md:px-8 mb-24">
-          <div className={`transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <section id="features" className="px-4 md:px-8 mb-16">
+          <div className={`transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             <div className="max-w-6xl mx-auto">
-              <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center">Powerful Features 🚀</h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 4xl:grid-cols-5 gap-8">
+              <h2 className="text-3xl md:text-4xl font-bold mb-10 text-center">Powerful, Practical Features</h2>
+
+              {/* AI features */}
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {aiFeatures.map((feature, index) => (
                   <div
                     key={index}
-                    className="bg-base-100 rounded-3xl shadow-xl p-8 border border-base-200 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 relative overflow-hidden flex flex-col h-full"
+                    className="relative bg-base-100 rounded-2xl shadow-lg p-6 border border-base-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden"
                   >
-                    <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 hover:opacity-5 transition-opacity duration-500`}></div>
+                    <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} pointer-events-none`}></div>
                     <div className="relative z-10 flex flex-col h-full">
-                      <div className="text-5xl mb-6">{feature.icon}</div>
-                      <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
-                      <p className="text-base-content/80 flex-grow">{feature.description}</p>
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="text-3xl">{feature.icon}</div>
+                        <h3 className="text-xl font-bold">{feature.title}</h3>
+                      </div>
+                      <p className="text-sm text-base-content/70 mb-3">{feature.subtitle}</p>
+                      <p className="text-base-content/80 text-sm md:text-[0.95rem] leading-relaxed">{feature.description}</p>
+                      <ul className="mt-4 space-y-1.5 text-sm text-base-content/70 list-disc list-inside">
+                        {feature.bullets.map((b, i) => (
+                          <li key={i}>{b}</li>
+                        ))}
+                      </ul>
                     </div>
                   </div>
                 ))}
               </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 4xl:grid-cols-5 gap-8 mt-12">
+
+              {/* Core features */}
+              <h3 className="text-2xl font-bold mt-12 mb-6 text-center">Core Quiz & Platform</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {coreFeatures.map((feature, index) => (
                   <div
                     key={index}
-                    className="bg-base-100 rounded-3xl shadow-xl p-8 border border-base-200 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 relative overflow-hidden flex flex-col h-full"
+                    className="relative bg-base-100 rounded-2xl shadow-lg p-6 border border-base-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden"
                   >
-                    <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 hover:opacity-5 transition-opacity duration-500`}></div>
+                    <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} pointer-events-none`}></div>
                     <div className="relative z-10 flex flex-col h-full">
-                      <div className="text-5xl mb-6">{feature.icon}</div>
-                      <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
-                      <p className="text-base-content/80 flex-grow">{feature.description}</p>
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="text-3xl">{feature.icon}</div>
+                        <h4 className="text-lg font-bold">{feature.title}</h4>
+                      </div>
+                      <p className="text-sm text-base-content/70 mb-3">{feature.subtitle}</p>
+                      <p className="text-base-content/80 text-sm md:text-[0.95rem] leading-relaxed">{feature.description}</p>
+                      <ul className="mt-4 space-y-1.5 text-sm text-base-content/70 list-disc list-inside">
+                        {feature.bullets.map((b, i) => (
+                          <li key={i}>{b}</li>
+                        ))}
+                      </ul>
                     </div>
                   </div>
                 ))}
@@ -352,85 +471,42 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* About Section */}
-        <section id="about" className="px-4 md:px-8 mb-24">
-          <div className={`transition-all duration-1000 delay-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="max-w-4xl mx-auto bg-base-100 rounded-3xl shadow-2xl p-8 md:p-12 border border-base-200">
-              <h2 className="text-4xl md:text-5xl font-bold mb-10 text-center">About Kostudy 📘</h2>
-              <div className="prose max-w-none text-lg">
-                <p className="mb-6 text-base-content text-xl">
-                  Most of today's learning tools fall short. They either hook you with cheap gamification to sell more ads, 
-                  or they slap a chatbot onto a decade-old quiz and call it an "AI education app." <strong className="text-primary">You deserve better.</strong>
+        {/* About Section (condensed, accurate) */}
+        <section id="about" className="px-4 md:px-8 mb-16">
+          <div className={`transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+            <div className="max-w-4xl mx-auto bg-base-100 rounded-2xl shadow-xl p-8 md:p-10 border border-base-200">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-center">Why Kostudy</h2>
+              <div className="prose max-w-none">
+                <p className="mb-4 text-base-content/90">
+                  Most learning tools either lean on shallow gamification or bolt a chatbot onto a dated quiz. Kostudy is different:
+                  an AI‑first, open‑source platform that uses modern web tech (React, TypeScript, Tailwind) and the Google Gemini API
+                  to deliver context‑aware learning that actually helps you remember, understand, and apply.
                 </p>
-                <p className="mb-6 text-base-content text-xl">
-                  That's why we built <strong>KoStudy</strong>. It's an AI-first, feature-rich, open-source learning application 
-                  built with React, TypeScript, and Tailwind CSS. It leverages the Google Gemini API and other advanced AI 
-                  capabilities to deliver an intelligent, context-aware, and engaging learning experience.
-                </p>
-                <p className="text-base-content text-xl">
-                  This is our attempt to reimagine what a learning app should be in the age of AI. It's a glimpse into the 
-                  future of AI-powered education—and we hope you find it useful. 🌟
+                <p className="mb-0 text-base-content/90">
+                  It’s a reimagining of what an education app should be in the age of AI—practical, extensible, and fun to use.
                 </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Backstory Section */}
-        <section className="px-4 md:px-8 mb-24">
-          <div className={`transition-all duration-1000 delay-900 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        {/* Use Cases */}
+        <section className="px-4 md:px-8 mb-16">
+          <div className={`transition-all duration-700 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             <div className="max-w-6xl mx-auto">
-              <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center">Our Backstory 📖</h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <div className="bg-gradient-to-br from-primary/5 to-accent/5 rounded-3xl p-10 border border-primary/10 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-16 translate-x-16"></div>
-                  <div className="absolute bottom-0 left-0 w-48 h-48 bg-accent/5 rounded-full translate-y-24 -translate-x-24"></div>
-                  <div className="relative z-10">
-                    <div className="text-7xl mb-8">📅 2021</div>
-                    <h3 className="text-3xl font-bold mb-6">The Beginning</h3>
-                    <p className="text-base-content/90 text-xl leading-relaxed">
-                      After learning just the basics of programming, I was eager to use this new skill to help myself and my close ones. 
-                      It began with learning English. I created WordTrainer — a simple web app to practice the most-used words and phrases in a language.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="bg-gradient-to-br from-accent/5 to-secondary/5 rounded-3xl p-10 border border-accent/10 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full -translate-y-16 translate-x-16"></div>
-                  <div className="absolute bottom-0 left-0 w-48 h-48 bg-secondary/5 rounded-full translate-y-24 -translate-x-24"></div>
-                  <div className="relative z-10">
-                    <div className="text-7xl mb-8">🤖 2022-2024</div>
-                    <h3 className="text-3xl font-bold mb-6">The Journey</h3>
-                    <p className="text-base-content/90 text-xl leading-relaxed">
-                      I joined an ed‑tech startup working with AI and robotics to teach languages. Three years later, I found myself 
-                      returning to this field with Kostudy. A family member approached me to help build a religious learning app, 
-                      sparking the idea for an open‑source learning platform.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+              <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">Use Cases</h2>
 
-        {/* Use Cases Section */}
-        <section className="px-4 md:px-8 mb-24">
-          <div className={`transition-all duration-1000 delay-1100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="max-w-6xl mx-auto">
-              <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center">Use Cases 🎯</h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {useCases.map((useCase, index) => (
-                  <div 
+                  <div
                     key={index}
-                    className="bg-gradient-to-br from-base-100 to-base-200 rounded-3xl shadow-xl p-8 border border-base-200 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 relative overflow-hidden"
+                    className="relative bg-gradient-to-br from-base-100 to-base-200 rounded-2xl shadow-lg p-6 border border-base-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden"
                   >
-                    <div className={`absolute inset-0 bg-gradient-to-br ${useCase.color} opacity-0 hover:opacity-5 transition-opacity duration-500`}></div>
+                    <div className={`absolute inset-0 bg-gradient-to-br ${useCase.color}`}></div>
                     <div className="relative z-10">
-                      <div className="text-6xl mb-6">{useCase.icon}</div>
-                      <h3 className="text-2xl font-bold mb-4">{useCase.title}</h3>
-                      <p className="text-base-content/80">{useCase.description}</p>
+                      <div className="text-4xl mb-3">{useCase.icon}</div>
+                      <h3 className="text-lg font-bold mb-2">{useCase.title}</h3>
+                      <p className="text-base-content/80 text-sm md:text-[0.95rem]">{useCase.description}</p>
                     </div>
                   </div>
                 ))}
@@ -440,19 +516,19 @@ export default function LandingPage() {
         </section>
 
         {/* Technologies Section */}
-        <section className="px-4 md:px-8 mb-24">
-          <div className={`transition-all duration-1000 delay-1300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <section className="px-4 md:px-8 mb-16">
+          <div className={`transition-all duration-700 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             <div className="max-w-6xl mx-auto">
-              <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center">Built with Modern Technologies ⚙️</h2>
-              
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+              <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">Built with Modern Technologies</h2>
+
+              <div className="grid grid-cols-3 md:grid-cols-6 gap-6">
                 {technologies.map((tech, index) => (
-                  <div 
+                  <div
                     key={index}
-                    className="bg-base-100 rounded-3xl shadow-xl p-8 flex flex-col items-center justify-center border border-base-200 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3"
+                    className="bg-base-100 rounded-2xl shadow-lg p-6 flex flex-col items-center justify-center border border-base-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
                   >
-                    <div className={`text-6xl mb-6 ${tech.color}`}>{tech.icon}</div>
-                    <div className="text-xl font-bold text-center">{tech.name}</div>
+                    <div className={`text-4xl mb-3 ${tech.color}`}>{tech.icon}</div>
+                    <div className="text-base font-semibold text-center">{tech.name}</div>
                   </div>
                 ))}
               </div>
@@ -461,74 +537,85 @@ export default function LandingPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="px-4 md:px-8 mb-24">
-          <div className={`transition-all duration-1000 delay-1500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="max-w-4xl mx-auto text-center bg-gradient-to-br from-primary/5 to-accent/5 rounded-3xl shadow-2xl p-16 border border-primary/10 relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-full bg-[url('/pattern.svg')] opacity-5"></div>
+        <section className="px-4 md:px-8 mb-16">
+          <div className={`transition-all duration-700 delay-600 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+            <div className="max-w-4xl mx-auto text-center bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl shadow-xl p-10 border border-primary/10 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-full opacity-10 [background:radial-gradient(circle_at_20%_20%,theme(colors.primary.DEFAULT)/.6_0,transparent_40%),radial-gradient(circle_at_80%_30%,theme(colors.accent)/.6_0,transparent_35%)]"></div>
               <div className="relative z-10">
-                <h2 className="text-4xl md:text-6xl font-bold mb-8">Ready to Transform Your Learning? 🚀</h2>
-                <p className="text-2xl mb-12 max-w-2xl mx-auto text-base-content/90">
-                  Join thousands of learners who have already transformed their education with Kostudy
+                <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Transform Your Learning?</h2>
+                <p className="text-base md:text-lg mb-6 max-w-2xl mx-auto text-base-content/90">
+                  Install as a PWA, import your materials, and start learning with AI today.
                 </p>
+                <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mx-auto">
+                  <button onClick={handleGetStarted} className="btn btn-primary btn-md">Start Free</button>
+                  <a
+                    href="https://github.com/youssef-imlyhen/kostudy"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn btn-outline btn-md"
+                  >
+                    View on GitHub
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
         {/* Footer */}
-        <footer id="contact" className="px-4 md:px-8 pt-16 pb-8 border-t border-base-200">
+        <footer id="contact" className="px-4 md:px-8 pt-12 pb-6 border-t border-base-200">
           <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               <div>
-                <div className="flex items-center mb-6">
-                  <div className="bg-gradient-to-br from-primary to-accent p-1 rounded-xl">
+                <div className="flex items-center mb-4">
+                  <div className="bg-gradient-to-br from-primary to-accent p-[2px] rounded-xl">
                     <div className="bg-base-100 rounded-lg p-2">
-                      <img src="/kostudy.png" alt="Kostudy logo" className="w-10 h-10 rounded-lg" />
+                      <img src="/kostudy.png" alt="Kostudy logo" className="w-8 h-8 rounded-lg" />
                     </div>
                   </div>
-                  <span className="ml-3 text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+                  <span className="ml-2 text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
                     Kostudy
                   </span>
                 </div>
-                <p className="text-base-content/80">
-                  AI-powered learning platform for the future of education.
+                <p className="text-base-content/80 text-sm">
+                  AI‑powered, open‑source learning for the future of education.
                 </p>
               </div>
-              
+
               <div>
-                <h3 className="text-xl font-bold mb-6">Features</h3>
-                <ul className="space-y-3">
-                  <li><a href="#" className="text-base-content/80 hover:text-primary transition-colors">AI Question Generation</a></li>
-                  <li><a href="#" className="text-base-content/80 hover:text-primary transition-colors">AI Chat Assistant</a></li>
-                  <li><a href="#" className="text-base-content/80 hover:text-primary transition-colors">SagaLearn Adventure</a></li>
-                  <li><a href="#" className="text-base-content/80 hover:text-primary transition-colors">Performance Analytics</a></li>
+                <h3 className="text-base font-bold mb-4">Features</h3>
+                <ul className="space-y-2 text-sm">
+                  <li><a href="#features" className="text-base-content/80 hover:text-primary transition-colors">AI Question Generation</a></li>
+                  <li><a href="#features" className="text-base-content/80 hover:text-primary transition-colors">AI Chat Assistant</a></li>
+                  <li><a href="#features" className="text-base-content/80 hover:text-primary transition-colors">SagaLearn Adventure</a></li>
+                  <li><a href="#features" className="text-base-content/80 hover:text-primary transition-colors">Achievements & Analytics</a></li>
                 </ul>
               </div>
-              
+
               <div>
-                <h3 className="text-xl font-bold mb-6">Resources</h3>
-                <ul className="space-y-3">
-                  <li><a href="#" className="text-base-content/80 hover:text-primary transition-colors">Documentation</a></li>
-                  <li><a href="#" className="text-base-content/80 hover:text-primary transition-colors">GitHub</a></li>
-                  <li><a href="#" className="text-base-content/80 hover:text-primary transition-colors">Community</a></li>
-                  <li><a href="#" className="text-base-content/80 hover:text-primary transition-colors">Support</a></li>
+                <h3 className="text-base font-bold mb-4">Resources</h3>
+                <ul className="space-y-2 text-sm">
+                  <li><a href="https://github.com/youssef-imlyhen/kostudy" target="_blank" rel="noreferrer" className="text-base-content/80 hover:text-primary transition-colors">GitHub</a></li>
+                  <li><a href="https://youtu.be/VsXnGYEopW0?si=qPlHpDq75T32G-RJ" target="_blank" rel="noreferrer" className="text-base-content/80 hover:text-primary transition-colors">Demo Video</a></li>
+                  <li><a href="#screenshots" className="text-base-content/80 hover:text-primary transition-colors">Screenshots</a></li>
+                  <li><a href="#about" className="text-base-content/80 hover:text-primary transition-colors">About</a></li>
                 </ul>
               </div>
-              
+
               <div>
-                <h3 className="text-xl font-bold mb-6">Connect</h3>
-                <ul className="space-y-3">
-                  <li><a href="#" className="text-base-content/80 hover:text-primary transition-colors">Twitter</a></li>
-                  <li><a href="#" className="text-base-content/80 hover:text-primary transition-colors">LinkedIn</a></li>
-                  <li><a href="#" className="text-base-content/80 hover:text-primary transition-colors">Discord</a></li>
-                  <li><a href="#" className="text-base-content/80 hover:text-primary transition-colors">Email</a></li>
+                <h3 className="text-base font-bold mb-4">Connect</h3>
+                <ul className="space-y-2 text-sm">
+                  <li><span className="text-base-content/60">Twitter (coming soon)</span></li>
+                  <li><span className="text-base-content/60">LinkedIn (coming soon)</span></li>
+                  <li><span className="text-base-content/60">Discord (coming soon)</span></li>
+                  <li><a href="mailto:contact@example.com" className="text-base-content/80 hover:text-primary transition-colors">Email</a></li>
                 </ul>
               </div>
-            
-            <div className="border-t border-base-200 mt-16 pt-8 text-center text-base-content/60">
-              <p>© 2024 Kostudy. All rights reserved. MIT Licensed.</p>
             </div>
-          </div>
+
+            <div className="border-t border-base-200 mt-10 pt-6 text-center text-base-content/60 text-sm">
+              <p>© 2025 Kostudy. MIT Licensed.</p>
+            </div>
           </div>
         </footer>
       </div>
