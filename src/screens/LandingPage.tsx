@@ -243,9 +243,7 @@ export default function LandingPage() {
 🚀 Get Started Free
                 </button>
                 
-                <button className="btn btn-outline btn-lg">
-              ▶️ Watch Demo
-                </button>
+             
               </div>
             </div>
           </div>
@@ -257,6 +255,23 @@ export default function LandingPage() {
             <div className="max-w-6xl mx-auto">
               <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center">See Kostudy In Action 📸</h2>
               
+        {/* Video Section */}
+        <section className="px-4 md:px-8 mt-6">
+          <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <div className="max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-2xl border border-base-200">
+              <div className="relative w-full pb-[56.25%] bg-black">
+                <iframe
+                  className="absolute top-0 left-0 w-full h-full"
+                  src="https://www.youtube-nocookie.com/embed/VsXnGYEopW0?rel=0"
+                  title="Kostudy Demo"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            </div>
+          </div>
+        </section>
               <div className="relative">
                 {/* Main screenshot */}
                 <div className="relative h-[500px] rounded-3xl overflow-hidden shadow-2xl border-8 border-base-100">
