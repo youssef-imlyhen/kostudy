@@ -22,12 +22,12 @@ export default function Header({
 
   return (
     <header
-          className="relative z-10 bg-base-100 shadow-sm"
+          className="relative z-10 bg-base-100 shadow-sm  px-4 py-2 mb-4"
           style={{
             transition: `background-color ${designTokens.transitions.duration} ${designTokens.transitions.timing}, color ${designTokens.transitions.duration} ${designTokens.transitions.timing}`,
           }}
         >
-      <div className="container mx-auto px-4 py-0">
+      <div className="container mx-auto">
         <div className="flex items-center justify-between h-12">
           <div className="flex items-center gap-2 h-12">
             {showBackButton && (

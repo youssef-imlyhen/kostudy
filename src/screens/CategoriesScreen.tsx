@@ -24,13 +24,10 @@ export default function CategoriesScreen() {
   // Get categories from questions data
   const questionCounts = getQuestionsCountByCategory();
   const categories = getCategories().map((categoryId) => {
-    const descriptionKey = `categories.${categoryId}.description`;
-    const description = t(descriptionKey);
-
-    // Check if the description is the same as the key (meaning it wasn't found)
-    const finalDescription = description === descriptionKey
-      ? `Questions about ${categoryId}`
-      : description;
+    const readableName = categoryId
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+    const finalDescription = `Questions about ${readableName}`;
 
     return {
       id: categoryId,

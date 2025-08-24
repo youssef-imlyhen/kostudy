@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { LockClosedIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import Card from './Card';
 import { getCategoryColor } from '../data/questions';
-import { useLanguage } from '../context/LanguageContext';
 import { useCategoryEmojis } from '../hooks/useCategoryEmojis';
 
 interface CategoryCardProps {
@@ -25,7 +24,6 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
   locked = false,
   size = 'large'
 }) => {
-  const { t } = useLanguage();
   const { getEmoji } = useCategoryEmojis();
   
   // Determine the display title
@@ -58,8 +56,9 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
         
         <p className="text-sm text-base-content/70 mb-3 flex-grow">{description}</p>
         <div className="flex justify-between items-center">
-          <span className={`badge badge-primary badge-outline ${badgeSize}`}>
-            {questionCount} {t('dashboard.questions')}
+          <span className={`badge badge-primary badge-outline whitespace-nowrap ${badgeSize} px-1.5 sm:px-2 leading-none`}>
+            <span className="sm:hidden">{questionCount} Q</span>
+            <span className="hidden sm:inline">{questionCount} questions</span>
           </span>
           <ChevronRightIcon className="w-5 h-5 text-base-content/40 group-hover:translate-x-1 transition-transform" />
         </div>

@@ -11,21 +11,10 @@ That’s why I built **KoStudy**. It’s an AI-first, feature-rich, open-source 
 This is my attempt to reimagine what a learning app should be in the age of AI. It’s a glimpse into the future of AI-powered education—and I hope you find it useful.
 
 
-
-<!-- Example content note: default seed uses YouTube questions -->
-> Note: This repository ships with an example seed question bank focused on YouTube growth strategy, sourced from concepts in [docs/youtube-knowledge.md](docs/youtube-knowledge.md:1). You can replace or extend this seed with your own topics by editing [src/data/youtubeQuestions.ts](src/data/youtubeQuestions.ts:1). The app composes its flat question list from this module via [src/data/questions.ts](src/data/questions.ts:1), using the schema defined in [src/types/question.ts](src/types/question.ts:1).
-
-## Backstory
-
-Somehow I find myself always back to learning apps—I guess every dev does, lol. Back in 2021, after learning just the basics of programming, I was eager to use this new skill to help myself and my close ones. It began with learning English. I created [WordTrainer](https://github.com/youssef-imlyhen/WordTrainer) — a simple web app to practice the most‑used words and phrases in a language. Later, I dug deeper into the science of learning and language acquisition. Based on those principles, I built [LanTrainer](https://github.com/youssef-imlyhen/LanTrainer) — a React app that uses movies to help learn languages through multi‑subtitle viewing, saving quotes, and quizzing.
-
-After that, I joined an ed‑tech startup working with AI and robotics to teach languages. Three years later, I found myself returning to this field with Kostudy. About a year ago, a family member asked me to help build a religious learning app, and myself though of creating something to help younger siblings and relatives learn languages, and other subjects, and around the same time, I was working on [autonolab.com](https://autonolab.com) — an AI YouTube growth platform, and though of adding it to help creators learn about Youtube Growth. It felt natural to bring these threads together: Kostudy as an open‑source learning platform for the age of AI, flexible enough for family learning and extensible.  The goal is a thoughtful, modern tool that anyone can use or build on.
-
 ## Live Demo
 
-[Link to live demo]
 - Watch on YouTube: https://youtu.be/VsXnGYEopW0?si=qPlHpDq75T32G-RJ
-
+- Try it at https://kostudy.netlify.app/
 
 https://github.com/user-attachments/assets/6f3066c1-657b-4e5f-b002-2f2f06004002
 
@@ -111,6 +100,17 @@ The application provides extensive localization support for a multitude of langu
 - Turkish
 - Czech
 - And many more
+
+
+
+<!-- Example content note: default seed uses YouTube questions -->
+> Note: This repository ships with an example seed question bank focused on YouTube growth strategy, sourced from concepts in [docs/youtube-knowledge.md](docs/youtube-knowledge.md:1). You can replace or extend this seed with your own topics by editing [src/data/youtubeQuestions.ts](src/data/youtubeQuestions.ts:1). The app composes its flat question list from this module via [src/data/questions.ts](src/data/questions.ts:1), using the schema defined in [src/types/question.ts](src/types/question.ts:1).
+
+## Backstory
+
+Somehow I find myself always back to learning apps—I guess every dev does, lol. Back in 2021, after learning just the basics of programming, I was eager to use this new skill to help myself and my close ones. It began with learning English. I created [WordTrainer](https://github.com/youssef-imlyhen/WordTrainer) — a simple web app to practice the most‑used words and phrases in a language. Later, I dug deeper into the science of learning and language acquisition. Based on those principles, I built [LanTrainer](https://github.com/youssef-imlyhen/LanTrainer) — a React app that uses movies to help learn languages through multi‑subtitle viewing, saving quotes, and quizzing.
+
+After that, I joined an ed‑tech startup working with AI and robotics to teach languages. Three years later, I found myself returning to this field with Kostudy. About a year ago, a family member asked me to help build a religious learning app, and myself though of creating something to help younger siblings and relatives learn languages, and other subjects, and around the same time, I was working on [autonolab.com](https://autonolab.com) — an AI YouTube growth platform, and though of adding it to help creators learn about Youtube Growth. It felt natural to bring these threads together: Kostudy as an open‑source learning platform for the age of AI, flexible enough for family learning and extensible.  The goal is a thoughtful, modern tool that anyone can use or build on.
 
 
 

@@ -26,13 +26,19 @@ export default function DashboardScreen() {
   const totalMistakes = getTotalUniqueMistakes(mistakes);
 
   const questionCounts = getQuestionsCountByCategory();
-  const allCategories = getCategories().map((categoryId) => ({
-    id: categoryId,
-    name: categoryId.charAt(0).toUpperCase() + categoryId.slice(1),
-    description: t(`categories.${categoryId}.description`) || `Questions about ${categoryId}`,
-    questionCount: questionCounts[categoryId] || 0,
-    icon: BookOpenIcon,
-  }));
+  const allCategories = getCategories().map((categoryId) => {
+    const readableName = categoryId
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+    return {
+      id: categoryId,
+      name: readableName,
+      // Always use direct English description without localization lookup
+      description: `Questions about ${readableName}`,
+      questionCount: questionCounts[categoryId] || 0,
+      icon: BookOpenIcon,
+    };
+  });
 
   const displayedCategories = allCategories.slice(0, MAX_CATEGORIES_DISPLAYED);
 
