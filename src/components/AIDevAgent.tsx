@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { AIOrchestrator, GenerationRequest, OrchestrationResult, ConversationTurn, TaskStep } from '../services/aiOrchestrator';
 import { useQuestions } from '../hooks/useQuestions';
 import { useCustomQuestions } from '../hooks/useCustomQuestions';
+import { useLocalStorage } from '../hooks/useLocalStorage';
+import { AIProvider, DEFAULT_AI_PROVIDER } from '../types/aiProvider';
+import { callKoStudyServerAI } from '../services/aiClient';
 import { 
   CpuChipIcon, 
   UserIcon, 
@@ -25,6 +28,8 @@ interface AIDevAgentProps {
 const AIDevAgent: React.FC<AIDevAgentProps> = ({ apiKey, onResult }) => {
   const { getCategories, allQuestions } = useQuestions();
   useCustomQuestions();
+  const [aiProvider] = useLocalStorage<AIProvider>('aiProvider', DEFAULT_AI_PROVIDER);
+  const useByok = aiProvider === 'byok' && !!apiKey;
   
   const [orchestrator] = useState(() => new AIOrchestrator(apiKey));
   const [isProcessing, setIsProcessing] = useState(false);
@@ -34,7 +39,7 @@ const AIDevAgent: React.FC<AIDevAgentProps> = ({ apiKey, onResult }) => {
   const [feedbackInput, setFeedbackInput] = useState('');
   const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
   const [preferences, setPreferences] = useState({
-    includeImages: true,
+    includeImages: false,
     includeInteractivity: true,
     style: 'educational' as const,
     complexity: 'intermediate' as const
@@ -47,6 +52,48 @@ const AIDevAgent: React.FC<AIDevAgentProps> = ({ apiKey, onResult }) => {
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [conversationHistory]);
+
+  const createServerResult = (prompt: string, aiText: string, model: string, quota?: { used: number; remaining: number }): OrchestrationResult => ({
+    success: true,
+    taskPlan: {
+      id: `server_plan_${Date.now()}`,
+      description: `KoStudy Server AI generation for: ${prompt}`,
+      estimatedTime: 10,
+      complexity: 'simple',
+      steps: [
+        {
+          id: 'server_step_1',
+          type: 'text_generation',
+          description: 'Generate educational content with KoStudy Server AI',
+          model,
+          dependencies: [],
+          status: 'completed',
+        },
+      ],
+    },
+    generatedContent: {
+      textContent: [aiText],
+      images: [],
+      metadata: {
+        provider: 'server',
+        quota,
+      },
+    },
+    conversationHistory: [
+      {
+        id: `user_${Date.now()}`,
+        timestamp: new Date(),
+        type: 'user_request',
+        content: prompt,
+      },
+      {
+        id: `agent_${Date.now()}`,
+        timestamp: new Date(),
+        type: 'agent_action',
+        content: aiText,
+      },
+    ],
+  });
 
   const handleStartGeneration = async () => {
     if (!userInput.trim()) return;
@@ -64,7 +111,20 @@ const AIDevAgent: React.FC<AIDevAgentProps> = ({ apiKey, onResult }) => {
     };
 
     try {
-      const result = await orchestrator.orchestrateGeneration(request);
+      let result: OrchestrationResult;
+
+      if (useByok) {
+        result = await orchestrator.orchestrateGeneration(request);
+      } else {
+        const prompt = `You are KoStudy's AI Development Agent. Create useful educational content for this request.\n\nUSER REQUEST:\n${request.userPrompt}\n\nPREFERENCES:\n${JSON.stringify(request.preferences, null, 2)}\n\nFOCUS CATEGORIES:\n${request.context?.categories?.join(', ') || 'none'}\n\nReturn a structured answer with:\n1. A short plan\n2. The generated educational content\n3. A small quiz or activity\n4. A suggested next improvement`;
+        const aiResponse = await callKoStudyServerAI({
+          task: 'orchestration',
+          model: 'gemini-3.1-flash-lite',
+          prompt,
+        });
+        result = createServerResult(request.userPrompt, aiResponse.text, aiResponse.model, aiResponse.quota);
+      }
+
       setCurrentResult(result);
       setConversationHistory(result.conversationHistory);
       onResult(result);
@@ -78,8 +138,43 @@ const AIDevAgent: React.FC<AIDevAgentProps> = ({ apiKey, onResult }) => {
   const handleFeedbackSubmit = async () => {
     if (!feedbackInput.trim()) return;
 
-    await orchestrator.respondToUserFeedback(feedbackInput);
-    setConversationHistory(orchestrator.getConversationHistory());
+    if (useByok) {
+      await orchestrator.respondToUserFeedback(feedbackInput);
+      setConversationHistory(orchestrator.getConversationHistory());
+    } else {
+      const aiResponse = await callKoStudyServerAI({
+        task: 'orchestration_feedback',
+        model: 'gemini-3.1-flash-lite',
+        prompt: `Refine the previous KoStudy AI result using this feedback.\n\nPrevious result:\n${currentResult?.generatedContent.textContent?.join('\n\n') || 'No previous result'}\n\nUser feedback:\n${feedbackInput}`,
+      });
+
+      const updatedHistory: ConversationTurn[] = [
+        ...conversationHistory,
+        {
+          id: `user_feedback_${Date.now()}`,
+          timestamp: new Date(),
+          type: 'user_response',
+          content: feedbackInput,
+        },
+        {
+          id: `agent_feedback_${Date.now()}`,
+          timestamp: new Date(),
+          type: 'agent_action',
+          content: aiResponse.text,
+        },
+      ];
+
+      setConversationHistory(updatedHistory);
+      setCurrentResult(prev => prev ? {
+        ...prev,
+        generatedContent: {
+          ...prev.generatedContent,
+          textContent: [...(prev.generatedContent.textContent || []), aiResponse.text],
+        },
+        conversationHistory: updatedHistory,
+      } : prev);
+    }
+
     setFeedbackInput('');
   };
 
@@ -136,10 +231,18 @@ const AIDevAgent: React.FC<AIDevAgentProps> = ({ apiKey, onResult }) => {
           </div>
           <div>
             <h2 className="text-2xl font-bold text-base-content">AI Development Agent</h2>
-            <p className="text-base-content/70">Multi-modal content orchestrator with intelligent planning</p>
+            <p className="text-base-content/70">
+              {useByok ? 'Using your local BYOK Gemini key' : 'Using KoStudy Server AI for free text generation'}
+            </p>
           </div>
         </div>
       </div>
+
+      {!useByok && (
+        <div className="alert alert-info">
+          <span>Server mode uses KoStudy's Gemini key and never receives your personal API key. Image generation and advanced media features remain BYOK-only for now.</span>
+        </div>
+      )}
 
       {/* Request Input */}
       <div className="space-y-4">
@@ -205,8 +308,9 @@ const AIDevAgent: React.FC<AIDevAgentProps> = ({ apiKey, onResult }) => {
                   checked={preferences.includeImages}
                   onChange={(e) => setPreferences(prev => ({ ...prev, includeImages: e.target.checked }))}
                   className="checkbox checkbox-primary"
+                  disabled={!useByok}
                 />
-                <span className="text-sm">Include AI-generated images</span>
+                <span className="text-sm">Include AI-generated images {useByok ? '' : '(BYOK only)'}</span>
               </label>
               <label className="flex items-center space-x-2">
                 <input
@@ -250,7 +354,7 @@ const AIDevAgent: React.FC<AIDevAgentProps> = ({ apiKey, onResult }) => {
         {/* Generate Button */}
         <button
           onClick={handleStartGeneration}
-          disabled={isProcessing || !userInput.trim()}
+          disabled={isProcessing || !userInput.trim() || (aiProvider === 'byok' && !apiKey)}
           className="btn btn-primary btn-lg w-full"
         >
           {isProcessing ? (
@@ -349,7 +453,7 @@ const AIDevAgent: React.FC<AIDevAgentProps> = ({ apiKey, onResult }) => {
                       'bg-primary text-primary-content' : 
                       'bg-base-200 text-base-content'
                   }`}>
-                    <div className="text-sm">{turn.content}</div>
+                    <div className="text-sm whitespace-pre-wrap">{turn.content}</div>
                     <div className="text-xs opacity-70 mt-1">
                       {turn.timestamp.toLocaleTimeString()}
                     </div>
