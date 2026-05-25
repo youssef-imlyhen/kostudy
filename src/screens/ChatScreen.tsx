@@ -10,13 +10,17 @@ import remarkGfm from 'remark-gfm';
 import Header from '../components/Header';
 import GeminiLiveComponent from '../components/GeminiLiveComponent';
 import { MediaContext } from '../types/media';
+import { AIProvider, DEFAULT_AI_PROVIDER } from '../types/aiProvider';
 import InlineMediaContextSelector from '../components/InlineMediaContextSelector';
 import { useLanguage } from '../context/LanguageContext';
 
 const ChatScreen = () => {
   const { t } = useLanguage();
   const [apiKey] = useLocalStorage('geminiApiKey', '');
-  const { messages, loading, error, sendMessage, clearChat } = useChat(apiKey);
+  const [aiProvider] = useLocalStorage<AIProvider>('aiProvider', DEFAULT_AI_PROVIDER);
+  const isByokMode = aiProvider === 'byok';
+  const hasByokKey = isByokMode && !!apiKey;
+  const { messages, loading, error, sendMessage, clearChat } = useChat(apiKey, aiProvider);
   const [input, setInput] = useState('');
   const [mediaContext, setMediaContext] = useState<MediaContext>({ type: 'none' });
   const [selectedCategory, setSelectedCategory] = useState<string>('');
@@ -85,10 +89,16 @@ const ChatScreen = () => {
     <div className="flex flex-col h-[calc(100vh-6rem)] bg-base-100">
       <Header title={t('chatScreen.title')} />
 
-      {!apiKey && (
+      {!isByokMode && (
+        <div className="alert alert-info rounded-none">
+          <span>Free KoStudy Server AI is enabled for text chat. Add your own Gemini API key in Settings to unlock media uploads and live voice calls.</span>
+        </div>
+      )}
+
+      {isByokMode && !apiKey && (
         <div className="alert alert-warning rounded-none">
           <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-          <span>{t('chatScreen.warning')}</span>
+          <span>BYOK mode is selected. Add your Gemini API key in Settings, or switch back to KoStudy Server AI.</span>
         </div>
       )}
 
@@ -179,7 +189,7 @@ const ChatScreen = () => {
               <InlineMediaContextSelector
                 value={mediaContext}
                 onChange={setMediaContext}
-                disabled={loading || !apiKey}
+                disabled={loading || !hasByokKey}
               />
             </div>
             
@@ -192,7 +202,7 @@ const ChatScreen = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                disabled={loading || !apiKey}
+                disabled={loading || (isByokMode && !apiKey)}
               />
             </div>
             {/* Chat Options Menu */}
@@ -224,8 +234,8 @@ const ChatScreen = () => {
             <button
               onClick={() => setIsCallActive(true)}
               className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-primary hover:from-primary-focus hover:to-primary shadow-lg hover:shadow-xl active:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg flex items-center justify-center group overflow-hidden flex-shrink-0"
-              disabled={!apiKey}
-              title={t('chatScreen.startCall')}
+              disabled={!hasByokKey}
+              title={hasByokKey ? t('chatScreen.startCall') : 'Live voice calls currently require BYOK mode'}
             >
               <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-full"></div>
               <MicrophoneIcon className="w-6 h-6 text-white group-hover:scale-110 group-active:scale-95 transition-all duration-200" />
@@ -235,7 +245,7 @@ const ChatScreen = () => {
             <button
               onClick={handleSendMessage}
               className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-primary hover:from-primary-focus hover:to-primary shadow-lg hover:shadow-xl active:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg flex items-center justify-center group overflow-hidden flex-shrink-0"
-              disabled={loading || !apiKey || (!input.trim() && mediaContext.type === 'none')}
+              disabled={loading || (isByokMode && !apiKey) || (!input.trim() && mediaContext.type === 'none')}
               title={t('chatScreen.sendMessage')}
             >
               <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-full"></div>
@@ -248,7 +258,7 @@ const ChatScreen = () => {
           </div>
 
           {/* Gemini Live Component */}
-          {isCallActive && (
+          {isCallActive && hasByokKey && (
             <GeminiLiveComponent
               apiKey={apiKey}
               context={context}
