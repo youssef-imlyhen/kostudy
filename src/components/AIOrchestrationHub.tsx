@@ -3,6 +3,7 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import { OrchestrationResult } from '../services/aiOrchestrator';
 import AIDevAgent from './AIDevAgent';
 import AIResultsViewer from './AIResultsViewer';
+import { AIProvider, DEFAULT_AI_PROVIDER } from '../types/aiProvider';
 import { 
   SparklesIcon,
   CpuChipIcon,
@@ -18,6 +19,7 @@ interface AIOrchestrationHubProps {
 
 const AIOrchestrationHub: React.FC<AIOrchestrationHubProps> = ({ onClose }) => {
   const [geminiApiKey] = useLocalStorage('geminiApiKey', '');
+  const [aiProvider] = useLocalStorage<AIProvider>('aiProvider', DEFAULT_AI_PROVIDER);
   const [currentResult, setCurrentResult] = useState<OrchestrationResult | null>(null);
   const [resultHistory, setResultHistory] = useState<OrchestrationResult[]>([]);
   const [showHistory, setShowHistory] = useState(false);
@@ -69,27 +71,6 @@ const AIOrchestrationHub: React.FC<AIOrchestrationHubProps> = ({ onClose }) => {
     setShowHistory(false);
   };
 
-  if (!geminiApiKey) {
-    return (
-      <div className="min-h-screen bg-base-100 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-base-200 rounded-lg p-8 text-center">
-          <div className="p-4 bg-error/10 rounded-full w-fit mx-auto mb-4">
-            <CpuChipIcon className="w-8 h-8 text-error" />
-          </div>
-          <h2 className="text-2xl font-bold mb-4">API Key Required</h2>
-          <p className="text-base-content/70 mb-6">
-            Please configure your Gemini API key in the AI Generator settings to use the AI Orchestration Hub.
-          </p>
-          {onClose && (
-            <button onClick={onClose} className="btn btn-primary">
-              Go to Settings
-            </button>
-          )}
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-base-100">
       {/* Header */}
@@ -113,7 +94,9 @@ const AIOrchestrationHub: React.FC<AIOrchestrationHubProps> = ({ onClose }) => {
                 <div>
                   <h1 className="text-2xl font-bold">AI Orchestration Hub</h1>
                   <p className="text-white/80 text-sm">
-                    Multi-modal AI content generation with intelligent planning
+                    {aiProvider === 'byok' && geminiApiKey
+                      ? 'Using your browser-local Gemini API key'
+                      : 'Using KoStudy Server AI by default. BYOK remains optional in Settings.'}
                   </p>
                 </div>
               </div>
@@ -178,7 +161,7 @@ const AIOrchestrationHub: React.FC<AIOrchestrationHubProps> = ({ onClose }) => {
                 </div>
                 <h3 className="text-xl font-semibold mb-2">Ready for AI Generation</h3>
                 <p className="text-base-content/70">
-                  Describe what you want to create using the AI Development Agent, and the results will appear here.
+                  Describe what you want to create. KoStudy Server AI works without a user API key; BYOK is optional for personal limits and advanced features.
                 </p>
               </div>
             )}
