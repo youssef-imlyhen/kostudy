@@ -2,9 +2,11 @@ import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { GeminiLiveService } from '../services/geminiLiveService';
 import { decode, decodeAudioData } from '../utils/audioUtils';
 import { LiveServerMessage } from '@google/genai';
+import { AIProvider } from '../types/aiProvider';
 
 interface GeminiLiveComponentProps {
   apiKey: string;
+  aiProvider?: AIProvider;
   context?: string;
   onClose: () => void;
   onCallStart?: () => void;
@@ -14,6 +16,7 @@ interface GeminiLiveComponentProps {
 
 const GeminiLiveComponent: React.FC<GeminiLiveComponentProps> = ({
   apiKey,
+  aiProvider = 'byok',
   context,
   onClose,
   onCallStart,
@@ -149,7 +152,7 @@ const GeminiLiveComponent: React.FC<GeminiLiveComponentProps> = ({
       const audioWorkletNode = new AudioWorkletNode(audioContext, 'audio-processing-worklet');
       audioWorkletNodeRef.current = audioWorkletNode;
 
-      const service = new GeminiLiveService(apiKey);
+      const service = new GeminiLiveService(apiKey, aiProvider);
       liveServiceRef.current = service;
 
       await service.connect(
@@ -174,9 +177,7 @@ const GeminiLiveComponent: React.FC<GeminiLiveComponentProps> = ({
       setIsRecording(true);
       setStatus('Connected! Listening...');
       
-      // Send context as initial message if available
       if (context && liveServiceRef.current) {
-        // Parse the context to extract prompt and data
         let contextText = context;
         try {
           const parsedContext = JSON.parse(context);
@@ -203,7 +204,7 @@ const GeminiLiveComponent: React.FC<GeminiLiveComponentProps> = ({
       onError?.(errorMessage);
       handleStopCall();
     }
-  }, [apiKey, onCallStart, onError, handleStopCall, playAudioResponse]);
+  }, [apiKey, aiProvider, context, onCallStart, onError, handleStopCall, playAudioResponse]);
 
   useEffect(() => {
     handleStartCall();
@@ -226,6 +227,9 @@ const GeminiLiveComponent: React.FC<GeminiLiveComponentProps> = ({
             <div className={`w-3 h-3 rounded-full mr-2 ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
             <p className="text-lg font-medium">{status}</p>
           </div>
+          <p className="text-xs text-base-content/50 mt-1">
+            {aiProvider === 'server' ? 'KoStudy Server Live' : 'BYOK Gemini Live'}
+          </p>
           {isRecording && !isAISpeaking && <p className="text-gray-500">Listening...</p>}
           {isAISpeaking && <p className="text-blue-500">AI is speaking...</p>}
           {error && <p className="text-red-500 mt-2">{error}</p>}
