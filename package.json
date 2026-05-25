@@ -12,7 +12,7 @@
     "build-pwa": "npm run generate-icons && tsc -b && vite build"
   },
   "dependencies": {
-    "@google/genai": "^1.10.0",
+    "@google/genai": "^2.0.1",
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
     "@types/howler": "^2.2.12",
