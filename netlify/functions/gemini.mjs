@@ -1,7 +1,9 @@
 import { GoogleGenAI } from '@google/genai';
 
 const DEFAULT_TEXT_MODEL = process.env.GEMINI_TEXT_MODEL || 'gemini-3.1-flash-lite';
+const DEFAULT_LIVE_MODEL = process.env.GEMINI_LIVE_MODEL || 'gemini-3.1-flash-live-preview';
 const DAILY_LIMIT = Number(process.env.KOSTUDY_FREE_AI_DAILY_LIMIT || 450);
+const LIVE_DAILY_LIMIT = Number(process.env.KOSTUDY_FREE_LIVE_DAILY_LIMIT || 20);
 
 const quotaStore = globalThis.__kostudyQuotaStore || new Map();
 globalThis.__kostudyQuotaStore = quotaStore;
@@ -18,20 +20,22 @@ function getTodayKey() {
   return new Date().toISOString().slice(0, 10);
 }
 
-function checkQuota(request) {
+function checkQuota(request, kind = 'text') {
   const clientId = getClientId(request);
-  const key = `${getTodayKey()}:${clientId}`;
+  const limit = kind === 'live' ? LIVE_DAILY_LIMIT : DAILY_LIMIT;
+  const key = `${getTodayKey()}:${kind}:${clientId}`;
   const used = quotaStore.get(key) || 0;
 
-  if (used >= DAILY_LIMIT) {
-    return { allowed: false, used, remaining: 0 };
+  if (used >= limit) {
+    return { allowed: false, used, remaining: 0, limit };
   }
 
   quotaStore.set(key, used + 1);
   return {
     allowed: true,
     used: used + 1,
-    remaining: Math.max(DAILY_LIMIT - used - 1, 0),
+    remaining: Math.max(limit - used - 1, 0),
+    limit,
   };
 }
 
@@ -47,6 +51,46 @@ function buildContents(body) {
   }
 
   return [{ role: 'user', parts: [{ text: JSON.stringify(body) }] }];
+}
+
+async function createLiveSession(ai, request) {
+  const quota = checkQuota(request, 'live');
+  if (!quota.allowed) {
+    return Response.json(
+      {
+        error: 'Daily free Live AI limit reached. Add your own Gemini API key in Settings to keep using Live today.',
+        quota,
+      },
+      { status: 429 }
+    );
+  }
+
+  const expireTime = new Date(Date.now() + 30 * 60 * 1000).toISOString();
+  const newSessionExpireTime = new Date(Date.now() + 60 * 1000);
+
+  const sessionKey = await ai.authTokens.create({
+    config: {
+      uses: 1,
+      expireTime,
+      newSessionExpireTime,
+      liveConnectConstraints: {
+        model: DEFAULT_LIVE_MODEL,
+        config: {
+          responseModalities: ['AUDIO'],
+        },
+      },
+      httpOptions: {
+        apiVersion: 'v1alpha',
+      },
+    },
+  });
+
+  return Response.json({
+    liveKey: sessionKey.name,
+    model: DEFAULT_LIVE_MODEL,
+    provider: 'server-live',
+    quota,
+  });
 }
 
 export default async function handler(request) {
@@ -73,7 +117,13 @@ export default async function handler(request) {
       );
     }
 
-    const quota = checkQuota(request);
+    const ai = new GoogleGenAI({ apiKey });
+
+    if (body.task === 'live_session') {
+      return await createLiveSession(ai, request);
+    }
+
+    const quota = checkQuota(request, 'text');
     if (!quota.allowed) {
       return Response.json(
         {
@@ -84,7 +134,6 @@ export default async function handler(request) {
       );
     }
 
-    const ai = new GoogleGenAI({ apiKey });
     const model = typeof body.model === 'string' ? body.model : DEFAULT_TEXT_MODEL;
     const contents = buildContents(body);
 
