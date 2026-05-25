@@ -20,6 +20,7 @@ const ChatScreen = () => {
   const [aiProvider] = useLocalStorage<AIProvider>('aiProvider', DEFAULT_AI_PROVIDER);
   const isByokMode = aiProvider === 'byok';
   const hasByokKey = isByokMode && !!apiKey;
+  const canStartLive = aiProvider === 'server' || hasByokKey;
   const { messages, loading, error, sendMessage, clearChat } = useChat(apiKey, aiProvider);
   const [input, setInput] = useState('');
   const [mediaContext, setMediaContext] = useState<MediaContext>({ type: 'none' });
@@ -91,7 +92,7 @@ const ChatScreen = () => {
 
       {!isByokMode && (
         <div className="alert alert-info rounded-none">
-          <span>Free KoStudy Server AI is enabled for text chat. Add your own Gemini API key in Settings to unlock media uploads and live voice calls.</span>
+          <span>Free KoStudy Server AI is enabled for text chat and Live voice. Add your own Gemini API key in Settings to unlock media uploads.</span>
         </div>
       )}
 
@@ -234,8 +235,8 @@ const ChatScreen = () => {
             <button
               onClick={() => setIsCallActive(true)}
               className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-primary hover:from-primary-focus hover:to-primary shadow-lg hover:shadow-xl active:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg flex items-center justify-center group overflow-hidden flex-shrink-0"
-              disabled={!hasByokKey}
-              title={hasByokKey ? t('chatScreen.startCall') : 'Live voice calls currently require BYOK mode'}
+              disabled={!canStartLive}
+              title={canStartLive ? t('chatScreen.startCall') : 'Live voice calls require KoStudy Server AI or BYOK mode with a key'}
             >
               <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-full"></div>
               <MicrophoneIcon className="w-6 h-6 text-white group-hover:scale-110 group-active:scale-95 transition-all duration-200" />
@@ -258,9 +259,10 @@ const ChatScreen = () => {
           </div>
 
           {/* Gemini Live Component */}
-          {isCallActive && hasByokKey && (
+          {isCallActive && canStartLive && (
             <GeminiLiveComponent
               apiKey={apiKey}
+              aiProvider={aiProvider}
               context={context}
               onClose={() => setIsCallActive(false)}
               onCallStart={handleCallStart}
