@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { useLocalStorage } from './useLocalStorage';
 import { GoogleGenAI, Part } from '@google/genai';
 import { MediaContext } from '../types/media';
+import { AIProvider, DEFAULT_AI_PROVIDER } from '../types/aiProvider';
 import { mediaContextToParts, isMediaContextReady } from '../utils/mediaUtils';
+import { callKoStudyServerAI } from '../services/aiClient';
 
 // Define the message structure
 export interface ChatMessage {
@@ -22,12 +24,10 @@ async function fileToGenerativePart(file: File) {
   };
 }
 
-export const useChat = (apiKey: string) => {
+export const useChat = (apiKey: string, aiProvider: AIProvider = DEFAULT_AI_PROVIDER) => {
   const [messages, setMessages] = useLocalStorage<ChatMessage[]>('chatHistory', []);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const genAI = new GoogleGenAI({ apiKey });
 
   const sendMessage = async (
     text: string,
@@ -41,15 +41,27 @@ export const useChat = (apiKey: string) => {
       const userParts: Part[] = [];
       userParts.push({ text });
 
-      // Handle different types of media input
+      const useByok = aiProvider === 'byok';
+      const hasUsableByokKey = useByok && !!apiKey;
+
       if (mediaContext) {
+        if (!hasUsableByokKey && !(mediaContext instanceof File) && mediaContext.type !== 'none') {
+          setError('Media context currently requires BYOK mode with your own Gemini API key. Text chat works with KoStudy Server AI.');
+          setLoading(false);
+          return;
+        }
+
         if (mediaContext instanceof File) {
-          // Legacy image support
+          if (!hasUsableByokKey) {
+            setError('Image/file context currently requires BYOK mode with your own Gemini API key. Text chat works with KoStudy Server AI.');
+            setLoading(false);
+            return;
+          }
           const imagePart = await fileToGenerativePart(mediaContext);
           userParts.push(imagePart);
-        } else if (isMediaContextReady(mediaContext)) {
-          // New media context support
+        } else if (isMediaContextReady(mediaContext) && mediaContext.type !== 'none') {
           try {
+            const genAI = new GoogleGenAI({ apiKey });
             const mediaParts = await mediaContextToParts(mediaContext, genAI);
             userParts.push(...mediaParts);
           } catch (error) {
@@ -89,8 +101,25 @@ export const useChat = (apiKey: string) => {
         });
       }
 
+      if (!hasUsableByokKey) {
+        const response = await callKoStudyServerAI({
+          task: 'chat',
+          model: 'gemini-3.1-flash-lite',
+          contents,
+        });
+
+        const modelMessage: ChatMessage = {
+          role: 'model',
+          parts: [{ text: response.text }],
+        };
+
+        setMessages([...newHistory, modelMessage].slice(-10));
+        return;
+      }
+
+      const genAI = new GoogleGenAI({ apiKey });
       const result = await genAI.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3.1-flash-lite',
         contents
       });
 
@@ -126,7 +155,7 @@ export const useChat = (apiKey: string) => {
             }
 
             if (!imageGenerated) {
-              modelParts.push({ text: "I was unable to generate an image for that prompt." });
+              modelParts.push({ text: 'I was unable to generate an image for that prompt.' });
             }
 
             const modelMessage: ChatMessage = {
