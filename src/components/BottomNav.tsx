@@ -34,8 +34,7 @@ export default function BottomNav() {
     >
       <div className="flex justify-around items-center h-16 px-2 max-w-4xl mx-auto w-full">
         {navItems.map(({ path, icon: Icon, activeIcon: ActiveIcon, label }) => {
-          const isActive = currentPath === path ||
-                          (path !== '/' && currentPath.startsWith(path));
+          const isActive = currentPath === path || currentPath.startsWith(`${path}/`);
           const IconComponent = isActive ? ActiveIcon : Icon;
 
           return (

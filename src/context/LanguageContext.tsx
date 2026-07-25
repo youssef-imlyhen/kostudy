@@ -62,17 +62,13 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
 
   const t = (key: string, options?: { [key: string]: string | number }) => {
     const keys = key.split('.');
-    console.log('t() lookup start:', { key, language, root: translations[language] });
     let result: any = translations[language];
     for (const k of keys) {
-      console.log('t() segment lookup:', { segment: k, current: result });
       result = result?.[k];
       if (result === undefined) {
-        console.log(`Translation key not found: ${key} for language: ${language}`);
         return key; // Return key if not found
       }
     }
-    console.log(`t() lookup result for '${key}':`, result);
 
     if (options && typeof result === 'string') {
       return Object.entries(options).reduce((acc, [key, value]) => {

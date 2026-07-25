@@ -326,9 +326,12 @@ export default function QuizScreen() {
           timestamp: Date.now(),
         };
         const existing = mistakes[categoryKey] || [];
+        const deduped = existing.filter(
+          mistake => !(mistake.questionId === entry.questionId && mistake.category === entry.category && mistake.difficulty === entry.difficulty)
+        );
         setMistakes({
           ...mistakes,
-          [categoryKey]: [...existing, entry],
+          [categoryKey]: [...deduped, entry],
         });
       }
 
@@ -373,9 +376,12 @@ export default function QuizScreen() {
         timestamp: Date.now(),
       };
       const existing = mistakes[categoryKey] || [];
+      const deduped = existing.filter(
+        mistake => !(mistake.questionId === entry.questionId && mistake.category === entry.category && mistake.difficulty === entry.difficulty)
+      );
       setMistakes({
         ...mistakes,
-        [categoryKey]: [...existing, entry],
+        [categoryKey]: [...deduped, entry],
       });
     }
 

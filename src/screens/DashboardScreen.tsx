@@ -55,6 +55,23 @@ export default function DashboardScreen() {
 
             
             <div className="grid grid-cols-1 gap-4">
+              {totalMistakes > 0 && (
+                <Link to="/mistakes">
+                  <Card variant="interactive" className="group border border-error/20 bg-error/5">
+                    <div className="flex items-center">
+                      <div className="p-3 bg-error/10 rounded-xl mr-4">
+                        <ArrowPathIcon className="w-6 h-6 text-error" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-bold text-base-content group-hover:text-primary transition-colors">{t('dashboard.reviewMistakes')}</h3>
+                        <p className="text-sm text-base-content/70 mt-1">{totalMistakes} {t('dashboard.questionsToPractice')}</p>
+                      </div>
+                      <ChevronRightIcon className="w-5 h-5 text-base-content/40 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </Card>
+                </Link>
+              )}
+
               {/* Play All Card */}
               <Link to="/play-all">
                 <Card variant="interactive" className="group">
@@ -75,7 +92,7 @@ export default function DashboardScreen() {
               <h2 className="section-header-title text-lg sm:text-xl">{t('dashboard.learningPath')}</h2>
             </div>
               {/* Categories Grid */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {displayedCategories.map((category) => (
                   <CategoryCard
                     key={category.id}

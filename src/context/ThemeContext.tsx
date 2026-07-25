@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo, ReactNode } from 'react';
 import { config } from '../config';
 
 interface DesignTokens {
@@ -231,7 +231,7 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
     };
   };
 
-  const designTokens = generateDesignTokens();
+  const designTokens = useMemo(() => generateDesignTokens(), [theme]);
 
   const value = {
     theme,

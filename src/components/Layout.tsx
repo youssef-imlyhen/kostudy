@@ -21,10 +21,10 @@ export default function Layout({ children, hideNav = false }: LayoutProps) {
       }}
     >
       {/* Main content */}
-      <main className="flex-1 w-full max-w-4xl mx-auto px-4 md:px-6 pb-24 md:pb-8">
+      <main className="flex-1 w-full max-w-5xl mx-auto px-3 sm:px-4 md:px-6 pb-24 md:pb-28">
         <div className="py-6 md:py-8">
           <div
-            className="bg-base-100/80 backdrop-blur-sm rounded-2xl shadow-sm p-6 md:p-8 border border-base-100/20"
+            className="bg-base-100/80 backdrop-blur-sm rounded-2xl shadow-sm p-4 sm:p-6 md:p-8 border border-base-100/20"
             style={{
               borderRadius: designTokens.borderRadius.xl,
               boxShadow: designTokens.shadows.card,
@@ -37,8 +37,10 @@ export default function Layout({ children, hideNav = false }: LayoutProps) {
 
       {/* Bottom Navigation */}
       {!hideNav && (
-        <div className="fixed bottom-0 left-0 right-0 w-full max-w-4xl mx-auto">
-          <BottomNav />
+        <div className="fixed bottom-0 left-0 right-0 z-40 w-full px-0 md:px-6 md:pb-4 pointer-events-none">
+          <div className="w-full max-w-2xl mx-auto pointer-events-auto md:rounded-2xl md:overflow-hidden md:shadow-lg md:border md:border-base-200">
+            <BottomNav />
+          </div>
         </div>
       )}
     </div>

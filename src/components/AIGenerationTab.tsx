@@ -44,7 +44,7 @@ export default function AIGenerationTab({ onQuestionsGenerated }: AIGenerationTa
       setError(t('aiGenerationTab.errors.apiKeyMissing'));
       return;
     }
-    if (!prompt) {
+    if (!prompt.trim()) {
       setError(t('aiGenerationTab.errors.promptMissing'));
       return;
     }
@@ -286,7 +286,7 @@ export default function AIGenerationTab({ onQuestionsGenerated }: AIGenerationTa
       <button
         onClick={handleGenerate}
         className="btn btn-primary w-full rounded-2xl hover:shadow-elevated active:translate-y-0.5 transition-all duration-150"
-        disabled={isLoading}
+        disabled={isLoading || !apiKey || !prompt.trim() || !isMediaContextReady(mediaContext)}
       >
         {isLoading ? t('aiGenerationTab.buttons.generating') : t('aiGenerationTab.buttons.generate')}
       </button>
