@@ -55,7 +55,7 @@ export default function DashboardScreen() {
 
             
             <div className="grid grid-cols-1 gap-4">
-              {totalMistakes > 0 && (
+              {totalMistakes > 0 ? (
                 <Link to="/mistakes">
                   <Card variant="interactive" className="group border border-error/20 bg-error/5">
                     <div className="flex items-center">
@@ -70,23 +70,22 @@ export default function DashboardScreen() {
                     </div>
                   </Card>
                 </Link>
+              ) : (
+                <Link to="/play-all">
+                  <Card variant="interactive" className="group">
+                    <div className="flex items-center">
+                      <div className="p-3 bg-primary/10 rounded-xl mr-4">
+                        <FireIcon className="w-6 h-6 text-primary" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-bold text-base-content group-hover:text-primary transition-colors">{t('dashboard.playAll')}</h3>
+                        <p className="text-sm text-base-content/70 mt-1">{t('dashboard.playAllDesc')}</p>
+                      </div>
+                      <ChevronRightIcon className="w-5 h-5 text-base-content/40 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </Card>
+                </Link>
               )}
-
-              {/* Play All Card */}
-              <Link to="/play-all">
-                <Card variant="interactive" className="group">
-                  <div className="flex items-center">
-                    <div className="p-3 bg-primary/10 rounded-xl mr-4">
-                      <FireIcon className="w-6 h-6 text-primary" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-bold text-base-content group-hover:text-primary transition-colors">{t('dashboard.playAll')}</h3>
-                      <p className="text-sm text-base-content/70 mt-1">{t('dashboard.playAllDesc')}</p>
-                    </div>
-                    <ChevronRightIcon className="w-5 h-5 text-base-content/40 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </Card>
-              </Link>
               
               <div className="section-header-content">
               <h2 className="section-header-title text-lg sm:text-xl">{t('dashboard.learningPath')}</h2>
@@ -134,18 +133,15 @@ export default function DashboardScreen() {
                 </Card>
               </Link>
               
-              {/* Mistakes */}
               {totalMistakes > 0 && (
-                <Link to="/mistakes">
+                <Link to="/play-all">
                   <Card variant="interactive" className="flex items-center">
-                    <div className="p-3 bg-error/10 rounded-xl mr-4">
-                      <ArrowPathIcon className="w-6 h-6 text-error" />
+                    <div className="p-3 bg-primary/10 rounded-xl mr-4">
+                      <FireIcon className="w-6 h-6 text-primary" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-bold text-base-content group-hover:text-primary transition-colors">{t('dashboard.reviewMistakes')}</h3>
-                      <p className="text-sm text-base-content/70 mt-1">
-                        {totalMistakes} {t('dashboard.questionsToPractice')}
-                      </p>
+                      <h3 className="font-bold text-base-content group-hover:text-primary transition-colors">{t('dashboard.playAll')}</h3>
+                      <p className="text-sm text-base-content/70 mt-1">{t('dashboard.playAllDesc')}</p>
                     </div>
                     <ChevronRightIcon className="w-5 h-5 text-base-content/40 group-hover:translate-x-1 transition-transform" />
                   </Card>
