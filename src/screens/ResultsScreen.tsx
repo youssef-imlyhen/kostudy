@@ -8,7 +8,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useAchievements } from '../hooks/useAchievements';
 import Header from '../components/Header';
 import soundManager from '../utils/soundManager';
-import { useLocalStorage as useLocalStorageHook } from '../hooks/useLocalStorage';
+import { Mistake, Mistakes, getUniqueMistakes } from '../utils/mistakes';
 
 interface LocationState {
   score?: number;
@@ -23,17 +23,6 @@ interface LocationState {
   incorrectQuestionIds?: string[];
 }
 
-interface Mistake {
-  questionId: string;
-  category: string;
-  difficulty: string;
-  selectedAnswer: string;
-  timestamp: number;
-}
-
-interface Mistakes {
-  [key: string]: Mistake[];
-}
 
 export default function ResultsScreen() {
   const navigate = useNavigate();
@@ -43,7 +32,7 @@ export default function ResultsScreen() {
   const { updateProgress } = useAchievements();
   const [, setMistakes] = useLocalStorage<Mistakes>('quizMistakes', {});
   const mistakesSaved = useRef(false);
-  const [soundEnabled] = useLocalStorageHook<boolean>('soundEnabled', true);
+  const [soundEnabled] = useLocalStorage<boolean>('soundEnabled', true);
 
   const state = location.state as LocationState;
 
@@ -66,6 +55,27 @@ export default function ResultsScreen() {
     }
   }, [soundEnabled, state]);
 
+  useEffect(() => {
+    if (!state?.playAllMode || !state.lastQuestion || !state.lastAnswer || mistakesSaved.current) return;
+
+    const mistake: Mistake = {
+      questionId: state.lastQuestion.id,
+      category: state.lastQuestion.category,
+      difficulty: state.lastQuestion.difficulty,
+      selectedAnswer: state.lastAnswer,
+      timestamp: Date.now(),
+    };
+
+    setMistakes(prev => {
+      const categoryMistakes = prev[mistake.category] || [];
+      return {
+        ...prev,
+        [mistake.category]: getUniqueMistakes([...categoryMistakes, mistake]),
+      };
+    });
+    mistakesSaved.current = true;
+  }, [state?.playAllMode, state?.lastQuestion, state?.lastAnswer, setMistakes]);
+
   // Render nothing if the state is invalid, the effect will handle the redirect.
   if (!state || (!state.playAllMode && (state.score === undefined || state.total === undefined || !state.answers || !state.questions))) {
     return null;
@@ -75,28 +85,6 @@ export default function ResultsScreen() {
   if (state.playAllMode) {
     const { finalStreak = 0, maxStreak = 0, lastQuestion, lastAnswer } = state;
 
-    // Save last mistake if available
-    useEffect(() => {
-      if (!lastQuestion || !lastAnswer || mistakesSaved.current) return;
-
-      const mistake = {
-        questionId: lastQuestion.id,
-        category: lastQuestion.category,
-        difficulty: lastQuestion.difficulty,
-        selectedAnswer: lastAnswer,
-        timestamp: Date.now(),
-      };
-
-      setMistakes(prev => {
-        const categoryMistakes = prev[lastQuestion.category] || [];
-        return {
-          ...prev,
-          [lastQuestion.category]: [...categoryMistakes, mistake]
-        };
-      });
-
-      mistakesSaved.current = true;
-    }, [lastQuestion, lastAnswer, setMistakes]);
 
     return (
       <div className="flex flex-col items-center justify-center min-h-screen px-4 py-8 -mt-16">
@@ -162,7 +150,7 @@ export default function ResultsScreen() {
     questions = [],
     incorrectQuestionIds = [] // Get incorrect IDs from state
   } = state;
-  const percentage = Math.round((score / total) * 100);
+  const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
   const wrongAnswers = total - score;
   const rightAnswers = score;
   const isPerfectScore = percentage === 100 && total >= 10;
@@ -187,7 +175,7 @@ export default function ResultsScreen() {
         const categoryMistakes = prev[category] || [];
         return {
           ...prev,
-          [category]: [...categoryMistakes, ...currentMistakes]
+          [category]: getUniqueMistakes([...categoryMistakes, ...currentMistakes])
         };
       });
     }
@@ -274,23 +262,38 @@ export default function ResultsScreen() {
         </div>
       </div>
 
-      {/* Next Level Button */}
-      <button
-        onClick={handleNextLevel}
-        className="btn btn-primary rounded-2xl font-bold border-2 border-b-4 w-full max-w-sm"
-      >
-        {t('resultsScreen.continue')}
-      </button>
-
-      {/* Review Mistakes Link */}
       {wrongAnswers > 0 && (
-        <button
-          onClick={() => navigate('/mistakes')}
-          className="btn btn-ghost rounded-2xl font-bold border-2 border-b-4 mt-4"
-        >
-          {t('resultsScreen.reviewMistakes')}
-        </button>
+        <div className="w-full max-w-sm rounded-2xl bg-warning/10 border border-warning/20 p-4 mb-4">
+          <p className="text-xs font-semibold uppercase tracking-wider text-warning">{t('resultsScreen.nextBestStep')}</p>
+          <p className="text-sm text-base-content/80 mt-1">{t('resultsScreen.reviewWhileFresh', { count: wrongAnswers })}</p>
+        </div>
       )}
+
+      <div className="w-full max-w-sm space-y-3">
+        {wrongAnswers > 0 ? (
+          <>
+            <button
+              onClick={() => navigate('/mistakes')}
+              className="btn btn-primary rounded-2xl font-bold border-2 border-b-4 w-full"
+            >
+              {t('resultsScreen.reviewMissedNow', { count: wrongAnswers })}
+            </button>
+            <button
+              onClick={handleNextLevel}
+              className="btn btn-ghost rounded-2xl font-bold border-2 border-b-4 w-full"
+            >
+              {t('resultsScreen.continue')}
+            </button>
+          </>
+        ) : (
+          <button
+            onClick={handleNextLevel}
+            className="btn btn-primary rounded-2xl font-bold border-2 border-b-4 w-full"
+          >
+            {t('resultsScreen.continue')}
+          </button>
+        )}
+      </div>
     </div>
   );
 }

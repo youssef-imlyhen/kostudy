@@ -62,12 +62,15 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
 
   const t = (key: string, options?: { [key: string]: string | number }) => {
     const keys = key.split('.');
-    let result: any = translations[language];
-    for (const k of keys) {
-      result = result?.[k];
-      if (result === undefined) {
-        return key; // Return key if not found
-      }
+    const lookup = (dictionary: any) => keys.reduce((value, segment) => value?.[segment], dictionary);
+    let result = lookup(translations[language]);
+
+    if (result === undefined && language !== 'en') {
+      result = lookup(en);
+    }
+
+    if (result === undefined) {
+      return key;
     }
 
     if (options && typeof result === 'string') {

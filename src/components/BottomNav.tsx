@@ -1,10 +1,10 @@
 import { useLocation, Link } from 'react-router-dom';
 import {
-  HomeIcon, TrophyIcon, BookOpenIcon, CircleStackIcon, ChatBubbleBottomCenterTextIcon
+  HomeIcon, TrophyIcon, BookOpenIcon, ArrowPathIcon, ChatBubbleBottomCenterTextIcon
 } from '@heroicons/react/24/outline';
 import {
   HomeIcon as HomeIconSolid, TrophyIcon as TrophyIconSolid,
-  BookOpenIcon as BookOpenIconSolid, CircleStackIcon as CircleStackIconSolid,
+  BookOpenIcon as BookOpenIconSolid, ArrowPathIcon as ArrowPathIconSolid,
   ChatBubbleBottomCenterTextIcon as ChatBubbleBottomCenterTextIconSolid
 } from '@heroicons/react/24/solid';
 import { useLanguage } from '../context/LanguageContext';
@@ -20,7 +20,7 @@ export default function BottomNav() {
     { path: '/dashboard', icon: HomeIcon, activeIcon: HomeIconSolid, label: t('nav.dashboard') },
     { path: '/achievements', icon: TrophyIcon, activeIcon: TrophyIconSolid, label: t('nav.achievements') },
     { path: '/categories', icon: BookOpenIcon, activeIcon: BookOpenIconSolid, label: t('nav.categories') },
-    { path: '/questions', icon: CircleStackIcon, activeIcon: CircleStackIconSolid, label: t('nav.questions') },
+    { path: '/mistakes', icon: ArrowPathIcon, activeIcon: ArrowPathIconSolid, label: t('nav.mistakes') },
     { path: '/chat', icon: ChatBubbleBottomCenterTextIcon, activeIcon: ChatBubbleBottomCenterTextIconSolid, label: t('nav.chat') }
   ];
 

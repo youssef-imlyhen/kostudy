@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../context/UserContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useAchievements } from '../hooks/useAchievements';
@@ -12,7 +11,7 @@ interface MistakeStats {
   mistakesByCategory: {
     [key: string]: number;
   };
-  score: number;
+  reviewMinutes: number;
 }
 
 function calculateStats(mistakes: Mistakes): MistakeStats {
@@ -27,21 +26,18 @@ function calculateStats(mistakes: Mistakes): MistakeStats {
     return acc;
   }, {} as { [key: string]: number });
 
-  // Calculate score based on unique mistakes
-  // Base score of 1000, minus 10 points per unique mistake
-  const score = Math.max(0, 1000 - (totalMistakes * 10));
+  const reviewMinutes = totalMistakes > 0 ? Math.max(3, Math.ceil(totalMistakes * 0.75)) : 0;
 
   return {
     totalMistakes,
     mistakesByCategory,
-    score,
+    reviewMinutes,
   };
 }
 
 export default function MistakesScreen() {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const {} = useUser();
   const [mistakes] = useLocalStorage<Mistakes>('quizMistakes', {});
   const { updateProgress } = useAchievements();
 
@@ -54,7 +50,7 @@ export default function MistakesScreen() {
     name: `${categoryEmojis[categoryId] || '❓'} ${categoryId.charAt(0).toUpperCase() + categoryId.slice(1)}`,
     description: t('mistakesScreen.reviewMistakesInCategory', { category: categoryId }),
     wrongCount: stats.mistakesByCategory[categoryId] || 0,
-  })).filter(category => category.wrongCount > 0);
+  })).filter(category => category.wrongCount > 0).sort((a, b) => b.wrongCount - a.wrongCount);
 
   const handlePlayMistakes = (categoryId?: string) => {
     const mistakesForCategory = categoryId
@@ -87,8 +83,8 @@ export default function MistakesScreen() {
       <div className="grid grid-cols-3 gap-4 px-4 mb-8">
         <div className="card border border-base-300 bg-base-100 shadow-sm hover:shadow-elevated transition-shadow rounded-2xl p-4">
           <div className="flex flex-col items-center">
-            <span className="text-sm text-base-content/70">{t('mistakesScreen.score')}</span>
-            <span className="font-bold text-2xl text-primary">{stats.score}</span>
+            <span className="text-sm text-base-content/70">{t('mistakesScreen.unresolved')}</span>
+            <span className="font-bold text-2xl text-primary">{stats.totalMistakes}</span>
           </div>
         </div>
 
@@ -101,8 +97,8 @@ export default function MistakesScreen() {
 
         <div className="card border border-base-300 bg-base-100 shadow-sm hover:shadow-elevated transition-shadow rounded-2xl p-4">
           <div className="flex flex-col items-center">
-            <span className="text-sm text-base-content/70">{t('mistakesScreen.total')}</span>
-            <span className="font-bold text-2xl text-primary">{stats.totalMistakes}</span>
+            <span className="text-sm text-base-content/70">{t('mistakesScreen.estimatedTime')}</span>
+            <span className="font-bold text-2xl text-primary">{stats.reviewMinutes}{t('mistakesScreen.minutesShort')}</span>
           </div>
         </div>
       </div>
@@ -127,7 +123,11 @@ export default function MistakesScreen() {
       {/* Categories */}
       {categories.length > 0 ? (
         <div className="px-4 space-y-4">
-          {categories.map((category) => (
+          <div>
+            <h2 className="font-bold text-lg text-base-content">{t('mistakesScreen.reviewPriority')}</h2>
+            <p className="text-sm text-base-content/60 mt-1">{t('mistakesScreen.reviewPriorityDesc')}</p>
+          </div>
+          {categories.map((category, index) => (
             <button
               key={category.id}
               onClick={() => handlePlayMistakes(category.id)}
@@ -136,7 +136,12 @@ export default function MistakesScreen() {
             >
               <div className="flex justify-between items-start">
                 <div>
-                  <h3 className="font-semibold text-lg text-base-content">{category.name}</h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-semibold text-lg text-base-content">{category.name}</h3>
+                    {index === 0 && categories.length > 1 && (
+                      <span className="badge badge-error badge-outline badge-sm">{t('mistakesScreen.topPriority')}</span>
+                    )}
+                  </div>
                   <p className="text-sm text-base-content/70 mt-1">{category.description}</p>
                 </div>
                 <div className="bg-error/20 px-3 py-1 rounded-full">

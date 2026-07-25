@@ -2,21 +2,10 @@ import { Link } from 'react-router-dom';
 import { FireIcon } from '@heroicons/react/24/outline';
 import { useQuestions } from '../hooks/useQuestions';
 import { useLanguage } from '../context/LanguageContext';
-import {
-  BookOpenIcon,
-  AcademicCapIcon,
-  GlobeAmericasIcon,
-} from '@heroicons/react/24/solid';
 import Header from '../components/Header';
 import Card from '../components/Card';
 import CategoryCard from '../components/CategoryCard';
 
-const categoryIcons: Record<string, any> = {
-  youtube_growth: FireIcon,
-  youtube_monetization: BookOpenIcon,
-  youtube_content: AcademicCapIcon,
-  youtube_analytics: GlobeAmericasIcon,
-};
 
 export default function CategoriesScreen() {
   const { t } = useLanguage();
@@ -27,14 +16,13 @@ export default function CategoriesScreen() {
     const readableName = categoryId
       .replace(/_/g, ' ')
       .replace(/\b\w/g, (c) => c.toUpperCase());
-    const finalDescription = `Questions about ${readableName}`;
+    const finalDescription = t('dashboard.categoryDescription', { category: readableName });
 
     return {
       id: categoryId,
       description: finalDescription,
       locked: false, // You can implement logic for locked categories later
       questionCount: questionCounts[categoryId] || 0,
-      icon: categoryIcons[categoryId] || BookOpenIcon,
     };
   });
 
@@ -67,7 +55,7 @@ export default function CategoriesScreen() {
         </div>
         
         {/* Category Cards Grid */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Category Cards */}
           {categories.map((category) => (
             <CategoryCard

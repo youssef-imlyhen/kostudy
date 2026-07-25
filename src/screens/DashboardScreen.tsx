@@ -13,7 +13,8 @@ import { ChevronRightIcon } from '@heroicons/react/24/solid';
 import { getCategories, getQuestionsCountByCategory } from '../data/questions';
 import { useLanguage } from '../context/LanguageContext';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { Mistakes, getTotalUniqueMistakes } from '../utils/mistakes';
+import { Mistakes, getTotalUniqueMistakes, getUniqueMistakes } from '../utils/mistakes';
+import { useAchievements } from '../hooks/useAchievements';
 import Header from '../components/Header';
 import Card from '../components/Card';
 import CategoryCard from '../components/CategoryCard';
@@ -23,7 +24,23 @@ const MAX_CATEGORIES_DISPLAYED = 4;
 export default function DashboardScreen() {
   const { t } = useLanguage();
   const [mistakes] = useLocalStorage<Mistakes>('quizMistakes', {});
+  const { progress } = useAchievements();
   const totalMistakes = getTotalUniqueMistakes(mistakes);
+  const uniqueMistakes = getUniqueMistakes(Object.values(mistakes).flat());
+  const accuracy = progress.questionsAnswered > 0
+    ? Math.round((progress.correctAnswers / progress.questionsAnswered) * 100)
+    : 0;
+  const hasActivity = progress.questionsAnswered > 0;
+  const reviewMinutes = Math.max(3, Math.ceil(Math.min(totalMistakes, 12) * 0.75));
+  const mistakesByCategory = uniqueMistakes.reduce<Record<string, number>>((counts, mistake) => {
+    counts[mistake.category] = (counts[mistake.category] || 0) + 1;
+    return counts;
+  }, {});
+  const weakestCategoryId = Object.entries(mistakesByCategory)
+    .sort(([, a], [, b]) => b - a)[0]?.[0];
+  const weakestCategory = weakestCategoryId
+    ? weakestCategoryId.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+    : '';
 
   const questionCounts = getQuestionsCountByCategory();
   const allCategories = getCategories().map((categoryId) => {
@@ -33,8 +50,7 @@ export default function DashboardScreen() {
     return {
       id: categoryId,
       name: readableName,
-      // Always use direct English description without localization lookup
-      description: `Questions about ${readableName}`,
+      description: t('dashboard.categoryDescription', { category: readableName }),
       questionCount: questionCounts[categoryId] || 0,
       icon: BookOpenIcon,
     };
@@ -55,6 +71,12 @@ export default function DashboardScreen() {
 
             
             <div className="grid grid-cols-1 gap-4">
+              <div className="section-header-content">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-primary">{t('dashboard.studyNext')}</p>
+                  <h2 className="section-header-title text-lg sm:text-xl mt-1">{totalMistakes > 0 ? t('dashboard.strengthenWeakSpots') : t('dashboard.keepMomentum')}</h2>
+                </div>
+              </div>
               {totalMistakes > 0 ? (
                 <Link to="/mistakes">
                   <Card variant="interactive" className="group border border-error/20 bg-error/5">
@@ -64,7 +86,10 @@ export default function DashboardScreen() {
                       </div>
                       <div className="flex-1">
                         <h3 className="font-bold text-base-content group-hover:text-primary transition-colors">{t('dashboard.reviewMistakes')}</h3>
-                        <p className="text-sm text-base-content/70 mt-1">{totalMistakes} {t('dashboard.questionsToPractice')}</p>
+                        <p className="text-sm text-base-content/70 mt-1">
+                          {t('dashboard.reviewPlan', { count: totalMistakes, minutes: reviewMinutes })}
+                          {weakestCategory ? ` · ${t('dashboard.weakestArea', { category: weakestCategory })}` : ''}
+                        </p>
                       </div>
                       <ChevronRightIcon className="w-5 h-5 text-base-content/40 group-hover:translate-x-1 transition-transform" />
                     </div>
@@ -79,14 +104,31 @@ export default function DashboardScreen() {
                       </div>
                       <div className="flex-1">
                         <h3 className="font-bold text-base-content group-hover:text-primary transition-colors">{t('dashboard.playAll')}</h3>
-                        <p className="text-sm text-base-content/70 mt-1">{t('dashboard.playAllDesc')}</p>
+                        <p className="text-sm text-base-content/70 mt-1">{hasActivity ? t('dashboard.mixedPracticePlan') : t('dashboard.firstSessionDesc')}</p>
                       </div>
                       <ChevronRightIcon className="w-5 h-5 text-base-content/40 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </Card>
                 </Link>
               )}
-              
+
+              {hasActivity && (
+                <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                  <div className="rounded-xl bg-base-200/70 p-3 text-center">
+                    <div className="text-lg sm:text-xl font-bold text-base-content">{progress.questionsAnswered}</div>
+                    <div className="text-xs text-base-content/60 mt-1">{t('dashboard.answered')}</div>
+                  </div>
+                  <div className="rounded-xl bg-base-200/70 p-3 text-center">
+                    <div className="text-lg sm:text-xl font-bold text-base-content">{accuracy}%</div>
+                    <div className="text-xs text-base-content/60 mt-1">{t('dashboard.accuracy')}</div>
+                  </div>
+                  <div className="rounded-xl bg-base-200/70 p-3 text-center">
+                    <div className="text-lg sm:text-xl font-bold text-base-content">{progress.maxStreak}</div>
+                    <div className="text-xs text-base-content/60 mt-1">{t('dashboard.bestStreak')}</div>
+                  </div>
+                </div>
+              )}
+
               <div className="section-header-content">
               <h2 className="section-header-title text-lg sm:text-xl">{t('dashboard.learningPath')}</h2>
             </div>
