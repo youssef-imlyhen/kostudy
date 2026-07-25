@@ -70,6 +70,10 @@ export const en = {
     accuracy: "Accuracy",
     bestStreak: "Best streak",
     categoryDescription: "Practice {{category}}",
+    refreshMemory: "Refresh what is starting to fade",
+    scheduledReview: "Scheduled review",
+    dueReviewPlan: "{{count}} questions are due for memory review",
+    due: "Due",
   },
   categoriesScreen: {
     title: "Categories",
@@ -91,6 +95,7 @@ export const en = {
     continueStreak: "Continue Streak",
     loading: "Loading...",
     unsupportedQuestionType: "Unsupported question type",
+    reviewSession: "Scheduled Review",
   },
   resultsScreen: {
     title: "Results",

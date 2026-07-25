@@ -15,6 +15,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { Mistakes, getTotalUniqueMistakes, getUniqueMistakes } from '../utils/mistakes';
 import { useAchievements } from '../hooks/useAchievements';
+import { LearningState, getDueQuestionIds } from '../utils/learningState';
 import Header from '../components/Header';
 import Card from '../components/Card';
 import CategoryCard from '../components/CategoryCard';
@@ -25,6 +26,8 @@ export default function DashboardScreen() {
   const { t } = useLanguage();
   const [mistakes] = useLocalStorage<Mistakes>('quizMistakes', {});
   const { progress } = useAchievements();
+  const [learningState] = useLocalStorage<LearningState>('questionLearningState', {});
+  const dueReviews = getDueQuestionIds(learningState).length;
   const totalMistakes = getTotalUniqueMistakes(mistakes);
   const uniqueMistakes = getUniqueMistakes(Object.values(mistakes).flat());
   const accuracy = progress.questionsAnswered > 0
@@ -74,7 +77,7 @@ export default function DashboardScreen() {
               <div className="section-header-content">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wider text-primary">{t('dashboard.studyNext')}</p>
-                  <h2 className="section-header-title text-lg sm:text-xl mt-1">{totalMistakes > 0 ? t('dashboard.strengthenWeakSpots') : t('dashboard.keepMomentum')}</h2>
+                  <h2 className="section-header-title text-lg sm:text-xl mt-1">{totalMistakes > 0 ? t('dashboard.strengthenWeakSpots') : dueReviews > 0 ? t('dashboard.refreshMemory') : t('dashboard.keepMomentum')}</h2>
                 </div>
               </div>
               {totalMistakes > 0 ? (
@@ -90,6 +93,21 @@ export default function DashboardScreen() {
                           {t('dashboard.reviewPlan', { count: totalMistakes, minutes: reviewMinutes })}
                           {weakestCategory ? ` · ${t('dashboard.weakestArea', { category: weakestCategory })}` : ''}
                         </p>
+                      </div>
+                      <ChevronRightIcon className="w-5 h-5 text-base-content/40 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </Card>
+                </Link>
+              ) : dueReviews > 0 ? (
+                <Link to="/quiz?mode=review">
+                  <Card variant="interactive" className="group border border-primary/20 bg-primary/5">
+                    <div className="flex items-center">
+                      <div className="p-3 bg-primary/10 rounded-xl mr-4">
+                        <ArrowPathIcon className="w-6 h-6 text-primary" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-bold text-base-content group-hover:text-primary transition-colors">{t('dashboard.scheduledReview')}</h3>
+                        <p className="text-sm text-base-content/70 mt-1">{t('dashboard.dueReviewPlan', { count: dueReviews })}</p>
                       </div>
                       <ChevronRightIcon className="w-5 h-5 text-base-content/40 group-hover:translate-x-1 transition-transform" />
                     </div>
@@ -113,7 +131,7 @@ export default function DashboardScreen() {
               )}
 
               {hasActivity && (
-                <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
                   <div className="rounded-xl bg-base-200/70 p-3 text-center">
                     <div className="text-lg sm:text-xl font-bold text-base-content">{progress.questionsAnswered}</div>
                     <div className="text-xs text-base-content/60 mt-1">{t('dashboard.answered')}</div>
@@ -125,6 +143,10 @@ export default function DashboardScreen() {
                   <div className="rounded-xl bg-base-200/70 p-3 text-center">
                     <div className="text-lg sm:text-xl font-bold text-base-content">{progress.maxStreak}</div>
                     <div className="text-xs text-base-content/60 mt-1">{t('dashboard.bestStreak')}</div>
+                  </div>
+                  <div className="rounded-xl bg-base-200/70 p-3 text-center">
+                    <div className="text-lg sm:text-xl font-bold text-base-content">{dueReviews}</div>
+                    <div className="text-xs text-base-content/60 mt-1">{t('dashboard.due')}</div>
                   </div>
                 </div>
               )}

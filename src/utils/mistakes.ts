@@ -2,7 +2,7 @@ export interface Mistake {
   questionId: string;
   category: string;
   difficulty: string;
-  selectedAnswer: string;
+  selectedAnswer: string | string[];
   timestamp: number;
 }
 

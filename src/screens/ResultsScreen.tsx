@@ -5,7 +5,6 @@ import { useQuiz } from '../context/QuizContext';
 import { Question } from '../types/question';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useLanguage } from '../context/LanguageContext';
-import { useAchievements } from '../hooks/useAchievements';
 import Header from '../components/Header';
 import soundManager from '../utils/soundManager';
 import { Mistake, Mistakes, getUniqueMistakes } from '../utils/mistakes';
@@ -13,13 +12,13 @@ import { Mistake, Mistakes, getUniqueMistakes } from '../utils/mistakes';
 interface LocationState {
   score?: number;
   total?: number;
-  answers?: { [key: string]: string };
+  answers?: { [key: string]: string | string[] };
   questions?: Question[];
   playAllMode?: boolean;
   finalStreak?: number;
   maxStreak?: number;
   lastQuestion?: Question;
-  lastAnswer?: string;
+  lastAnswer?: string | string[];
   incorrectQuestionIds?: string[];
 }
 
@@ -29,7 +28,6 @@ export default function ResultsScreen() {
   const location = useLocation();
   const { currentQuiz } = useQuiz();
   const { t } = useLanguage();
-  const { updateProgress } = useAchievements();
   const [, setMistakes] = useLocalStorage<Mistakes>('quizMistakes', {});
   const mistakesSaved = useRef(false);
   const [soundEnabled] = useLocalStorage<boolean>('soundEnabled', true);
@@ -153,7 +151,6 @@ export default function ResultsScreen() {
   const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
   const wrongAnswers = total - score;
   const rightAnswers = score;
-  const isPerfectScore = percentage === 100 && total >= 10;
 
   // Save mistakes for review - only questions that were incorrect during the quiz
   useEffect(() => {
@@ -182,15 +179,7 @@ export default function ResultsScreen() {
 
     mistakesSaved.current = true;
 
-    // Update achievement progress
-    updateProgress({
-      questionsAnswered: total,
-      correctAnswers: rightAnswers,
-      category: currentQuiz?.category,
-      isPerfectScore: isPerfectScore,
-      streak: currentQuiz?.currentStreak
-    });
-  }, [currentQuiz?.category, currentQuiz?.currentStreak, questions, answers, setMistakes, incorrectQuestionIds, total, rightAnswers, isPerfectScore, updateProgress]);
+  }, [currentQuiz?.category, currentQuiz?.currentStreak, questions, answers, setMistakes, incorrectQuestionIds, total, rightAnswers]);
 
   const handleNextLevel = () => {
     const category = currentQuiz?.category;

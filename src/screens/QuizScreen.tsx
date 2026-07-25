@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { useQuiz } from '../context/QuizContext';
@@ -15,6 +15,7 @@ import FillInTheBlankDisplay from '../components/question-types/FillInTheBlankDi
 import Header from '../components/Header';
 import soundManager from '../utils/soundManager';
 import { useAchievements } from '../hooks/useAchievements';
+import { LearningState, getDueQuestionIds, recordQuestionAttempt } from '../utils/learningState';
 
 interface Progress {
   [key: string]: {
@@ -37,12 +38,13 @@ export default function QuizScreen() {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { getQuestionsByCategory, getRandomQuestions } = useQuestions();
+  const { allQuestions, getQuestionsByCategory, getRandomQuestions } = useQuestions();
   const { currentQuiz, setCurrentQuiz } = useQuiz();
   const [progress, setProgress] = useLocalStorage<Progress>('quizProgress', {});
   const [mistakes, setMistakes] = useLocalStorage<{ [key: string]: Mistake[] }>('quizMistakes', {});
   const [maxStreak, setMaxStreak] = useLocalStorage<number>('maxStreak', 0);
   const [soundEnabled] = useLocalStorage<boolean>('soundEnabled', true);
+  const [learningState, setLearningState] = useLocalStorage<LearningState>('questionLearningState', {});
   const { updateProgress } = useAchievements();
 
   // State
@@ -56,9 +58,11 @@ export default function QuizScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [incorrectAnswers, setIncorrectAnswers] = useState<Set<string>>(new Set());
   const [questionStartTime, setQuestionStartTime] = useState<number>(Date.now());
+  const reviewQuestionIds = useRef<string[] | null>(null);
 
   // Check modes
   const isMistakesMode = searchParams.get('mode') === 'mistakes';
+  const isReviewMode = searchParams.get('mode') === 'review';
   const isPlayAllMode = window.location.pathname === '/play-all';
 
   // Load questions based on mode
@@ -68,6 +72,12 @@ export default function QuizScreen() {
       const randomQuestion = getRandomQuestions(1);
       setQuestions(randomQuestion);
       setCurrentStreak(0);
+    } else if (isReviewMode) {
+      if (reviewQuestionIds.current === null) {
+        reviewQuestionIds.current = getDueQuestionIds(learningState);
+      }
+      const dueSet = new Set(reviewQuestionIds.current);
+      setQuestions(allQuestions.filter(question => dueSet.has(question.id)).slice(0, 12));
     } else if (isMistakesMode) {
       const mistakesJson = sessionStorage.getItem('currentMistakes');
       if (!mistakesJson) {
@@ -89,13 +99,13 @@ export default function QuizScreen() {
       setQuestions(shuffled.slice(0, 10));
     }
     setIsLoading(false);
-  }, [currentQuiz.category, currentQuiz.difficulty, isMistakesMode, isPlayAllMode, navigate, setCurrentQuiz]);
+  }, [currentQuiz.category, currentQuiz.difficulty, isMistakesMode, isReviewMode, isPlayAllMode, navigate, setCurrentQuiz, allQuestions]);
 
   useEffect(() => {
     if (!isLoading && questions.length === 0) {
-      navigate(isMistakesMode ? '/mistakes' : '/categories');
+      navigate(isMistakesMode ? '/mistakes' : isReviewMode ? '/dashboard' : '/categories');
     }
-  }, [isLoading, questions, navigate, isMistakesMode]);
+  }, [isLoading, questions, navigate, isMistakesMode, isReviewMode]);
 
   useEffect(() => {
     // Reset timer whenever the current question changes
@@ -135,6 +145,7 @@ export default function QuizScreen() {
     setShowAnswerResult(false);
 
     const isCorrect = isAnswerCorrect(currentQuestion, finalAnswer);
+    setLearningState(prev => recordQuestionAttempt(prev, currentQuestion.id, isCorrect));
 
     // Track incorrect answers in real-time
     if (!isCorrect && !isPlayAllMode && !isMistakesMode) {
@@ -192,6 +203,19 @@ export default function QuizScreen() {
             lastAnswer: finalAnswer
           }
         });
+      }
+    } else if (isReviewMode) {
+      updateProgress({
+        questionsAnswered: 1,
+        correctAnswers: isCorrect ? 1 : 0,
+        timeToAnswerSec,
+      });
+
+      if (currentQuestionIndex < questions.length - 1) {
+        setCurrentQuestionIndex(prev => prev + 1);
+        setSelectedAnswer(null);
+      } else {
+        navigate('/dashboard');
       }
     } else if (!isMistakesMode) {
       const category = currentQuiz.category || '';
@@ -438,7 +462,7 @@ export default function QuizScreen() {
 
   return (
     <div className="min-h-screen bg-base-200 pt-4 pb-20">
-      <Header title={isPlayAllMode ? t('dashboard.playAll') : isMistakesMode ? t('mistakesScreen.title') : `${currentQuiz.category ? currentQuiz.category.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Quiz'} ${currentQuiz.difficulty ? `- ${currentQuiz.difficulty.charAt(0).toUpperCase() + currentQuiz.difficulty.slice(1)}` : ''}`} />
+      <Header title={isPlayAllMode ? t('dashboard.playAll') : isReviewMode ? t('quizScreen.reviewSession') : isMistakesMode ? t('mistakesScreen.title') : `${currentQuiz.category ? currentQuiz.category.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Quiz'} ${currentQuiz.difficulty ? `- ${currentQuiz.difficulty.charAt(0).toUpperCase() + currentQuiz.difficulty.slice(1)}` : ''}`} />
 
       {/* Question Number Indicator */}
       <div className="flex justify-center mb-6">
