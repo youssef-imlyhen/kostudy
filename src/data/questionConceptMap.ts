@@ -10,3 +10,7 @@ export const questionConceptMap: Record<string, string[]> = {
   yt_aa_5: ['ctr', 'retention-curve', 'diagnostic-thinking'],
   yt_sh_1: ['viewer-expectation'],
 };
+
+export const getQuestionIdsForConcept = (conceptId: string): string[] => Object.entries(questionConceptMap)
+  .filter(([, conceptIds]) => conceptIds.includes(conceptId))
+  .map(([questionId]) => questionId);
