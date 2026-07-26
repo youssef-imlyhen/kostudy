@@ -28,23 +28,60 @@ const extractJson = (text: string) => {
 
 const normalizeBlocks = (raw: unknown): LessonBlock[] => {
   if (!Array.isArray(raw)) return [];
-  return raw.slice(0, 10).flatMap((value, index) => {
-    if (!value || typeof value !== 'object') return [];
+  const blocks: LessonBlock[] = [];
+
+  raw.slice(0, 10).forEach((value, index) => {
+    if (!value || typeof value !== 'object') return;
     const item = value as Record<string, unknown>;
     const type = cleanText(item.type);
-    if (!allowedBlockTypes.has(type)) return [];
+    if (!allowedBlockTypes.has(type)) return;
     const id = cleanText(item.id, `step-${index + 1}`).replace(/[^a-zA-Z0-9_-]/g, '-');
     const title = cleanText(item.title, `Step ${index + 1}`);
     const eyebrow = cleanText(item.eyebrow) || undefined;
-    if (type === 'explain') return [{ id, type, title, eyebrow, body: cleanText(item.body), bullets: Array.isArray(item.bullets) ? item.bullets.filter((x): x is string => typeof x === 'string').slice(0, 5) : undefined }];
-    if (type === 'interactive') { const visual = cleanText(item.visual) as LessonVisualId; return allowedVisuals.has(visual) ? [{ id, type, title, eyebrow, body: cleanText(item.body), visual, challenge: cleanText(item.challenge) || undefined }] : []; }
-    if (type === 'checkpoint') { const options = Array.isArray(item.options) ? item.options.filter((x): x is string => typeof x === 'string').slice(0, 5) : []; const correctAnswer = cleanText(item.correctAnswer); if (options.length < 2 || !options.includes(correctAnswer)) return []; return [{ id, type, title, eyebrow, prompt: cleanText(item.prompt), options, correctAnswer, explanation: cleanText(item.explanation), conceptIds: Array.isArray(item.conceptIds) ? item.conceptIds.filter((x): x is string => typeof x === 'string').slice(0, 6) : [] }]; }
-    if (type === 'reflection') return [{ id, type, title, eyebrow, prompt: cleanText(item.prompt), placeholder: cleanText(item.placeholder) || undefined }];
-    if (type === 'takeaways') return [{ id, type, title, eyebrow, items: Array.isArray(item.items) ? item.items.filter((x): x is string => typeof x === 'string').slice(0, 7) : [] }];
-    if (type === 'compare') { const left = item.left as Record<string, unknown> | undefined; const right = item.right as Record<string, unknown> | undefined; if (!left || !right) return []; return [{ id, type, title, eyebrow, prompt: cleanText(item.prompt) || undefined, left: { label: cleanText(left.label, 'A'), body: cleanText(left.body) }, right: { label: cleanText(right.label, 'B'), body: cleanText(right.body) } }]; }
-    if (type === 'resources') return [{ id, type, title, eyebrow, body: cleanText(item.body) || undefined, sourceIds: Array.isArray(item.sourceIds) ? item.sourceIds.filter((x): x is string => typeof x === 'string').slice(0, 12) : [] }];
-    return [];
+
+    if (type === 'explain') {
+      blocks.push({ id, type: 'explain', title, eyebrow, body: cleanText(item.body), bullets: Array.isArray(item.bullets) ? item.bullets.filter((x): x is string => typeof x === 'string').slice(0, 5) : undefined });
+      return;
+    }
+
+    if (type === 'interactive') {
+      const visual = cleanText(item.visual) as LessonVisualId;
+      if (allowedVisuals.has(visual)) blocks.push({ id, type: 'interactive', title, eyebrow, body: cleanText(item.body), visual, challenge: cleanText(item.challenge) || undefined });
+      return;
+    }
+
+    if (type === 'checkpoint') {
+      const options = Array.isArray(item.options) ? item.options.filter((x): x is string => typeof x === 'string').slice(0, 5) : [];
+      const correctAnswer = cleanText(item.correctAnswer);
+      if (options.length >= 2 && options.includes(correctAnswer)) {
+        blocks.push({ id, type: 'checkpoint', title, eyebrow, prompt: cleanText(item.prompt), options, correctAnswer, explanation: cleanText(item.explanation), conceptIds: Array.isArray(item.conceptIds) ? item.conceptIds.filter((x): x is string => typeof x === 'string').slice(0, 6) : [] });
+      }
+      return;
+    }
+
+    if (type === 'reflection') {
+      blocks.push({ id, type: 'reflection', title, eyebrow, prompt: cleanText(item.prompt), placeholder: cleanText(item.placeholder) || undefined });
+      return;
+    }
+
+    if (type === 'takeaways') {
+      blocks.push({ id, type: 'takeaways', title, eyebrow, items: Array.isArray(item.items) ? item.items.filter((x): x is string => typeof x === 'string').slice(0, 7) : [] });
+      return;
+    }
+
+    if (type === 'compare') {
+      const left = item.left as Record<string, unknown> | undefined;
+      const right = item.right as Record<string, unknown> | undefined;
+      if (left && right) blocks.push({ id, type: 'compare', title, eyebrow, prompt: cleanText(item.prompt) || undefined, left: { label: cleanText(left.label, 'A'), body: cleanText(left.body) }, right: { label: cleanText(right.label, 'B'), body: cleanText(right.body) } });
+      return;
+    }
+
+    if (type === 'resources') {
+      blocks.push({ id, type: 'resources', title, eyebrow, body: cleanText(item.body) || undefined, sourceIds: Array.isArray(item.sourceIds) ? item.sourceIds.filter((x): x is string => typeof x === 'string').slice(0, 12) : [] });
+    }
   });
+
+  return blocks;
 };
 
 export default function LessonCreatorScreen() {
