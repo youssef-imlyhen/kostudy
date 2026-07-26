@@ -1,0 +1,9 @@
+import { useMemo, useState } from 'react';
+
+export default function ClickFunnelLab() {
+  const [impressions, setImpressions] = useState(10000);
+  const [ctr, setCtr] = useState(4);
+  const clicks = useMemo(() => Math.round(impressions * (ctr / 100)), [impressions, ctr]);
+  const clickWidth = Math.max(8, Math.min(100, ctr * 5));
+  return <div className="space-y-6"><div className="grid gap-4 sm:grid-cols-2"><label className="space-y-2"><span className="flex justify-between text-sm font-medium"><span>Impressions</span><span>{impressions.toLocaleString()}</span></span><input className="range range-primary range-sm" type="range" min="1000" max="100000" step="1000" value={impressions} onChange={(event) => setImpressions(Number(event.target.value))} /></label><label className="space-y-2"><span className="flex justify-between text-sm font-medium"><span>CTR</span><span>{ctr.toFixed(1)}%</span></span><input className="range range-secondary range-sm" type="range" min="1" max="15" step="0.5" value={ctr} onChange={(event) => setCtr(Number(event.target.value))} /></label></div><div className="rounded-3xl bg-base-200/70 p-5 sm:p-7"><div className="mx-auto max-w-xl space-y-3 text-center"><div className="rounded-2xl bg-primary/10 px-4 py-4 font-semibold">{impressions.toLocaleString()} eligible impressions</div><div className="text-base-content/40">↓</div><div className="mx-auto rounded-2xl bg-secondary/15 px-4 py-4 transition-all" style={{ width: `${clickWidth}%`, minWidth: '9rem' }}><div className="text-2xl font-black">≈ {clicks.toLocaleString()}</div><div className="text-xs text-base-content/70">impression-originated clicks</div></div></div></div><p className="text-xs leading-5 text-base-content/60">This isolates one relationship for intuition. It does not forecast channel performance or imply that maximizing CTR is the only objective.</p></div>;
+}

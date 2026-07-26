@@ -1,75 +1,16 @@
 import { Link } from 'react-router-dom';
 import { FireIcon } from '@heroicons/react/24/outline';
+import { lessons } from '../data/lessons';
 import { useQuestions } from '../hooks/useQuestions';
 import { useLanguage } from '../context/LanguageContext';
+import { useLocalStorage } from '../hooks/useLocalStorage';
+import { LessonProgressState, getLessonCompletion, getMostRecentLessonId } from '../utils/lessonProgress';
 import Header from '../components/Header';
 import Card from '../components/Card';
 import CategoryCard from '../components/CategoryCard';
-
+import LessonCard from '../components/lessons/LessonCard';
 
 export default function CategoriesScreen() {
-  const { t } = useLanguage();
-  const { getCategories, getQuestionsCountByCategory } = useQuestions();
-  // Get categories from questions data
-  const questionCounts = getQuestionsCountByCategory();
-  const categories = getCategories().map((categoryId) => {
-    const readableName = categoryId
-      .replace(/_/g, ' ')
-      .replace(/\b\w/g, (c) => c.toUpperCase());
-    const finalDescription = t('dashboard.categoryDescription', { category: readableName });
-
-    return {
-      id: categoryId,
-      description: finalDescription,
-      locked: false, // You can implement logic for locked categories later
-      questionCount: questionCounts[categoryId] || 0,
-    };
-  });
-
-  return (
-    <div className="pt-4 pb-20">
-      <Header title={t('categoriesScreen.title')} />
-
-      {/* Categories Grid */}
-      <div className="pb-4">
-        {/* Play All Card */}
-        <div className="mb-4">
-          <Link to="/play-all" className="block">
-            <Card variant="interactive" className="group bg-gradient-to-r from-primary/10 to-secondary/10 border-primary/20 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 transform translate-x-1/2 -translate-y-1/2">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full animate-pulse-slow" />
-              </div>
-              <div className="flex items-center space-x-4 relative z-10">
-                <div className="p-3 bg-gradient-to-br from-primary to-secondary rounded-xl">
-                  <FireIcon className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-base-content text-lg sm:text-xl">{t('dashboard.playAll')}</h3>
-                  <p className="text-base-content/80 mt-1 text-sm sm:text-base">
-                    {t('dashboard.playAllDesc')}
-                  </p>
-                </div>
-              </div>
-            </Card>
-          </Link>
-        </div>
-        
-        {/* Category Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* Category Cards */}
-          {categories.map((category) => (
-            <CategoryCard
-              key={category.id}
-              id={category.id}
-              title={category.id.charAt(0).toUpperCase() + category.id.slice(1).replace(/_/g, ' ')}
-              description={category.description}
-              questionCount={category.questionCount}
-              locked={category.locked}
-              size="small"
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+  const { t } = useLanguage(); const { getCategories, getQuestionsCountByCategory } = useQuestions(); const [lessonProgress] = useLocalStorage<LessonProgressState>('lessonProgress', {}); const counts = getQuestionsCountByCategory(); const recentId = getMostRecentLessonId(lessonProgress); const recent = lessons.find((lesson) => lesson.id === recentId); const categories = getCategories().map((id) => ({ id, questionCount: counts[id] || 0 }));
+  return <div className="pb-24 pt-4"><Header title={t('nav.categories')} /><div className="space-y-9 pb-4">{recent && <section><p className="text-xs font-semibold uppercase tracking-wider text-primary">Continue</p><h2 className="mt-1 mb-3 text-xl font-bold">Pick up where you stopped</h2><LessonCard lesson={recent} completion={getLessonCompletion(recent,lessonProgress[recent.id])} compact /></section>}<section><div className="mb-4"><p className="text-xs font-semibold uppercase tracking-wider text-primary">Lessons</p><h2 className="mt-1 text-xl font-bold">Understand before you drill</h2><p className="mt-1 max-w-2xl text-sm leading-6 text-base-content/65">Short explanations, coded visuals, experiments, media, checkpoints, and reflection.</p></div><div className="grid grid-cols-1 gap-4 md:grid-cols-2">{lessons.map((lesson) => <LessonCard key={lesson.id} lesson={lesson} completion={getLessonCompletion(lesson,lessonProgress[lesson.id])} />)}</div></section><section><div className="mb-4"><p className="text-xs font-semibold uppercase tracking-wider text-secondary">Practice</p><h2 className="mt-1 text-xl font-bold">Retrieve what you know</h2><p className="mt-1 text-sm leading-6 text-base-content/65">Questions are practice, not the curriculum. Use them to expose weak spots and schedule future recall.</p></div><Link to="/play-all" className="mb-4 block"><Card variant="interactive" className="group border-primary/15 bg-primary/5"><div className="flex items-center gap-4"><div className="rounded-xl bg-primary/10 p-3"><FireIcon className="h-6 w-6 text-primary" /></div><div><h3 className="font-bold">Mixed practice</h3><p className="mt-1 text-sm text-base-content/65">Mix topics to make recall less dependent on context.</p></div></div></Card></Link><div className="grid grid-cols-1 gap-4 sm:grid-cols-2">{categories.map((category) => <CategoryCard key={category.id} id={category.id} title={category.id.replace(/_/g,' ')} description={t('dashboard.categoryDescription',{category:category.id.replace(/_/g,' ')})} questionCount={category.questionCount} size="small" />)}</div></section></div></div>;
 }

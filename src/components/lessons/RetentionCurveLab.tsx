@@ -1,0 +1,9 @@
+import { useMemo, useState } from 'react';
+
+export default function RetentionCurveLab() {
+  const [early, setEarly] = useState(72);
+  const [late, setLate] = useState(42);
+  const safeLate = Math.min(late, early - 5);
+  const points = useMemo(() => { const values = [100, early, Math.max(safeLate + 12, Math.round((early + safeLate) / 2)), safeLate]; return values.map((value, index) => `${index * 33.33},${100 - value}`).join(' '); }, [early, safeLate]);
+  return <div className="space-y-5"><div className="grid gap-4 sm:grid-cols-2"><label className="space-y-2"><span className="flex justify-between text-sm font-medium"><span>After opening</span><span>{early}%</span></span><input className="range range-primary range-sm" type="range" min="35" max="95" value={early} onChange={(event) => setEarly(Number(event.target.value))} /></label><label className="space-y-2"><span className="flex justify-between text-sm font-medium"><span>Near ending</span><span>{safeLate}%</span></span><input className="range range-secondary range-sm" type="range" min="10" max={Math.max(10, early - 5)} value={safeLate} onChange={(event) => setLate(Number(event.target.value))} /></label></div><div className="rounded-3xl bg-base-200/70 p-4 sm:p-6"><svg viewBox="0 0 100 105" className="h-52 w-full overflow-visible" role="img" aria-label="Illustrative retention curve">{[25,50,75,100].map((value) => <line key={value} x1="0" x2="100" y1={100-value} y2={100-value} className="stroke-base-content/10" strokeWidth="0.5" />)}<polyline points={points} fill="none" className="stroke-primary" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" /><text x="0" y="104" className="fill-base-content/50 text-[4px]">start</text><text x="87" y="104" className="fill-base-content/50 text-[4px]">ending</text></svg></div><p className="text-xs leading-5 text-base-content/60">This is a shape builder, not a benchmark. Real retention is evidence for investigation, not a universal grade.</p></div>;
+}
