@@ -22,7 +22,6 @@ interface LocationState {
   incorrectQuestionIds?: string[];
 }
 
-
 export default function ResultsScreen() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -31,23 +30,18 @@ export default function ResultsScreen() {
   const [, setMistakes] = useLocalStorage<Mistakes>('quizMistakes', {});
   const mistakesSaved = useRef(false);
   const [soundEnabled] = useLocalStorage<boolean>('soundEnabled', true);
-
   const state = location.state as LocationState;
 
   useEffect(() => {
-    // If state is missing, or if it's not playAllMode and is missing regular quiz data, navigate away.
     if (!state || (!state.playAllMode && (state.score === undefined || state.total === undefined || !state.answers || !state.questions))) {
       navigate('/categories');
     }
   }, [state, navigate]);
 
-  // Play sound effect when results screen loads
   useEffect(() => {
     if (soundEnabled && state && !state.playAllMode) {
       const percentage = state.total ? Math.round((state.score || 0) / state.total * 100) : 0;
-      if (percentage >= 70) {
-        soundManager.play('levelComplete');
-      }
+      if (percentage >= 70) soundManager.play('levelComplete');
     } else if (soundEnabled && state && state.playAllMode) {
       soundManager.play('levelComplete');
     }
@@ -55,7 +49,6 @@ export default function ResultsScreen() {
 
   useEffect(() => {
     if (!state?.playAllMode || !state.lastQuestion || !state.lastAnswer || mistakesSaved.current) return;
-
     const mistake: Mistake = {
       questionId: state.lastQuestion.id,
       category: state.lastQuestion.category,
@@ -63,226 +56,73 @@ export default function ResultsScreen() {
       selectedAnswer: state.lastAnswer,
       timestamp: Date.now(),
     };
-
-    setMistakes(prev => {
-      const categoryMistakes = prev[mistake.category] || [];
-      return {
-        ...prev,
-        [mistake.category]: getUniqueMistakes([...categoryMistakes, mistake]),
-      };
+    setMistakes((previous) => {
+      const categoryMistakes = previous[mistake.category] || [];
+      return { ...previous, [mistake.category]: getUniqueMistakes([...categoryMistakes, mistake]) };
     });
     mistakesSaved.current = true;
   }, [state?.playAllMode, state?.lastQuestion, state?.lastAnswer, setMistakes]);
 
-  // Render nothing if the state is invalid, the effect will handle the redirect.
-  if (!state || (!state.playAllMode && (state.score === undefined || state.total === undefined || !state.answers || !state.questions))) {
-    return null;
-  }
+  if (!state || (!state.playAllMode && (state.score === undefined || state.total === undefined || !state.answers || !state.questions))) return null;
 
-  // Handle play-all mode results
   if (state.playAllMode) {
-    const { finalStreak = 0, maxStreak = 0, lastQuestion, lastAnswer } = state;
-
-
+    const { finalStreak = 0, maxStreak = 0 } = state;
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen px-4 py-8 -mt-16">
+      <div className="flex min-h-screen flex-col items-center justify-center px-4 py-8 -mt-16">
         <Header title={t('resultsScreen.title')} />
-
-        {/* Trophy Icon */}
-        <div className="mb-4">
-          <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center">
-            <TrophyIcon className="w-12 h-12 text-primary" />
-          </div>
+        <div className="mb-4"><div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10"><TrophyIcon className="h-12 w-12 text-primary" /></div></div>
+        <h1 className="mb-4 text-center text-2xl font-bold text-base-content">{t('resultsScreen.streakOver')}</h1>
+        <div className="mb-8 w-full max-w-sm space-y-6">
+          <div className="flex flex-col items-center space-y-2"><span className="text-4xl font-bold text-primary">{finalStreak}</span><span className="text-base-content/80">{t('resultsScreen.questionsAnsweredCorrectly')}</span></div>
+          {maxStreak === finalStreak && maxStreak > 0 && <div className="rounded-2xl border-2 border-b-4 border-accent bg-accent/10 p-4 text-center"><span className="font-bold text-accent">🎉 {t('resultsScreen.newPersonalBest')} 🎉</span></div>}
+          <div className="rounded-2xl border-2 border-b-4 border-base-300 bg-base-100 p-4 text-center"><span className="text-base-content/80">{t('resultsScreen.personalBest')}: </span><span className="font-bold text-base-content">{maxStreak}</span></div>
         </div>
-
-        {/* Title */}
-        <h1 className="text-2xl font-bold text-base-content text-center mb-4">
-          {t('resultsScreen.streakOver')}
-        </h1>
-
-        {/* Results */}
-        <div className="w-full max-w-sm space-y-6 mb-8">
-          <div className="flex flex-col items-center space-y-2">
-            <span className="text-4xl font-bold text-primary">{finalStreak}</span>
-            <span className="text-base-content/80">{t('resultsScreen.questionsAnsweredCorrectly')}</span>
-          </div>
-
-          {maxStreak === finalStreak && maxStreak > 0 && (
-            <div className="bg-accent/10 rounded-2xl p-4 text-center border-2 border-b-4 border-accent">
-              <span className="text-accent font-bold">
-                🎉 {t('resultsScreen.newPersonalBest')} 🎉
-              </span>
-            </div>
-          )}
-
-          <div className="bg-base-100 rounded-2xl p-4 text-center border-2 border-b-4 border-base-300">
-            <span className="text-base-content/80">{t('resultsScreen.personalBest')}: </span>
-            <span className="text-base-content font-bold">{maxStreak}</span>
-          </div>
-        </div>
-
-        {/* Buttons */}
-        <div className="w-full max-w-sm space-y-4">
-          <button
-            onClick={() => navigate('/play-all')}
-            className="btn btn-primary rounded-2xl font-bold border-2 border-b-4 w-full"
-          >
-            {t('resultsScreen.tryAgain')}
-          </button>
-          <button
-            onClick={() => navigate('/categories')}
-            className="btn btn-ghost rounded-2xl font-bold border-2 border-b-4 w-full"
-          >
-            {t('resultsScreen.backToCategories')}
-          </button>
-        </div>
+        <div className="w-full max-w-sm space-y-4"><button onClick={() => navigate('/play-all')} className="btn btn-primary w-full rounded-2xl border-2 border-b-4 font-bold">{t('resultsScreen.tryAgain')}</button><button onClick={() => navigate('/categories')} className="btn btn-ghost w-full rounded-2xl border-2 border-b-4 font-bold">{t('resultsScreen.backToCategories')}</button></div>
       </div>
     );
   }
 
-  // Handle regular quiz results
-  const {
-    score = 0,
-    total = 0,
-    answers = {},
-    questions = [],
-    incorrectQuestionIds = [] // Get incorrect IDs from state
-  } = state;
+  const { score = 0, total = 0, answers = {}, questions = [], incorrectQuestionIds = [] } = state;
   const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
   const wrongAnswers = total - score;
   const rightAnswers = score;
 
-  // Save mistakes for review - only questions that were incorrect during the quiz
   useEffect(() => {
     const category = currentQuiz?.category;
     if (!category || mistakesSaved.current) return;
-
     const currentMistakes = questions
-      .filter(q => incorrectQuestionIds.includes(q.id)) // Only include questions that were incorrect during the quiz
-      .map(q => ({
-        questionId: q.id,
-        category: q.category,
-        difficulty: q.difficulty,
-        selectedAnswer: answers[q.id] || '',
-        timestamp: Date.now(),
-      }));
-
+      .filter((question) => incorrectQuestionIds.includes(question.id))
+      .map((question) => ({ questionId: question.id, category: question.category, difficulty: question.difficulty, selectedAnswer: answers[question.id] || '', timestamp: Date.now() }));
     if (currentMistakes.length > 0) {
-      setMistakes(prev => {
-        const categoryMistakes = prev[category] || [];
-        return {
-          ...prev,
-          [category]: getUniqueMistakes([...categoryMistakes, ...currentMistakes])
-        };
+      setMistakes((previous) => {
+        const categoryMistakes = previous[category] || [];
+        return { ...previous, [category]: getUniqueMistakes([...categoryMistakes, ...currentMistakes]) };
       });
     }
-
     mistakesSaved.current = true;
-
-  }, [currentQuiz?.category, currentQuiz?.currentStreak, questions, answers, setMistakes, incorrectQuestionIds, total, rightAnswers]);
+  }, [currentQuiz?.category, questions, answers, setMistakes, incorrectQuestionIds]);
 
   const handleNextLevel = () => {
     const category = currentQuiz?.category;
-    if (!category) {
-      navigate('/categories');
-      return;
-    }
-    navigate(`/categories/${category}`);
+    navigate(category ? `/categories/${category}` : '/categories');
   };
 
   const difficulty = currentQuiz?.difficulty || 'unknown';
   const difficultyDisplay = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-4 py-8 -mt-16">
+    <div className="flex min-h-screen flex-col items-center justify-center px-4 py-8 -mt-16">
       <Header title={t('resultsScreen.title')} />
-
-      {/* Trophy Icon */}
-      <div className="mb-4">
-        <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center">
-          <TrophyIcon className="w-12 h-12 text-primary" />
-        </div>
+      <div className="mb-4"><div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10"><TrophyIcon className="h-12 w-12 text-primary" /></div></div>
+      <h1 className="mb-4 text-center text-2xl font-bold text-base-content">{t('resultsScreen.levelComplete', { level: difficultyDisplay })}</h1>
+      <p className="mb-8 max-w-xs text-center text-base-content/80">{percentage >= 70 ? t('resultsScreen.greatJob') : t('resultsScreen.keepPracticing')}</p>
+      <div className="mb-8 w-full max-w-sm space-y-4">
+        <div className="grid grid-cols-2 gap-4"><div className="flex items-center justify-center rounded-2xl border-2 border-b-4 border-error bg-error/20 p-4"><XMarkIcon className="mr-2 h-5 w-5 text-error" /><span className="font-bold text-error">{t('resultsScreen.incorrectAnswers', { count: wrongAnswers })}</span></div><div className="flex items-center justify-center rounded-2xl border-2 border-b-4 border-success bg-success/20 p-4"><CheckIcon className="mr-2 h-5 w-5 text-success" /><span className="font-bold text-success">{t('resultsScreen.correctAnswers', { count: rightAnswers })}</span></div></div>
+        <div className="h-4 overflow-hidden rounded-full bg-base-200"><div className="h-full rounded-full bg-primary" style={{ width: `${percentage}%` }} /></div>
+        <div className="text-center text-base-content/80">{t('resultsScreen.score')}: {percentage}%</div>
       </div>
-
-      {/* Title */}
-      <h1 className="text-2xl font-bold text-base-content text-center mb-4">
-        {t('resultsScreen.levelComplete', { level: difficultyDisplay })}
-      </h1>
-
-      {/* Message */}
-      <p className="text-base-content/80 text-center mb-8 max-w-xs">
-        {percentage >= 70
-          ? t('resultsScreen.greatJob')
-          : t('resultsScreen.keepPracticing')}
-      </p>
-
-      {/* Results Container */}
-      <div className="w-full max-w-sm space-y-4 mb-8">
-        {/* Wrong/Right Answers */}
-        <div className="grid grid-cols-2 gap-4">
-          {/* Wrong Answers */}
-          <div className="bg-error/20 rounded-2xl p-4 flex items-center justify-center border-2 border-b-4 border-error">
-            <XMarkIcon className="w-5 h-5 text-error mr-2" />
-            <span className="text-error font-bold">
-              {t('resultsScreen.incorrectAnswers', { count: wrongAnswers })}
-            </span>
-          </div>
-
-          {/* Right Answers */}
-          <div className="bg-success/20 rounded-2xl p-4 flex items-center justify-center border-2 border-b-4 border-success">
-            <CheckIcon className="w-5 h-5 text-success mr-2" />
-            <span className="text-success font-bold">
-              {t('resultsScreen.correctAnswers', { count: rightAnswers })}
-            </span>
-          </div>
-        </div>
-
-        {/* Progress Bar */}
-        <div className="bg-base-200 rounded-full h-4 overflow-hidden">
-          <div
-            className="bg-primary h-full rounded-full"
-            style={{ width: `${percentage}%` }}
-          />
-        </div>
-
-        {/* Score Percentage */}
-        <div className="text-center text-base-content/80">
-          {t('resultsScreen.score')}: {percentage}%
-        </div>
-      </div>
-
-      {wrongAnswers > 0 && (
-        <div className="w-full max-w-sm rounded-2xl bg-warning/10 border border-warning/20 p-4 mb-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-warning">{t('resultsScreen.nextBestStep')}</p>
-          <p className="text-sm text-base-content/80 mt-1">{t('resultsScreen.reviewWhileFresh', { count: wrongAnswers })}</p>
-        </div>
-      )}
-
-      <div className="w-full max-w-sm space-y-3">
-        {wrongAnswers > 0 ? (
-          <>
-            <button
-              onClick={() => navigate('/mistakes')}
-              className="btn btn-primary rounded-2xl font-bold border-2 border-b-4 w-full"
-            >
-              {t('resultsScreen.reviewMissedNow', { count: wrongAnswers })}
-            </button>
-            <button
-              onClick={handleNextLevel}
-              className="btn btn-ghost rounded-2xl font-bold border-2 border-b-4 w-full"
-            >
-              {t('resultsScreen.continue')}
-            </button>
-          </>
-        ) : (
-          <button
-            onClick={handleNextLevel}
-            className="btn btn-primary rounded-2xl font-bold border-2 border-b-4 w-full"
-          >
-            {t('resultsScreen.continue')}
-          </button>
-        )}
-      </div>
+      {wrongAnswers > 0 && <div className="mb-4 w-full max-w-sm rounded-2xl border border-warning/20 bg-warning/10 p-4"><p className="text-xs font-semibold uppercase tracking-wider text-warning">{t('resultsScreen.nextBestStep')}</p><p className="mt-1 text-sm text-base-content/80">{t('resultsScreen.reviewWhileFresh', { count: wrongAnswers })}</p></div>}
+      <div className="w-full max-w-sm space-y-3">{wrongAnswers > 0 ? <><button onClick={() => navigate('/mistakes')} className="btn btn-primary w-full rounded-2xl border-2 border-b-4 font-bold">{t('resultsScreen.reviewMissedNow', { count: wrongAnswers })}</button><button onClick={handleNextLevel} className="btn btn-ghost w-full rounded-2xl border-2 border-b-4 font-bold">{t('resultsScreen.continue')}</button></> : <button onClick={handleNextLevel} className="btn btn-primary w-full rounded-2xl border-2 border-b-4 font-bold">{t('resultsScreen.continue')}</button>}</div>
     </div>
   );
 }
