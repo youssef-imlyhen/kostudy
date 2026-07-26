@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { lessons } from '../data/lessons';
 import { useQuestions } from '../hooks/useQuestions';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { LearningState } from '../utils/learningState';
