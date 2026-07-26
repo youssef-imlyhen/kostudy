@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useQuestions } from '../hooks/useQuestions';
+import { useLessons } from '../hooks/useLessons';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { LearningState } from '../utils/learningState';
 import { LessonProgressState } from '../utils/lessonProgress';
@@ -10,9 +11,10 @@ const statusLabel = { new: 'Not explored', exposed: 'Seen in lesson', weak: 'Nee
 
 export default function MasteryOverview() {
   const { allQuestions } = useQuestions();
+  const { allLessons } = useLessons();
   const [learningState] = useLocalStorage<LearningState>('questionLearningState', {});
   const [lessonProgress] = useLocalStorage<LessonProgressState>('lessonProgress', {});
-  const concepts = buildConceptMastery(allQuestions, learningState, lessonProgress).sort((a, b) => {
+  const concepts = buildConceptMastery(allLessons, allQuestions, learningState, lessonProgress).sort((a, b) => {
     const rank = { weak: 0, developing: 1, exposed: 2, new: 3, strong: 4 };
     return rank[a.status] - rank[b.status] || (a.score ?? 101) - (b.score ?? 101);
   });

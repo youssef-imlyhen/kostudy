@@ -1,4 +1,4 @@
-import { lessons } from '../data/lessons';
+import { Lesson } from '../types/lesson';
 import { questionConceptMap } from '../data/questionConceptMap';
 import { Question } from '../types/question';
 import { LearningState } from './learningState';
@@ -7,7 +7,7 @@ import { LessonProgressState, getLessonCompletion } from './lessonProgress';
 export type ConceptStatus = 'new' | 'exposed' | 'weak' | 'developing' | 'strong';
 export interface ConceptMastery { id: string; label: string; description: string; score?: number; exposure: number; attempts: number; dueQuestions: number; status: ConceptStatus; lessonIds: string[]; }
 
-export const buildConceptMastery = (questions: Question[], learningState: LearningState, lessonProgress: LessonProgressState, now = Date.now()): ConceptMastery[] => {
+export const buildConceptMastery = (lessons: Lesson[], questions: Question[], learningState: LearningState, lessonProgress: LessonProgressState, now = Date.now()): ConceptMastery[] => {
   const registry = new Map<string, { label: string; description: string; lessonIds: string[]; exposures: number[] }>();
   lessons.forEach((lesson) => {
     const completion = getLessonCompletion(lesson, lessonProgress[lesson.id]);

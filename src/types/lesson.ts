@@ -7,6 +7,17 @@ export interface LessonConcept {
 }
 
 export type LessonVisualId = 'click-funnel' | 'retention-curve' | 'sound-wave' | 'memory-curve';
+export type LessonSourceType = 'article' | 'youtube' | 'video' | 'audio' | 'pdf' | 'image' | 'book' | 'other';
+export type LessonMediaType = 'image' | 'audio' | 'video' | 'pdf';
+
+export interface LessonSource {
+  id: string;
+  title: string;
+  url: string;
+  type: LessonSourceType;
+  creator?: string;
+  note?: string;
+}
 
 interface LessonBlockBase {
   id: string;
@@ -34,6 +45,30 @@ export interface YouTubeLessonBlock extends LessonBlockBase {
   channel?: string;
   why: string;
   startSeconds?: number;
+  sourceId?: string;
+}
+
+export interface MediaLessonBlock extends LessonBlockBase {
+  type: 'media';
+  mediaType: LessonMediaType;
+  src: string;
+  alt?: string;
+  caption?: string;
+  poster?: string;
+  sourceId?: string;
+}
+
+export interface ResourceLessonBlock extends LessonBlockBase {
+  type: 'resources';
+  body?: string;
+  sourceIds: string[];
+}
+
+export interface CompareLessonBlock extends LessonBlockBase {
+  type: 'compare';
+  prompt?: string;
+  left: { label: string; body: string };
+  right: { label: string; body: string };
 }
 
 export interface CheckpointLessonBlock extends LessonBlockBase {
@@ -56,7 +91,16 @@ export interface TakeawaysLessonBlock extends LessonBlockBase {
   items: string[];
 }
 
-export type LessonBlock = ExplainLessonBlock | InteractiveLessonBlock | YouTubeLessonBlock | CheckpointLessonBlock | ReflectionLessonBlock | TakeawaysLessonBlock;
+export type LessonBlock =
+  | ExplainLessonBlock
+  | InteractiveLessonBlock
+  | YouTubeLessonBlock
+  | MediaLessonBlock
+  | ResourceLessonBlock
+  | CompareLessonBlock
+  | CheckpointLessonBlock
+  | ReflectionLessonBlock
+  | TakeawaysLessonBlock;
 
 export interface Lesson {
   id: string;
@@ -72,4 +116,7 @@ export interface Lesson {
   concepts: LessonConcept[];
   blocks: LessonBlock[];
   tutorBrief: string;
+  sources?: LessonSource[];
+  origin?: 'built-in' | 'custom-ai' | 'custom';
+  createdAt?: number;
 }

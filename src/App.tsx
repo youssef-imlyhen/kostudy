@@ -10,6 +10,7 @@ import { config } from './config';
 import CategoriesScreen from './screens/CategoriesScreen';
 import CategoryScreen from './screens/CategoryScreen';
 import LessonScreen from './screens/LessonScreen';
+import LessonCreatorScreen from './screens/LessonCreatorScreen';
 import QuizScreen from './screens/QuizScreen';
 import ResultsScreen from './screens/ResultsScreen';
 import AchievementsScreen from './screens/AchievementsScreen';
@@ -48,6 +49,7 @@ function App() {
                   <Route path="/dashboard" element={<Layout><DashboardScreen /></Layout>} />
                   <Route path="/categories" element={<Layout><CategoriesScreen /></Layout>} />
                   <Route path="/categories/:categoryId" element={<Layout><CategoryScreen /></Layout>} />
+                  <Route path="/lessons/new" element={<Layout><LessonCreatorScreen /></Layout>} />
                   <Route path="/lessons/:lessonId" element={<Layout><LessonScreen /></Layout>} />
                   <Route path="/quiz" element={<Layout hideNav><QuizScreen /></Layout>} />
                   <Route path="/play-all" element={<Layout hideNav><QuizScreen /></Layout>} />

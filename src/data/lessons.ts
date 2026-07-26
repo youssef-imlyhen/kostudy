@@ -44,6 +44,7 @@ export const lessons: Lesson[] = [
     coreQuestion: 'What is changing in the world when you hear a sound?',
     firstPrinciple: 'Sound begins as changing pressure through time. Pitch and loudness are perceptual summaries of patterns in that motion.',
     tutorBrief: 'Begin with physical change over time. Distinguish waveform amplitude from perceived loudness and frequency from perceived pitch.',
+    sources: [{ id: 'fourier-guide', title: 'But what is the Fourier Transform? A visual introduction', url: 'https://www.youtube.com/watch?v=spUNpyF58BY', type: 'youtube', creator: '3Blue1Brown', note: 'Optional visual guide used after the waveform lab.' }],
     concepts: [
       { id: 'frequency', label: 'Frequency', description: 'How rapidly a repeating pattern cycles through time.' },
       { id: 'amplitude', label: 'Amplitude', description: 'The magnitude of variation around equilibrium in a wave representation.' },
@@ -52,7 +53,7 @@ export const lessons: Lesson[] = [
     blocks: [
       { id: 'motion', type: 'explain', eyebrow: 'First principle', title: 'Start with change through time', body: 'A microphone converts pressure variation into an electrical signal. A waveform is one way to represent that changing signal. Music theory comes later; first build intuition for the motion itself.' },
       { id: 'wave-lab', type: 'interactive', eyebrow: 'See + hear', title: 'Touch frequency and amplitude', body: 'Move the controls. The drawn wave is deliberately normalized for learning, while the tone uses the selected frequency in the Web Audio API.', visual: 'sound-wave', challenge: 'Double the frequency while leaving amplitude alone. What changes visually? What changes perceptually?' },
-      { id: 'fourier-video', type: 'youtube', eyebrow: 'Optional guide', title: 'A visual bridge to frequency space', url: 'https://www.youtube.com/watch?v=spUNpyF58BY', channel: '3Blue1Brown', why: 'Use this after the wave lab. It builds geometric intuition for decomposing complicated motion into frequency components.' },
+      { id: 'fourier-video', type: 'youtube', eyebrow: 'Optional guide', title: 'A visual bridge to frequency space', url: 'https://www.youtube.com/watch?v=spUNpyF58BY', channel: '3Blue1Brown', sourceId: 'fourier-guide', why: 'Use this after the wave lab. It builds geometric intuition for decomposing complicated motion into frequency components.' },
       { id: 'sound-check', type: 'checkpoint', eyebrow: 'Retrieval check', title: 'Separate the variables', prompt: 'In the simplified lab, which control changes how many cycles occur per second?', options: ['Amplitude', 'Frequency', 'Canvas width', 'Volume label'], correctAnswer: 'Frequency', explanation: 'Frequency is cycles per second. Pitch is strongly related to frequency, but the two words are not exact synonyms.', conceptIds: ['frequency', 'waveform'] },
       { id: 'carry', type: 'takeaways', eyebrow: 'Carry forward', title: 'What the lab gave you', items: ['Waveforms describe change through time.', 'Frequency describes repetition rate.', 'Amplitude and perceived loudness are related but not identical concepts.'] },
     ],

@@ -10,8 +10,8 @@ interface TutorMessage { role: 'user' | 'tutor'; text: string; }
 export default function LessonTutorPanel({ lesson, block, progress }: { lesson: Lesson; block: LessonBlock; progress?: LessonProgressEntry }) {
   const [open, setOpen] = useState(false); const [voiceOpen, setVoiceOpen] = useState(false); const [input, setInput] = useState(''); const [loading, setLoading] = useState(false); const [error, setError] = useState(''); const [messages, setMessages] = useState<TutorMessage[]>([]);
   const context = useMemo(() => JSON.stringify({
-    prompt: 'You are KoStudy lesson tutor. Teach the exact step the learner is viewing. Prefer hints and questions over immediately giving answers. Distinguish teaching simulations from real measurements or universal benchmarks.',
-    data: { lesson: { title: lesson.title, coreQuestion: lesson.coreQuestion, firstPrinciple: lesson.firstPrinciple, concepts: lesson.concepts, tutorBrief: lesson.tutorBrief }, currentBlock: block, progress },
+    prompt: 'You are KoStudy lesson tutor. Teach the exact step the learner is viewing. Prefer hints and questions over immediately giving answers. Distinguish teaching simulations from real measurements or universal benchmarks. Source entries are metadata/author notes unless their content is explicitly present; never pretend you opened or read an external source merely because its URL is listed.',
+    data: { lesson: { title: lesson.title, coreQuestion: lesson.coreQuestion, firstPrinciple: lesson.firstPrinciple, concepts: lesson.concepts, tutorBrief: lesson.tutorBrief, sources: lesson.sources || [] }, currentBlock: block, progress },
   }), [lesson, block, progress]);
 
   const send = async (preset?: string) => {
