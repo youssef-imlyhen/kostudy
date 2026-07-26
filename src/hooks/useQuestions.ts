@@ -3,51 +3,41 @@ import { Question } from '../types/question';
 import defaultQuestions from '../data/questions';
 import { useCustomQuestions } from './useCustomQuestions';
 
-// Mark default questions with the 'default' source
-const sourcedDefaultQuestions: Question[] = defaultQuestions.map(q => ({ ...q, source: 'default' }));
+const sourcedDefaults: Question[] = defaultQuestions.map((question) => ({ ...question, source: 'default' }));
+
+const shuffle = <T,>(items: T[]): T[] => {
+  const result = [...items];
+  for (let index = result.length - 1; index > 0; index -= 1) {
+    const swap = Math.floor(Math.random() * (index + 1));
+    [result[index], result[swap]] = [result[swap], result[index]];
+  }
+  return result;
+};
 
 export const useQuestions = () => {
   const { customQuestions } = useCustomQuestions();
-
-  // Combine default and custom questions, prioritizing custom ones
-  const allQuestions = useMemo(() => {
-    const all = [...sourcedDefaultQuestions, ...customQuestions];
-    // Prioritize custom questions by removing default questions with the same ID
-    const uniqueQuestions = all.filter((q, index, self) =>
-      index === self.findIndex(t => t.id === q.id)
-    );
-    return uniqueQuestions;
+  const data = useMemo(() => {
+    const byId = new Map<string, Question>();
+    sourcedDefaults.forEach((question) => byId.set(question.id, question));
+    customQuestions.forEach((question) => byId.set(question.id, { ...question, source: 'custom' }));
+    const allQuestions = Array.from(byId.values());
+    const grouped = new Map<string, Question[]>();
+    allQuestions.forEach((question) => { const list = grouped.get(question.category) || []; list.push(question); grouped.set(question.category, list); });
+    const order = ['easy', 'medium', 'hard'];
+    grouped.forEach((list) => list.sort((a, b) => order.indexOf(a.difficulty) - order.indexOf(b.difficulty)));
+    return {
+      allQuestions,
+      categories: Array.from(grouped.keys()),
+      grouped,
+      counts: Object.fromEntries(Array.from(grouped.entries()).map(([category, list]) => [category, list.length])),
+    };
   }, [customQuestions]);
 
-  // Re-create utility functions to operate on the combined list
-  const getCategories = (): string[] => {
-    return [...new Set(allQuestions.map(q => q.category))];
-  };
-
-  const getQuestionsByCategory = (category: string): Question[] => {
-    const difficultyOrder = ['easy', 'medium', 'hard'];
-    return allQuestions
-      .filter(q => q.category === category)
-      .sort((a, b) => difficultyOrder.indexOf(a.difficulty) - difficultyOrder.indexOf(b.difficulty));
-  };
-
-  const getQuestionsCountByCategory = (): Record<string, number> => {
-    return allQuestions.reduce((acc, q) => {
-      acc[q.category] = (acc[q.category] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-  };
-
-  const getRandomQuestions = (count: number = 10): Question[] => {
-    const shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, count);
-  };
-
   return {
-    allQuestions,
-    getCategories,
-    getQuestionsByCategory,
-    getQuestionsCountByCategory,
-    getRandomQuestions,
+    allQuestions: data.allQuestions,
+    getCategories: () => data.categories,
+    getQuestionsByCategory: (category: string) => data.grouped.get(category) || [],
+    getQuestionsCountByCategory: () => data.counts,
+    getRandomQuestions: (count = 10) => shuffle(data.allQuestions).slice(0, count),
   };
 };
