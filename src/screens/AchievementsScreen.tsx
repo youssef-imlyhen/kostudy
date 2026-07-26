@@ -3,7 +3,7 @@ import { TrophyIcon, GlobeAmericasIcon, SparklesIcon, CheckCircleIcon } from '@h
 import { useUser } from '../context/UserContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { getCategories, getQuestionsByCategory } from '../data/questions';
+import { useQuestions } from '../hooks/useQuestions';
 import { Mistakes, getTotalUniqueMistakes } from '../utils/mistakes';
 import { useAchievements } from '../hooks/useAchievements';
 import { ACHIEVEMENT_TIER_KEYS, Achievement } from '../types/achievement';
@@ -11,6 +11,7 @@ import Header from '../components/Header';
 import StatCard from '../components/StatCard';
 import PerformanceChart from '../components/PerformanceChart';
 import EmptyState from '../components/EmptyState';
+import MasteryOverview from '../components/MasteryOverview';
 import { achievements as achievementCatalog } from '../data/achievements';
 
 interface Progress {
@@ -184,6 +185,7 @@ export default function AchievementsScreen() {
   const { username } = useUser();
   const { t } = useLanguage();
   const { getAchievementStats, getUnlockedAchievements } = useAchievements();
+  const { getCategories, getQuestionsByCategory } = useQuestions();
   const [progress] = useLocalStorage<Progress>('quizProgress', {});
   const [mistakes] = useLocalStorage<Mistakes>('quizMistakes', {});
   // Calculate performance data
@@ -258,6 +260,8 @@ export default function AchievementsScreen() {
           color="info"
         />
       </div>
+
+      <MasteryOverview />
 
       {/* Performance Chart */}
       {performanceData.length > 0 ? (
