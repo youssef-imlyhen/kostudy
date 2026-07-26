@@ -9,7 +9,6 @@ import { GenerationRequest, ContextSelection } from '../types/aiGenerator';
 import { starterPrompts } from '../data/starterPrompts';
 import StarterPromptCard from './StarterPromptCard';
 import ContextSelector from './ContextSelector';
-import ModelSelector from './ModelSelector';
 import AppPreview from './AppPreview';
 import SaveAppModal from './SaveAppModal';
 import GeneratedAppsGallery from './GeneratedAppsGallery';
@@ -20,7 +19,6 @@ import {
   BookmarkIcon,
   FolderIcon,
   ExclamationTriangleIcon,
-  Cog6ToothIcon,
   CpuChipIcon
 } from '@heroicons/react/24/outline';
 
@@ -36,8 +34,6 @@ const AIGenerator = () => {
     includeCategories: false,
     includeMistakes: false
   });
-  const [selectedModel, setSelectedModel] = useLocalStorage('selectedAIModel', 'gemini-2.5-pro');
-  const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedHtml, setGeneratedHtml] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -69,7 +65,7 @@ const AIGenerator = () => {
     setGeneratedHtml(null);
 
     try {
-      const service = new EnhancedAIService(apiKey, selectedModel);
+      const service = new EnhancedAIService(apiKey);
       const request: GenerationRequest = {
         prompt: prompt.trim(),
         context,
@@ -192,28 +188,6 @@ const AIGenerator = () => {
         </div>
       </div>
 
-      {/* Advanced Settings Toggle */}
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold">{t('aiGenerator.settings.title')}</h3>
-        <button
-          onClick={() => setShowAdvancedSettings(!showAdvancedSettings)}
-          className="btn btn-ghost btn-sm"
-        >
-          <Cog6ToothIcon className="w-4 h-4 mr-2" />
-          {showAdvancedSettings ? t('aiGenerator.settings.hide') : t('aiGenerator.settings.show')}
-        </button>
-      </div>
-
-      {/* Advanced Settings */}
-      {showAdvancedSettings && (
-        <div className="space-y-6 p-4 bg-base-200/50 rounded-lg">
-          {/* Model Selection */}
-          <ModelSelector
-            selectedModel={selectedModel}
-            onModelChange={setSelectedModel}
-          />
-        </div>
-      )}
 
       {/* Context Selection */}
       <ContextSelector

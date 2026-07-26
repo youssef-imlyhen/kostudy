@@ -1,5 +1,6 @@
 import { GoogleGenAI } from '@google/genai';
 import { Question } from '../types/question';
+import { DEFAULT_TEXT_MODEL, IMAGE_GENERATION_MODEL } from '../config/aiModels';
 
 // Types for the AI Orchestrator
 export interface TaskPlan {
@@ -69,11 +70,11 @@ export class AIOrchestrator {
 
   // Model configurations
   private readonly MODELS = {
-    PLANNER: 'gemini-2.5-pro',
-    TEXT_GENERATOR: 'gemini-2.5-flash',
-    IMAGE_GENERATOR: 'gemini-2.0-flash-preview-image-generation',
-    APP_GENERATOR: 'gemini-2.5-pro',
-    REVIEWER: 'gemini-2.5-pro'
+    PLANNER: DEFAULT_TEXT_MODEL,
+    TEXT_GENERATOR: DEFAULT_TEXT_MODEL,
+    IMAGE_GENERATOR: IMAGE_GENERATION_MODEL,
+    APP_GENERATOR: DEFAULT_TEXT_MODEL,
+    REVIEWER: DEFAULT_TEXT_MODEL,
   };
 
   constructor(apiKey: string) {

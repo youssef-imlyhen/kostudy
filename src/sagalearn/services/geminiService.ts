@@ -1,4 +1,5 @@
 import { GoogleGenAI, Modality, Type } from "@google/genai";
+import { DEFAULT_TEXT_MODEL, IMAGE_GENERATION_MODEL } from '../../config/aiModels';
 import type { Scene, Question, InitialQuizScene, InitialFreeExploreScene, Stat, WorldState } from '../types';
 
 let ai: GoogleGenAI;
@@ -10,8 +11,8 @@ const initializeAI = (apiKey: string) => {
   ai = new GoogleGenAI({ apiKey });
 };
 
-const textModel = 'gemini-2.5-flash';
-const imageModel = 'gemini-2.0-flash-preview-image-generation';
+const textModel = DEFAULT_TEXT_MODEL;
+const imageModel = IMAGE_GENERATION_MODEL;
 
 const GAME_MASTER_PERSONA = `You are the SagaLearn Game Master, a master storyteller and world-builder. Your goal is to create a living, breathing world that is immersive, consistent, and proactive. Track the player's stats and update them based on their actions. Respond only in the requested JSON format.`;
 

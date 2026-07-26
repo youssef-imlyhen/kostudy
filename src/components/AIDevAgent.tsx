@@ -119,8 +119,7 @@ const AIDevAgent: React.FC<AIDevAgentProps> = ({ apiKey, onResult }) => {
         const prompt = `You are KoStudy's AI Development Agent. Create useful educational content for this request.\n\nUSER REQUEST:\n${request.userPrompt}\n\nPREFERENCES:\n${JSON.stringify(request.preferences, null, 2)}\n\nFOCUS CATEGORIES:\n${request.context?.categories?.join(', ') || 'none'}\n\nReturn a structured answer with:\n1. A short plan\n2. The generated educational content\n3. A small quiz or activity\n4. A suggested next improvement`;
         const aiResponse = await callKoStudyServerAI({
           task: 'orchestration',
-          model: 'gemini-3.1-flash-lite',
-          prompt,
+                    prompt,
         });
         result = createServerResult(request.userPrompt, aiResponse.text, aiResponse.model, aiResponse.quota);
       }
@@ -144,8 +143,7 @@ const AIDevAgent: React.FC<AIDevAgentProps> = ({ apiKey, onResult }) => {
     } else {
       const aiResponse = await callKoStudyServerAI({
         task: 'orchestration_feedback',
-        model: 'gemini-3.1-flash-lite',
-        prompt: `Refine the previous KoStudy AI result using this feedback.\n\nPrevious result:\n${currentResult?.generatedContent.textContent?.join('\n\n') || 'No previous result'}\n\nUser feedback:\n${feedbackInput}`,
+                prompt: `Refine the previous KoStudy AI result using this feedback.\n\nPrevious result:\n${currentResult?.generatedContent.textContent?.join('\n\n') || 'No previous result'}\n\nUser feedback:\n${feedbackInput}`,
       });
 
       const updatedHistory: ConversationTurn[] = [

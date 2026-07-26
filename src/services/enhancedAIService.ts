@@ -1,6 +1,7 @@
 import { GoogleGenAI } from '@google/genai';
 import { GenerationRequest, GenerationResponse } from '../types/aiGenerator';
 import { Question } from '../types/question';
+import { DEFAULT_TEXT_MODEL, IMAGE_GENERATION_MODEL } from '../config/aiModels';
 
 export interface AIModelConfig {
   name: string;
@@ -8,59 +9,32 @@ export interface AIModelConfig {
   description: string;
   capabilities: string[];
   maxTokens?: number;
-  temperature?: number;
 }
 
 export const AVAILABLE_MODELS: Record<string, AIModelConfig> = {
-  'gemini-2.5-pro': {
-    name: 'gemini-2.5-pro',
-    displayName: 'Gemini 2.5 Pro',
-    description: 'Most capable model for complex reasoning and creative tasks',
-    capabilities: ['text', 'code', 'reasoning', 'creative'],
-    maxTokens: 8192,
-    temperature: 0.7
+  [DEFAULT_TEXT_MODEL]: {
+    name: DEFAULT_TEXT_MODEL,
+    displayName: 'Gemini 3.5 Flash-Lite',
+    description: 'KoStudy default for fast text, code, planning, and multimodal-input learning tasks.',
+    capabilities: ['text', 'code', 'multimodal-input', 'speed', 'free-tier'],
+    maxTokens: 65536,
   },
-  'gemini-2.5-flash': {
-    name: 'gemini-2.5-flash',
-    displayName: 'Gemini 2.5 Flash',
-    description: 'Fast and efficient model for quick responses',
-    capabilities: ['text', 'code', 'speed'],
-    maxTokens: 8192,
-    temperature: 0.7
-  },
-  'gemini-2.0-flash-exp': {
-    name: 'gemini-2.0-flash-exp',
-    displayName: 'Gemini 2.0 Flash (Experimental)',
-    description: 'Latest experimental model with enhanced capabilities',
-    capabilities: ['text', 'code', 'multimodal', 'experimental'],
-    maxTokens: 1000000,
-    temperature: 0.7
-  },
-  'gemini-2.0-flash-preview-image-generation': {
-    name: 'gemini-2.0-flash-preview-image-generation',
-    displayName: 'Gemini 2.0 Flash Image Generation',
-    description: 'Specialized model for high-quality image generation',
-    capabilities: ['image-generation', 'multimodal', 'creative'],
-    maxTokens: 8192,
-    temperature: 0.7
-  }
 };
 
-// Specific model constants for different capabilities
-export const IMAGE_GENERATION_MODEL = 'gemini-2.0-flash-preview-image-generation';
+export { IMAGE_GENERATION_MODEL };
 export const TEXT_GENERATION_MODELS = {
-  PRO: 'gemini-2.5-pro',
-  FLASH: 'gemini-2.5-flash',
-  EXPERIMENTAL: 'gemini-2.0-flash-exp'
+  PRO: DEFAULT_TEXT_MODEL,
+  FLASH: DEFAULT_TEXT_MODEL,
+  EXPERIMENTAL: DEFAULT_TEXT_MODEL,
 };
 
 export class EnhancedAIService {
   private genAI: GoogleGenAI;
   private selectedModel: string;
 
-  constructor(apiKey: string, model: string = 'gemini-2.5-pro') {
+  constructor(apiKey: string, model: string = DEFAULT_TEXT_MODEL) {
     this.genAI = new GoogleGenAI({ apiKey });
-    this.selectedModel = model;
+    this.selectedModel = AVAILABLE_MODELS[model] ? model : DEFAULT_TEXT_MODEL;
   }
 
   setModel(model: string) {
@@ -177,15 +151,15 @@ TECHNICAL EXCELLENCE:
     return `ADVANCED AI HELPER LIBRARY:
 You have access to an enhanced 'AIHelper' library with powerful capabilities:
 
-// GEMINI FLASH 2.0 TEXT GENERATION
+// GEMINI FLASH-LITE TEXT GENERATION
 AIHelper.generateText(prompt, options = {})
-// Options: { model: 'flash-2.0' | 'pro', temperature: 0.1-1.0, maxTokens: number }
+// Options: { model: 'flash-lite', maxTokens: number }
 // Returns: Promise<string>
-// Example: const explanation = await AIHelper.generateText("Explain quantum physics simply", { model: 'flash-2.0', temperature: 0.3 });
+// Example: const explanation = await AIHelper.generateText("Explain quantum physics simply", { model: 'flash-lite' });
 
-// GEMINI 2.0 FLASH IMAGE GENERATION
+// GEMINI IMAGE GENERATION (BYOK / BILLING MAY BE REQUIRED)
 AIHelper.generateImage(prompt, options = {})
-// Uses: gemini-2.0-flash-preview-image-generation model
+// Uses: the current configured image model
 // Options: { style: 'photorealistic' | 'artistic' | 'cartoon', size: '256x256' | '512x512' | '1024x1024' }
 // Returns: Promise<string> (data URL)
 // Example: const imageUrl = await AIHelper.generateImage("A futuristic classroom with holographic displays", { style: 'photorealistic', size: '512x512' });
@@ -227,7 +201,7 @@ IMPLEMENTATION SCRIPT:
 window.AIHelper = {
   // Enhanced text generation with model selection
   async generateText(prompt, options = {}) {
-    const { model = 'flash-2.0', temperature = 0.7, maxTokens = 1000 } = options;
+    const { model = 'flash-lite', maxTokens = 1000 } = options;
     // In production, this would call the actual Gemini API
     return new Promise(resolve => {
       setTimeout(() => {
@@ -235,17 +209,17 @@ window.AIHelper = {
           'flash-2.0': \`Enhanced response using Gemini Flash 2.0: \${prompt}\`,
           'pro': \`Detailed response using Gemini Pro: \${prompt}\`
         };
-        resolve(responses[model] || responses['flash-2.0']);
+        resolve(responses[model] || responses['flash-lite']);
       }, 800);
     });
   },
   
-  // Advanced image generation with Gemini 2.0 Flash Image Generation
+  // Image generation is a separate BYOK capability
   async generateImage(prompt, options = {}) {
     const { style = 'photorealistic', size = '512x512' } = options;
     
-    // In production, this would use the actual Gemini 2.0 Flash Image Generation model
-    const imageModel = 'gemini-2.0-flash-preview-image-generation';
+    // In production, image generation must respect the configured BYOK/billing policy
+    const imageModel = '${IMAGE_GENERATION_MODEL}';
     
     return new Promise(resolve => {
       // Generate a more sophisticated placeholder that simulates the actual model
@@ -286,7 +260,7 @@ window.AIHelper = {
       ctx.fillStyle = 'white';
       ctx.font = 'bold 14px Arial';
       ctx.textAlign = 'center';
-      ctx.fillText('Gemini 2.0 Flash', width/2, height/2 - 20);
+      ctx.fillText('KoStudy Image', width/2, height/2 - 20);
       ctx.fillText('Image Generation', width/2, height/2);
       ctx.font = '12px Arial';
       ctx.fillText(\`Style: \${style}\`, width/2, height/2 + 20);
@@ -401,7 +375,7 @@ window.AIHelper = {
     };
     
     const prompt = helpPrompts[userAction] || \`Provide help for: \${userAction}\`;
-    return this.generateText(prompt, { model: 'flash-2.0', temperature: 0.5 });
+    return this.generateText(prompt, { model: 'flash-lite' });
   },
   
   // Adaptive difficulty system

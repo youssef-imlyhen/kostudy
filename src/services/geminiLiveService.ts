@@ -1,5 +1,6 @@
 import { GoogleGenAI, LiveServerMessage, Modality, Session } from '@google/genai';
 import { AIProvider } from '../types/aiProvider';
+import { DEFAULT_LIVE_MODEL } from '../config/aiModels';
 
 export class GeminiLiveService {
   private client: GoogleGenAI | null = null;
@@ -8,7 +9,7 @@ export class GeminiLiveService {
   constructor(
     private apiKey: string,
     private aiProvider: AIProvider = 'byok',
-    private model: string = 'gemini-3.1-flash-live-preview'
+    private model: string = DEFAULT_LIVE_MODEL
   ) {}
 
   private async getConnectionKey(): Promise<string> {

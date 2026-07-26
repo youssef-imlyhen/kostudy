@@ -1,6 +1,7 @@
 import { GoogleGenAI } from '@google/genai';
 import { GenerationRequest, GenerationResponse } from '../types/aiGenerator';
 import { Question } from '../types/question';
+import { DEFAULT_TEXT_MODEL } from '../config/aiModels';
 
 export class AIAppGeneratorService {
   private genAI: GoogleGenAI;
@@ -26,7 +27,7 @@ User Request: ${request.prompt}
 Generate a complete, self-contained HTML application that fulfills this request. The application should be engaging, interactive, and well-designed.`;
 
       const result = await this.genAI.models.generateContent({
-        model: 'gemini-2.5-pro',
+        model: DEFAULT_TEXT_MODEL,
         contents: [{
           parts: [{ text: fullPrompt }]
         }]

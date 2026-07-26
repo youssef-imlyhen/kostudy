@@ -10,6 +10,7 @@ import { MediaContext } from '../types/media';
 import { mediaContextToParts, getMediaContextPrompt, isMediaContextReady } from '../utils/mediaUtils';
 import MediaContextSelector from './MediaContextSelector';
 import { useLanguage } from '../context/LanguageContext';
+import { DEFAULT_TEXT_MODEL } from '../config/aiModels';
 
 interface AIGenerationTabProps {
   onQuestionsGenerated: (questions: Question[]) => void;
@@ -100,7 +101,7 @@ export default function AIGenerationTab({ onQuestionsGenerated }: AIGenerationTa
       ];
 
       const result = await genAI.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: DEFAULT_TEXT_MODEL,
         contents: [{
           parts: contentParts
         }]

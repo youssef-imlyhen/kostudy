@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { GoogleGenAI } from '@google/genai';
+import { DEFAULT_TEXT_MODEL } from '../config/aiModels';
 import { useLanguage } from '../context/LanguageContext';
 
 interface LiveCallComponentProps {
@@ -208,7 +209,7 @@ const LiveCallComponent: React.FC<LiveCallComponentProps> = ({
         // Add to contents as context text instead.
         const contextPrompt = systemPrompt ? systemPrompt + '\n' + userPrompt : userPrompt;
         const response = await genAI.models.generateContent({
-          model: 'gemini-2.5-flash',
+          model: DEFAULT_TEXT_MODEL,
           contents: contextPrompt,
         });
         return response.text || '';
