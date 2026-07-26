@@ -11,12 +11,14 @@ export type KoStudyAIResponse = {
 export async function callKoStudyServerAI(args: {
   prompt?: string;
   contents?: Array<{ role: 'user' | 'model'; parts: Part[] }>;
+  model?: string; // Backward-compatible input; shared server ignores caller model choice.
   task?: string;
 }): Promise<KoStudyAIResponse> {
+  const { model: _ignoredModel, ...serverArgs } = args;
   const response = await fetch('/.netlify/functions/gemini', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(args),
+    body: JSON.stringify(serverArgs),
   });
   const data = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(data.error || 'KoStudy server AI request failed');
