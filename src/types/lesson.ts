@@ -6,7 +6,19 @@ export interface LessonConcept {
   description: string;
 }
 
-export type LessonVisualId = 'click-funnel' | 'retention-curve' | 'sound-wave' | 'memory-curve';
+export type LessonVisualId =
+  | 'click-funnel'
+  | 'retention-curve'
+  | 'sound-wave'
+  | 'memory-curve'
+  | 'projectile-motion'
+  | 'chemical-equilibrium'
+  | 'natural-selection'
+  | 'bayes-updater'
+  | 'supply-demand'
+  | 'sorting-algorithms'
+  | 'polyrhythm'
+  | 'energy-balance';
 export type LessonSourceType = 'article' | 'youtube' | 'video' | 'audio' | 'pdf' | 'image' | 'book' | 'other';
 export type LessonMediaType = 'image' | 'audio' | 'video' | 'pdf';
 
@@ -112,6 +124,10 @@ export interface Lesson {
   durationMinutes: number;
   difficulty: LessonDifficulty;
   emoji: string;
+  field?: string;
+  learningObjectives?: string[];
+  prerequisiteConceptIds?: string[];
+  recommendedLessonIds?: string[];
   relatedCategory?: string;
   concepts: LessonConcept[];
   blocks: LessonBlock[];
