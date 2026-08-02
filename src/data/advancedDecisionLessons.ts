@@ -1,0 +1,142 @@
+import { Lesson } from '../types/lesson';
+
+export const advancedDecisionLessons: Lesson[] = [
+{
+    id: 'probability-is-not-a-decision',
+    title: 'Probability Is Not a Decision',
+    subtitle: 'Beliefs, thresholds, and unequal consequences',
+    description: 'Extend Bayesian updating into decision-making by separating a posterior probability from the action threshold chosen for a specific context.',
+    coreQuestion: 'Why can two people accept the same probability estimate yet rationally choose different actions?',
+    firstPrinciple: 'Probability describes uncertainty; a decision combines that uncertainty with consequences, available actions, and the unequal costs of different errors.',
+    durationMinutes: 18,
+    difficulty: 'intermediate',
+    emoji: '🚦',
+    field: 'Statistics',
+    relatedCategory: 'Statistics',
+    prerequisiteConceptIds: ['prior-probability', 'posterior-probability'],
+    recommendedLessonIds: ['evidence-changes-belief', 'counterexamples-break-invalid-forms'],
+    learningObjectives: [
+      'Separate posterior probability from the action taken after observing it.',
+      'Explain how decision thresholds depend on consequences and alternatives.',
+      'Recognize that false positives and false negatives can have asymmetric costs.',
+    ],
+    concepts: [
+      { id: 'posterior-vs-action', label: 'Posterior versus action', description: 'The distinction between an updated probability estimate and a choice made using that estimate.' },
+      { id: 'decision-threshold', label: 'Decision threshold', description: 'The probability or evidence level at which a particular action becomes preferable under stated consequences.' },
+      { id: 'asymmetric-error-cost', label: 'Asymmetric error cost', description: 'A situation where false positives and false negatives produce different harms or losses.' },
+    ],
+    tutorBrief: 'Do not prescribe medical, legal, or financial actions. Use neutral toy decisions and emphasize domain expertise. Show that thresholds are value- and consequence-dependent while posterior calculation remains evidence-dependent.',
+    blocks: [
+      {
+        id: 'estimate-action', type: 'explain', eyebrow: 'First principle', title: 'An estimate does not contain a command',
+        body: 'A posterior such as 20% answers “How plausible is the condition after this evidence?” It does not by itself answer “What should be done?” That requires comparing the consequences of acting, waiting, testing again, or doing nothing.',
+        bullets: ['Evidence updates belief.', 'Consequences shape action thresholds.', 'Different error costs can make the same posterior lead to different choices.'],
+      },
+      {
+        id: 'decision-lab', type: 'interactive', eyebrow: 'Predict → manipulate', title: 'Hold the test, change the population',
+        body: 'Use the Bayes lab to produce the same kind of positive result under different prior prevalences. Observe how the posterior changes before discussing any action threshold.',
+        visual: 'bayes-updater',
+        challenge: 'Create one scenario near 10% posterior and another above 70%. For each, list what additional consequence information would still be needed before choosing an action.',
+      },
+      {
+        id: 'estimate-threshold', type: 'compare', eyebrow: 'Two separate layers', title: 'Inference versus decision',
+        left: { label: 'Inference', body: 'Combines prior information and evidence to estimate how likely a state is.' },
+        right: { label: 'Decision', body: 'Combines the estimate with possible actions, benefits, harms, reversibility, delay, and error costs.' },
+      },
+      {
+        id: 'posterior-check', type: 'checkpoint', eyebrow: 'Retrieval check', title: 'What is still missing?',
+        prompt: 'A model estimates a 30% probability of an event. What must be added before the model can justify a specific action?',
+        options: ['Consequences and alternatives', 'A prettier chart', 'A larger font', 'The word certainty'],
+        correctAnswer: 'Consequences and alternatives',
+        explanation: 'An action threshold depends on what each choice can cause, not only on the probability estimate.',
+        conceptIds: ['posterior-vs-action', 'decision-threshold'],
+      },
+      {
+        id: 'error-cost-check', type: 'checkpoint', eyebrow: 'Transfer check', title: 'When thresholds move',
+        prompt: 'If missing a true danger becomes far more costly while false alarms remain cheap, how should a defensible action threshold usually move?',
+        options: ['Lower, so action can occur at less certainty', 'Higher, so action requires more certainty', 'It must remain exactly 50%', 'Probabilities stop mattering'],
+        correctAnswer: 'Lower, so action can occur at less certainty',
+        explanation: 'When false negatives are much more costly, acting earlier can become preferable despite lower posterior probability.',
+        conceptIds: ['decision-threshold', 'asymmetric-error-cost'],
+      },
+      {
+        id: 'decision-reflection', type: 'reflection', eyebrow: 'Apply carefully', title: 'Describe an asymmetric choice',
+        prompt: 'Invent a harmless everyday example where a false alarm is cheap but missing the event is costly. Explain how that changes your threshold.',
+        placeholder: 'I would act at a lower probability because…',
+      },
+      {
+        id: 'decision-carry', type: 'takeaways', eyebrow: 'Carry forward', title: 'What should survive the lesson',
+        items: ['A posterior is an estimate, not an instruction.', 'Thresholds depend on consequences and available actions.', 'False positives and false negatives often have unequal costs.', 'Transparent decisions state both the probability model and the value assumptions.'],
+      },
+    ],
+  },
+{
+    id: 'counterexamples-break-invalid-forms',
+    title: 'Counterexamples Break Invalid Forms',
+    subtitle: 'One decisive row defeats a universal claim',
+    description: 'Use truth tables to search for a case where all premises are true and the conclusion is false—the defining counterexample to validity.',
+    coreQuestion: 'Why can one carefully chosen case defeat an argument form that looked persuasive in many examples?',
+    firstPrinciple: 'Validity is universal: a form is valid only if no possible assignment makes every premise true and the conclusion false. One counterexample row is therefore enough to refute validity.',
+    durationMinutes: 17,
+    difficulty: 'intermediate',
+    emoji: '🧨',
+    field: 'Logic',
+    relatedCategory: 'Logic',
+    prerequisiteConceptIds: ['truth-table', 'validity-vs-truth'],
+    recommendedLessonIds: ['truth-tables-expose-rule-structure', 'probability-is-not-a-decision'],
+    learningObjectives: [
+      'Define a counterexample row for an argument form.',
+      'Recognize affirming the consequent and denying the antecedent.',
+      'Construct concrete cases that preserve true premises while falsifying a proposed conclusion.',
+    ],
+    concepts: [
+      { id: 'counterexample-row', label: 'Counterexample row', description: 'A truth assignment where all premises are true but the conclusion is false.' },
+      { id: 'affirming-consequent', label: 'Affirming the consequent', description: 'The invalid form: if P then Q; Q; therefore P.' },
+      { id: 'denying-antecedent', label: 'Denying the antecedent', description: 'The invalid form: if P then Q; not P; therefore not Q.' },
+    ],
+    tutorBrief: 'Require learners to produce the decisive row and then translate it into an everyday example. Distinguish formal invalidity from whether a particular conclusion happens to be true.',
+    blocks: [
+      {
+        id: 'universal-test', type: 'explain', eyebrow: 'First principle', title: 'Validity makes an all-cases claim',
+        body: 'An argument form claims that every case with true premises also has a true conclusion. Finding many successful cases cannot prove that universal claim, but one failing case can disprove it.',
+        bullets: ['A counterexample must keep every premise true.', 'Its conclusion must be false.', 'The factual topic can change while the logical form remains the same.'],
+      },
+      {
+        id: 'counterexample-lab', type: 'interactive', eyebrow: 'Search every row', title: 'Find the decisive assignment',
+        body: 'Use implication in the truth-table lab. Compare P → Q with its converse Q → P and inspect the row where Q is true while P is false.',
+        visual: 'truth-table',
+        challenge: 'Build a concrete example of “If P then Q; Q; therefore P” where both premises are true and P is false. Then do the same for denying the antecedent.',
+      },
+      {
+        id: 'valid-true', type: 'compare', eyebrow: 'Two different failures', title: 'False conclusion versus invalid inference',
+        left: { label: 'False conclusion', body: 'A claim can be false even when reached through a valid form because a premise was false.' },
+        right: { label: 'Invalid form', body: 'A conclusion can happen to be true while the premises fail to guarantee it. Counterexamples expose the missing guarantee.' },
+      },
+      {
+        id: 'consequent-check', type: 'checkpoint', eyebrow: 'Retrieval check', title: 'Name the invalid move',
+        prompt: '“If the alarm is armed, the light is on. The light is on. Therefore the alarm is armed.” Which form is this?',
+        options: ['Affirming the consequent', 'Modus ponens', 'Denying the antecedent', 'Valid contradiction'],
+        correctAnswer: 'Affirming the consequent',
+        explanation: 'The light may be on for another reason; Q does not guarantee P.',
+        conceptIds: ['affirming-consequent', 'counterexample-row'],
+      },
+      {
+        id: 'antecedent-check', type: 'checkpoint', eyebrow: 'Transfer check', title: 'What defeats the conclusion?',
+        prompt: '“If it is a dog, it is an animal. It is not a dog. Therefore it is not an animal.” What is the counterexample idea?',
+        options: ['It could be a cat—still an animal but not a dog', 'All animals are dogs', 'Dogs are not animals', 'The first premise is a contradiction'],
+        correctAnswer: 'It could be a cat—still an animal but not a dog',
+        explanation: 'P is false and Q remains true, defeating the conclusion not-Q.',
+        conceptIds: ['denying-antecedent', 'counterexample-row'],
+      },
+      {
+        id: 'logic-reflection', type: 'reflection', eyebrow: 'Construct it', title: 'Turn a row into a story',
+        prompt: 'Create your own affirming-the-consequent example and explicitly state the alternative cause that makes Q true while P is false.',
+        placeholder: 'If P, then Q. Q happened because… not because P.',
+      },
+      {
+        id: 'logic-carry', type: 'takeaways', eyebrow: 'Carry forward', title: 'What should survive the lesson',
+        items: ['Validity is an all-cases guarantee.', 'One true-premises/false-conclusion row disproves validity.', 'Affirming the consequent confuses a sufficient condition with a necessary one.', 'Denying the antecedent ignores other ways the consequence can occur.'],
+      },
+    ],
+  }
+];
