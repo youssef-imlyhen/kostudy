@@ -1,0 +1,7 @@
+import { Question } from '../types/question';
+
+export const advancedComputingQuestions: Question[] = [
+{ id: 'cs_scale_1', type: 'multiple-choice', category: 'Computer Science', difficulty: 'easy', question: 'What must be varied to study how an algorithm scales?', options: ['Input size', 'Interface color', 'Animation duration only', 'Variable names'], correctAnswer: 'Input size', explanation: 'Scaling describes how required work changes as the amount of input grows.' },
+{ id: 'cs_scale_2', type: 'multiple-choice', category: 'Computer Science', difficulty: 'medium', question: 'Why are comparison counts often more informative than one animation time?', options: ['They are less dependent on hardware and playback details', 'They guarantee identical implementations', 'They remove input arrangement', 'They make constants impossible'], correctAnswer: 'They are less dependent on hardware and playback details', explanation: 'Operation counts reveal procedural work more directly across environments.' },
+{ id: 'cs_scale_3', type: 'multiple-choice', category: 'Computer Science', difficulty: 'hard', question: 'Why can a better asymptotic algorithm lose on very small inputs?', options: ['Setup costs and constants can dominate before the crossover', 'Asymptotic growth applies only to colors', 'Input size never matters', 'All algorithms perform equal work'], correctAnswer: 'Setup costs and constants can dominate before the crossover', explanation: 'Asymptotic analysis describes dominant large-input growth, not every small practical case.' }
+];
