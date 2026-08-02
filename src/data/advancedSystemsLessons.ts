@@ -1,0 +1,142 @@
+import { Lesson } from '../types/lesson';
+
+export const advancedSystemsLessons: Lesson[] = [
+{
+    id: 'escape-is-a-boundary-not-no-gravity',
+    title: 'Escape Is a Boundary, Not No Gravity',
+    subtitle: 'Bound paths, energy, and continuing attraction',
+    description: 'Use the orbit lab to distinguish falling inward, remaining bound, and escaping while gravity continues to act at every finite distance.',
+    coreQuestion: 'What changes at escape if gravity does not suddenly switch off?',
+    firstPrinciple: 'Escape means the object has enough total energy to remain unbound; gravitational attraction continues, but it cannot reverse the outward journey into a return orbit.',
+    durationMinutes: 18,
+    difficulty: 'advanced',
+    emoji: '🚀',
+    field: 'Astronomy',
+    relatedCategory: 'Astronomy',
+    prerequisiteConceptIds: ['orbital-fall', 'escape-threshold'],
+    recommendedLessonIds: ['orbits-are-falling-sideways', 'climate-starts-with-an-energy-budget'],
+    learningObjectives: [
+      'Distinguish bound and unbound trajectories qualitatively.',
+      'Interpret escape as an energy boundary rather than the disappearance of force.',
+      'Explain why an escaping object can keep slowing while still never returning.',
+    ],
+    concepts: [
+      { id: 'bound-vs-unbound', label: 'Bound versus unbound', description: 'Whether a trajectory must remain near and eventually return toward the central body or can continue outward indefinitely.' },
+      { id: 'escape-energy', label: 'Escape energy', description: 'The minimum total-energy condition needed for a trajectory not to remain gravitationally bound.' },
+      { id: 'gravity-beyond-escape', label: 'Gravity beyond escape', description: 'Continued gravitational attraction acting on an object even after its trajectory has become unbound.' },
+    ],
+    tutorBrief: 'Keep the lab qualitative. Correct the misconception that escape velocity means gravity ends or that engines must run forever. Distinguish local speed threshold, total energy, and later slowing.',
+    blocks: [
+      {
+        id: 'boundary-story', type: 'explain', eyebrow: 'First principle', title: 'A boundary in outcome, not a boundary in space',
+        body: 'Below the escape condition, gravity can bend the path into a return. At the threshold and above, the object can continue outward forever in the ideal model. In both cases gravity remains present and weakens gradually with distance.',
+        bullets: ['Bound trajectories return or remain in orbit.', 'Unbound trajectories can keep moving outward indefinitely.', 'An escaping object may slow continuously without ever reversing.'],
+      },
+      {
+        id: 'escape-lab', type: 'interactive', eyebrow: 'Predict → manipulate', title: 'Cross the qualitative boundary',
+        body: 'In the orbit lab, keep mass and radius fixed while increasing sideways speed. Identify the transition from inward fall to bound motion and then to an escaping path.',
+        visual: 'orbit-motion',
+        challenge: 'Just above the escape region, predict whether the gravity arrow should vanish, remain constant, or shrink gradually as distance grows. Defend your choice.',
+      },
+      {
+        id: 'force-outcome', type: 'compare', eyebrow: 'Do not merge these', title: 'Force at an instant versus fate of a trajectory',
+        left: { label: 'Instantaneous force', body: 'Gravity is nonzero at every finite distance and continually changes velocity.' },
+        right: { label: 'Global outcome', body: 'Total energy determines whether those continuing changes are enough to make the object return.' },
+      },
+      {
+        id: 'escape-check', type: 'checkpoint', eyebrow: 'Retrieval check', title: 'What changes at escape?',
+        prompt: 'At the ideal escape threshold, which statement is strongest?',
+        options: ['Gravity becomes zero', 'The trajectory changes from bound to unbound', 'Mass disappears', 'The object must accelerate outward forever'],
+        correctAnswer: 'The trajectory changes from bound to unbound',
+        explanation: 'Escape classifies the long-term trajectory; it does not turn gravity off.',
+        conceptIds: ['bound-vs-unbound', 'escape-energy'],
+      },
+      {
+        id: 'slowing-check', type: 'checkpoint', eyebrow: 'Transfer check', title: 'Slowing without returning',
+        prompt: 'How can an escaping object slow down yet never fall back?',
+        options: ['Its outward speed remains sufficient for an unbound trajectory', 'Gravity acts only behind it', 'It has no mass', 'Distance removes all inertia'],
+        correctAnswer: 'Its outward speed remains sufficient for an unbound trajectory',
+        explanation: 'Gravity removes kinetic energy as the object climbs outward, but above escape the remaining total energy does not require a return.',
+        conceptIds: ['escape-energy', 'gravity-beyond-escape'],
+      },
+      {
+        id: 'escape-reflection', type: 'reflection', eyebrow: 'Repair the metaphor', title: 'Replace “leaving gravity”',
+        prompt: 'Rewrite the phrase “the spacecraft escaped gravity” so it accurately describes both the continuing force and the unbound path.',
+        placeholder: 'The spacecraft became unbound while…',
+      },
+      {
+        id: 'escape-carry', type: 'takeaways', eyebrow: 'Carry forward', title: 'What should survive the lesson',
+        items: ['Escape separates bound from unbound trajectories.', 'Gravity continues beyond the escape threshold.', 'An escaping object can slow forever without returning.', 'Local force and long-term trajectory answer different questions.'],
+      },
+    ],
+  },
+{
+    id: 'feedback-strength-changes-stability',
+    title: 'Feedback Strength Changes Stability',
+    subtitle: 'Damping, amplification, and collapse',
+    description: 'Push the predator–prey model beyond recognizing cycles and investigate how stronger interactions can damp, amplify, delay, or destroy them.',
+    coreQuestion: 'Why can making a feedback link stronger destabilize the system it appears to regulate?',
+    firstPrinciple: 'Feedback affects both correction and overshoot; when responses are strong or delayed, they can amplify deviations instead of smoothly restoring balance.',
+    durationMinutes: 19,
+    difficulty: 'advanced',
+    emoji: '🌀',
+    field: 'Ecology',
+    relatedCategory: 'Ecology',
+    prerequisiteConceptIds: ['coupled-populations', 'feedback-lag'],
+    recommendedLessonIds: ['predators-and-prey-create-cycles', 'equilibrium-never-stands-still'],
+    learningObjectives: [
+      'Explain how interaction strength changes oscillation amplitude and persistence.',
+      'Distinguish damping from amplification in a delayed feedback system.',
+      'Identify qualitative stability boundaries and model-collapse regimes.',
+    ],
+    concepts: [
+      { id: 'feedback-strength', label: 'Feedback strength', description: 'How strongly one state changes the rate of another state in a coupled system.' },
+      { id: 'damping-and-amplification', label: 'Damping and amplification', description: 'Reduction or growth of deviations and oscillations across successive cycles.' },
+      { id: 'stability-boundary', label: 'Stability boundary', description: 'A region of parameter space separating persistent, damped, exploding, or collapsing behavior.' },
+    ],
+    tutorBrief: 'Use qualitative parameter comparisons and model criticism. Avoid implying ecosystem health equals mathematical stability. Emphasize that extreme toy-model outputs often reveal assumptions and numerical boundaries, not literal forecasts.',
+    blocks: [
+      {
+        id: 'overshoot-story', type: 'explain', eyebrow: 'First principle', title: 'A stronger correction can arrive too late',
+        body: 'More predators can reduce prey faster, but predator abundance reflects earlier prey conditions. By the time the response becomes strong, the prey state may already have changed, producing overshoot and a larger later correction.',
+        bullets: ['Strength controls how large each response can be.', 'Delay controls how old the information behind the response is.', 'Strong delayed feedback can amplify cycles or drive a population near collapse.'],
+      },
+      {
+        id: 'stability-lab', type: 'interactive', eyebrow: 'Predict → manipulate', title: 'Map a qualitative stability region',
+        body: 'Use the predator–prey lab to vary encounter pressure, prey growth, predator loss, and conversion efficiency one control at a time. Record whether oscillations shrink, persist, grow, or collapse.',
+        visual: 'predator-prey',
+        challenge: 'Find one parameter change that damps the curves and another that amplifies them. Explain the causal loop rather than describing only the picture.',
+      },
+      {
+        id: 'strength-health', type: 'compare', eyebrow: 'Avoid a common shortcut', title: 'Strong interaction versus stable system',
+        left: { label: 'Strong link', body: 'A small state change produces a large effect on another population’s rate.' },
+        right: { label: 'Stable behavior', body: 'Disturbances remain bounded or shrink. Strong links can support stability in one regime and destroy it in another.' },
+      },
+      {
+        id: 'amplification-check', type: 'checkpoint', eyebrow: 'Retrieval check', title: 'What is amplification?',
+        prompt: 'Successive predator–prey peaks grow farther from their typical values. Which description fits best?',
+        options: ['Amplified oscillation', 'Complete damping', 'Static equilibrium', 'No feedback'],
+        correctAnswer: 'Amplified oscillation',
+        explanation: 'The deviations grow from cycle to cycle rather than shrinking.',
+        conceptIds: ['damping-and-amplification'],
+      },
+      {
+        id: 'strength-check', type: 'checkpoint', eyebrow: 'Transfer check', title: 'Why can stronger predation destabilize?',
+        prompt: 'Which mechanism best explains why much stronger delayed predation can create larger cycles?',
+        options: ['The response can overshoot after prey conditions have already changed', 'Delays disappear automatically', 'Predators stop depending on prey', 'The model becomes linear'],
+        correctAnswer: 'The response can overshoot after prey conditions have already changed',
+        explanation: 'A strong response based on lagged conditions can push the state past a smooth correction.',
+        conceptIds: ['feedback-strength', 'stability-boundary'],
+      },
+      {
+        id: 'stability-reflection', type: 'reflection', eyebrow: 'Model criticism', title: 'Interpret a collapse carefully',
+        prompt: 'The toy model drives one population almost to zero. Give one mechanistic interpretation and one reason not to treat that curve as a literal forecast.',
+        placeholder: 'Mechanistically… But the model omits…',
+      },
+      {
+        id: 'stability-carry', type: 'takeaways', eyebrow: 'Carry forward', title: 'What should survive the lesson',
+        items: ['Feedback strength affects both correction and overshoot.', 'Delay can turn negative feedback into oscillation or amplification.', 'Stability is a property of a parameter regime, not a single link.', 'Extreme model behavior should trigger assumption checks, not automatic prediction.'],
+      },
+    ],
+  }
+];
