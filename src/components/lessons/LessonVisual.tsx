@@ -1,4 +1,5 @@
 import { lazy, Suspense, type ComponentType, type LazyExoticComponent } from 'react';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { LessonVisualId } from '../../types/lesson';
 
 const ClickFunnelLab = lazy(() => import('./ClickFunnelLab'));
@@ -29,7 +30,50 @@ const visuals: Record<LessonVisualId, LazyExoticComponent<ComponentType>> = {
   'energy-balance': EnergyBalanceLab,
 };
 
+interface LabNote {
+  prediction: string;
+  observation: string;
+  updatedAt: number;
+}
+
+type LabNotes = Partial<Record<LessonVisualId, LabNote>>;
+
 export default function LessonVisual({ visual }: { visual: LessonVisualId }) {
   const Visual = visuals[visual];
-  return <Suspense fallback={<div className="flex min-h-48 items-center justify-center rounded-2xl bg-base-200/60"><span className="loading loading-spinner loading-md" /></div>}><Visual /></Suspense>;
+  const [notes, setNotes] = useLocalStorage<LabNotes>('lessonLabNotes', {});
+  const note = notes[visual] || { prediction: '', observation: '', updatedAt: 0 };
+  const update = (field: 'prediction' | 'observation', value: string) => {
+    setNotes((current) => ({
+      ...current,
+      [visual]: { ...note, [field]: value, updatedAt: Date.now() },
+    }));
+  };
+  const hasNote = Boolean(note.prediction.trim() || note.observation.trim());
+
+  return <div className="space-y-4">
+    <Suspense fallback={<div className="flex min-h-48 items-center justify-center rounded-2xl bg-base-200/60"><span className="loading loading-spinner loading-md" /></div>}><Visual /></Suspense>
+
+    <details className="group rounded-2xl border border-base-300 bg-base-100" open={hasNote}>
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-semibold">
+        <span>Experiment notebook</span>
+        <span className={`rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-wider ${hasNote ? 'bg-success/10 text-success' : 'bg-base-200 text-base-content/45'}`}>{hasNote ? 'Saved locally' : 'Prediction → observation'}</span>
+      </summary>
+      <div className="grid gap-4 border-t border-base-300 p-4 sm:grid-cols-2">
+        <label className="space-y-2">
+          <span className="text-xs font-bold uppercase tracking-wider text-primary">Before changing controls</span>
+          <span className="block text-sm font-semibold">What do you predict?</span>
+          <textarea className="textarea textarea-bordered min-h-24 w-full text-sm" value={note.prediction} onChange={(event) => update('prediction', event.target.value)} placeholder="When I change…, I expect… because…" />
+        </label>
+        <label className="space-y-2">
+          <span className="text-xs font-bold uppercase tracking-wider text-secondary">After experimenting</span>
+          <span className="block text-sm font-semibold">What changed? What stayed invariant?</span>
+          <textarea className="textarea textarea-bordered min-h-24 w-full text-sm" value={note.observation} onChange={(event) => update('observation', event.target.value)} placeholder="I observed… The surprising part was…" />
+        </label>
+        <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-base-content/45 sm:col-span-2">
+          <span>Notes stay on this device and remain attached to this simulation.</span>
+          {hasNote ? <button type="button" className="btn btn-ghost btn-xs" onClick={() => setNotes((current) => { const next = { ...current }; delete next[visual]; return next; })}>Clear notebook</button> : null}
+        </div>
+      </div>
+    </details>
+  </div>;
 }
