@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { lessons as legacyBuiltInLessons } from '../data/lessons';
 import { crossDomainLessons } from '../data/crossDomainLessons';
 import { Lesson } from '../types/lesson';
+import { assertValidCurriculum, validateLessonCatalog } from '../utils/curriculumValidation';
 import { useLocalStorage } from './useLocalStorage';
 
 const inferField = (lesson: Lesson): string => {
@@ -11,6 +12,8 @@ const inferField = (lesson: Lesson): string => {
   if (lesson.relatedCategory === 'Title & Packaging' || lesson.relatedCategory === 'Analytics & Algorithm') return 'Creator';
   return lesson.relatedCategory || 'General';
 };
+
+assertValidCurriculum(validateLessonCatalog(crossDomainLessons), 'Cross-domain lesson pack');
 
 const builtInLessons: Lesson[] = [...legacyBuiltInLessons, ...crossDomainLessons].map((lesson) => ({
   ...lesson,
