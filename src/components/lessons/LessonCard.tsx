@@ -4,5 +4,26 @@ import { Lesson } from '../../types/lesson';
 
 export default function LessonCard({ lesson, completion, compact = false }: { lesson: Lesson; completion: number; compact?: boolean }) {
   const complete = completion >= 100;
-  return <Link to={`/lessons/${lesson.id}`} className="group block h-full"><article className="h-full rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-md sm:p-5"><div className="flex items-start gap-4"><div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-xl" aria-hidden>{lesson.emoji}</div><div className="min-w-0 flex-1"><div className="flex items-start justify-between gap-3"><div><p className="text-xs font-semibold uppercase tracking-wider text-primary">{lesson.durationMinutes} min · {lesson.difficulty}</p><h3 className="mt-1 text-lg font-bold leading-tight text-base-content">{lesson.title}</h3></div>{complete ? <CheckCircleIcon className="h-5 w-5 shrink-0 text-success" /> : <ArrowRightIcon className="h-5 w-5 shrink-0 text-base-content/35 transition-transform group-hover:translate-x-1" />}</div>{!compact && <p className="mt-2 text-sm leading-6 text-base-content/70">{lesson.description}</p>}<div className="mt-4"><div className="mb-1 flex justify-between text-xs text-base-content/60"><span>{completion > 0 ? 'Progress' : 'Not started'}</span><span>{completion}%</span></div><div className="h-1.5 overflow-hidden rounded-full bg-base-200"><div className="h-full rounded-full bg-primary transition-all" style={{ width: `${completion}%` }} /></div></div></div></div></article></Link>;
+  return <Link to={`/lessons/${lesson.id}`} className="group block h-full">
+    <article className="h-full rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-md sm:p-5">
+      <div className="flex items-start gap-4">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-xl" aria-hidden>{lesson.emoji}</div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-primary">{lesson.field ? `${lesson.field} · ` : ''}{lesson.durationMinutes} min · {lesson.difficulty}</p>
+              <h3 className="mt-1 text-lg font-bold leading-tight text-base-content">{lesson.title}</h3>
+            </div>
+            {complete ? <CheckCircleIcon className="h-5 w-5 shrink-0 text-success" /> : <ArrowRightIcon className="h-5 w-5 shrink-0 text-base-content/35 transition-transform group-hover:translate-x-1" />}
+          </div>
+          {!compact && <p className="mt-2 text-sm leading-6 text-base-content/70">{lesson.description}</p>}
+          {!compact && lesson.learningObjectives?.length ? <p className="mt-3 text-xs text-base-content/55">{lesson.learningObjectives.length} outcomes · {lesson.blocks.filter((block) => block.type === 'interactive').length} coded lab{lesson.blocks.filter((block) => block.type === 'interactive').length === 1 ? '' : 's'} · {lesson.blocks.filter((block) => block.type === 'checkpoint').length} checks</p> : null}
+          <div className="mt-4">
+            <div className="mb-1 flex justify-between text-xs text-base-content/60"><span>{completion > 0 ? 'Progress' : 'Not started'}</span><span>{completion}%</span></div>
+            <div className="h-1.5 overflow-hidden rounded-full bg-base-200"><div className="h-full rounded-full bg-primary transition-all" style={{ width: `${completion}%` }} /></div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </Link>;
 }
