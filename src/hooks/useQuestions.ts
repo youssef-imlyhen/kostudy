@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
 import { Question } from '../types/question';
 import defaultQuestions from '../data/questions';
+import { crossDomainQuestions } from '../data/crossDomainQuestions';
 import { useCustomQuestions } from './useCustomQuestions';
 
-const sourcedDefaults: Question[] = defaultQuestions.map((question) => ({ ...question, source: 'default' }));
+const sourcedDefaults: Question[] = [...defaultQuestions, ...crossDomainQuestions].map((question) => ({ ...question, source: 'default' }));
 
 const shuffle = <T,>(items: T[]): T[] => {
   const result = [...items];
@@ -22,7 +23,11 @@ export const useQuestions = () => {
     customQuestions.forEach((question) => byId.set(question.id, { ...question, source: 'custom' }));
     const allQuestions = Array.from(byId.values());
     const grouped = new Map<string, Question[]>();
-    allQuestions.forEach((question) => { const list = grouped.get(question.category) || []; list.push(question); grouped.set(question.category, list); });
+    allQuestions.forEach((question) => {
+      const list = grouped.get(question.category) || [];
+      list.push(question);
+      grouped.set(question.category, list);
+    });
     const order = ['easy', 'medium', 'hard'];
     grouped.forEach((list) => list.sort((a, b) => order.indexOf(a.difficulty) - order.indexOf(b.difficulty)));
     return {
