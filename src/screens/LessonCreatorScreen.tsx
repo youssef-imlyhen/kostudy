@@ -6,7 +6,7 @@ import { useLessons } from '../hooks/useLessons';
 import { useQuestions } from '../hooks/useQuestions';
 import { Lesson, LessonBlock, LessonDifficulty, LessonSource, LessonSourceType, LessonVisualId } from '../types/lesson';
 
-const allowedVisuals = new Set<LessonVisualId>(['click-funnel', 'retention-curve', 'sound-wave', 'memory-curve']);
+const allowedVisuals = new Set<LessonVisualId>(['click-funnel', 'retention-curve', 'sound-wave', 'memory-curve', 'projectile-motion', 'chemical-equilibrium', 'natural-selection', 'bayes-updater', 'supply-demand', 'sorting-algorithms', 'polyrhythm', 'energy-balance', 'exponential-growth', 'compound-growth', 'orbit-motion', 'predator-prey', 'truth-table']);
 const allowedBlockTypes = new Set(['explain', 'interactive', 'checkpoint', 'reflection', 'takeaways', 'compare', 'resources']);
 
 const slugify = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '').slice(0, 52) || 'lesson';
@@ -105,7 +105,7 @@ export default function LessonCreatorScreen() {
     try {
       const response = await callKoStudyServerAI({
         task: 'lesson_generate',
-        prompt: `Create a compact, first-principles learning lesson as JSON only. Topic: ${topic.trim()}\nGoal: ${goal.trim() || 'Build a durable mental model'}\nRelated category: ${category || 'none'}\nLearner-provided notes (the only source content you may treat as read):\n${sourceNotes.slice(0, 12000)}\n\nSource metadata IDs available: ${sources.map((source) => `${source.id} (${source.type})`).join(', ') || 'none'}\n\nReturn an object with title, subtitle, description, coreQuestion, firstPrinciple, durationMinutes (5-20), difficulty (foundation|intermediate|advanced), emoji, tutorBrief, concepts (2-6 items with id,label,description), blocks (4-9 items). Allowed block types ONLY: explain, interactive, checkpoint, reflection, takeaways, compare, resources. Interactive visual may ONLY be one of click-funnel, retention-curve, sound-wave, memory-curve and should be omitted if it does not genuinely fit. A checkpoint needs 2-5 options and correctAnswer must exactly match one option. Resources may only reference the provided source IDs. Never invent source URLs, citations, facts claimed to come from an unread URL, executable code, HTML, scripts, or new visualization identifiers. Prefer explanation + prediction + retrieval over decorative content.`
+        prompt: `Create a compact, first-principles learning lesson as JSON only. Topic: ${topic.trim()}\nGoal: ${goal.trim() || 'Build a durable mental model'}\nRelated category: ${category || 'none'}\nLearner-provided notes (the only source content you may treat as read):\n${sourceNotes.slice(0, 12000)}\n\nSource metadata IDs available: ${sources.map((source) => `${source.id} (${source.type})`).join(', ') || 'none'}\n\nReturn an object with title, subtitle, description, field, coreQuestion, firstPrinciple, durationMinutes (5-20), difficulty (foundation|intermediate|advanced), emoji, tutorBrief, concepts (2-6 items with id,label,description), blocks (4-9 items). Allowed block types ONLY: explain, interactive, checkpoint, reflection, takeaways, compare, resources. Interactive visual may ONLY be one of click-funnel, retention-curve, sound-wave, memory-curve, projectile-motion, chemical-equilibrium, natural-selection, bayes-updater, supply-demand, sorting-algorithms, polyrhythm, energy-balance, exponential-growth, compound-growth, orbit-motion, predator-prey, truth-table and should be omitted if it does not genuinely fit. A checkpoint needs 2-5 options and correctAnswer must exactly match one option. Resources may only reference the provided source IDs. Never invent source URLs, citations, facts claimed to come from an unread URL, executable code, HTML, scripts, or new visualization identifiers. Prefer explanation + prediction + retrieval over decorative content.`
       });
       const raw = extractJson(response.text);
       const concepts = Array.isArray(raw.concepts) ? raw.concepts.slice(0, 6).map((concept: Record<string, unknown>, index: number) => ({ id: slugify(cleanText(concept.id, `${topic}-concept-${index + 1}`)), label: cleanText(concept.label, `Concept ${index + 1}`), description: cleanText(concept.description) })) : [];
@@ -122,6 +122,7 @@ export default function LessonCreatorScreen() {
         durationMinutes: Math.max(5, Math.min(20, Number(raw.durationMinutes) || 10)),
         difficulty,
         emoji: cleanText(raw.emoji, '✨').slice(0, 4),
+        field: cleanText(raw.field, category || 'Custom').slice(0, 40),
         relatedCategory: category || undefined,
         concepts,
         blocks,

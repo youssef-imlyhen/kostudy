@@ -31,4 +31,18 @@ export const curriculumPaths: CurriculumPath[] = [
     ],
     outcome: 'Separate observations from interpretation and uncover the procedure or structure underneath an outcome.',
   },
+  {
+    id: 'growth-feedback-limits',
+    title: 'Growth, feedback, and limits',
+    description: 'Move from pure exponential structure to money over time, coupled ecology, and planetary constraints.',
+    lessonIds: ['exponential-growth-is-repeated-multiplication', 'compound-interest-is-time-multiplying', 'predators-and-prey-create-cycles', 'climate-starts-with-an-energy-budget'],
+    outcome: 'Recognize multiplicative growth, delayed feedback, purchasing-power changes, and limits that stop simple curves continuing forever.',
+  },
+  {
+    id: 'rules-motion-evidence',
+    title: 'Rules, motion, and evidence',
+    description: 'Connect formal logic to algorithms, projectile decomposition, orbital motion, and evidence-based updating.',
+    lessonIds: ['truth-tables-expose-rule-structure', 'sorting-makes-procedure-visible', 'a-throw-is-two-motions', 'orbits-are-falling-sideways', 'evidence-changes-belief'],
+    outcome: 'Separate rule structure from factual evidence and see how explicit update rules generate complex outcomes.',
+  },
 ];

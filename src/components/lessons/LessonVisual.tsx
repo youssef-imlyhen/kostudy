@@ -14,6 +14,11 @@ const SupplyDemandLab = lazy(() => import('./SupplyDemandLab'));
 const SortingLab = lazy(() => import('./SortingLab'));
 const PolyrhythmLab = lazy(() => import('./PolyrhythmLab'));
 const EnergyBalanceLab = lazy(() => import('./EnergyBalanceLab'));
+const ExponentialGrowthLab = lazy(() => import('./ExponentialGrowthLab'));
+const CompoundGrowthLab = lazy(() => import('./CompoundGrowthLab'));
+const OrbitLab = lazy(() => import('./OrbitLab'));
+const PredatorPreyLab = lazy(() => import('./PredatorPreyLab'));
+const TruthTableLab = lazy(() => import('./TruthTableLab'));
 
 const visuals: Record<LessonVisualId, LazyExoticComponent<ComponentType>> = {
   'click-funnel': ClickFunnelLab,
@@ -28,6 +33,11 @@ const visuals: Record<LessonVisualId, LazyExoticComponent<ComponentType>> = {
   'sorting-algorithms': SortingLab,
   'polyrhythm': PolyrhythmLab,
   'energy-balance': EnergyBalanceLab,
+  'exponential-growth': ExponentialGrowthLab,
+  'compound-growth': CompoundGrowthLab,
+  'orbit-motion': OrbitLab,
+  'predator-prey': PredatorPreyLab,
+  'truth-table': TruthTableLab,
 };
 
 interface LabNote {

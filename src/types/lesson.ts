@@ -18,7 +18,12 @@ export type LessonVisualId =
   | 'supply-demand'
   | 'sorting-algorithms'
   | 'polyrhythm'
-  | 'energy-balance';
+  | 'energy-balance'
+  | 'exponential-growth'
+  | 'compound-growth'
+  | 'orbit-motion'
+  | 'predator-prey'
+  | 'truth-table';
 export type LessonSourceType = 'article' | 'youtube' | 'video' | 'audio' | 'pdf' | 'image' | 'book' | 'other';
 export type LessonMediaType = 'image' | 'audio' | 'video' | 'pdf';
 

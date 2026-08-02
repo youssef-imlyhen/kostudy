@@ -33,6 +33,21 @@ export const questionConceptMap: Record<string, string[]> = {
   earth_energy_1: ['albedo', 'absorbed-energy'],
   earth_energy_2: ['absorbed-energy', 'infrared-escape'],
   earth_energy_3: ['albedo', 'infrared-escape'],
+  math_growth_1: ['multiplicative-growth'],
+  math_growth_2: ['doubling-time'],
+  math_growth_3: ['model-limits'],
+  finance_compound_1: ['cash-contributions', 'compound-return'],
+  finance_compound_2: ['real-purchasing-power'],
+  finance_compound_3: ['compound-return', 'real-purchasing-power'],
+  astronomy_orbit_1: ['orbital-fall'],
+  astronomy_orbit_2: ['circular-speed'],
+  astronomy_orbit_3: ['escape-threshold'],
+  ecology_cycle_1: ['coupled-populations'],
+  ecology_cycle_2: ['feedback-lag'],
+  ecology_cycle_3: ['ecological-model-limits'],
+  logic_truth_1: ['logical-implication'],
+  logic_truth_2: ['truth-table'],
+  logic_truth_3: ['validity-vs-truth'],
 };
 
 export const getQuestionIdsForConcept = (conceptId: string): string[] => Object.entries(questionConceptMap)

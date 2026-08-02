@@ -2,17 +2,20 @@ import { useMemo } from 'react';
 import { Question } from '../types/question';
 import defaultQuestions from '../data/questions';
 import { crossDomainQuestions } from '../data/crossDomainQuestions';
+import { expansionQuestions } from '../data/expansionQuestions';
 import { crossDomainLessons } from '../data/crossDomainLessons';
 import { questionConceptMap } from '../data/questionConceptMap';
 import { assertValidCurriculum, validateQuestionMappings } from '../utils/curriculumValidation';
 import { useCustomQuestions } from './useCustomQuestions';
 
+const curriculumQuestions = [...crossDomainQuestions, ...expansionQuestions];
+
 assertValidCurriculum(
-  validateQuestionMappings(crossDomainLessons, crossDomainQuestions, questionConceptMap),
+  validateQuestionMappings(crossDomainLessons, curriculumQuestions, questionConceptMap),
   'Cross-domain retrieval bank',
 );
 
-const sourcedDefaults: Question[] = [...defaultQuestions, ...crossDomainQuestions].map((question) => ({ ...question, source: 'default' }));
+const sourcedDefaults: Question[] = [...defaultQuestions, ...curriculumQuestions].map((question) => ({ ...question, source: 'default' }));
 
 const shuffle = <T,>(items: T[]): T[] => {
   const result = [...items];

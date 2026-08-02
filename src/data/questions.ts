@@ -18,6 +18,11 @@ export const categoryEmojis: Record<string, string> = {
   'Editing & Post-Production': '✂️',
   'Analytics & Algorithm': '📊',
   'Monetization & Business': '💰',
+  'Mathematics': '📈',
+  'Finance': '💰',
+  'Astronomy': '🪐',
+  'Ecology': '🐇',
+  'Logic': '🧩',
 };
 
 // Word to emoji mapping for fallback mechanism (kept for robustness)
