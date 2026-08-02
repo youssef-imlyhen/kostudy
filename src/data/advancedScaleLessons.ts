@@ -1,0 +1,143 @@
+import { Lesson } from '../types/lesson';
+
+export const advancedScaleLessons: Lesson[] = [
+{
+    id: 'logarithms-run-growth-backward',
+    title: 'Logarithms Run Growth Backward',
+    subtitle: 'From a target back to the number of multiplications',
+    description: 'Use the exponential-growth lab in reverse: start from a target and reason about how many equal multiplication steps are required to reach it.',
+    coreQuestion: 'If repeated multiplication creates growth, how can we work backward from the final amount to the number of steps?',
+    firstPrinciple: 'Exponentiation asks for the result after repeated multiplication; a logarithm asks how many repetitions of a chosen multiplier produced a given ratio.',
+    durationMinutes: 17,
+    difficulty: 'intermediate',
+    emoji: '🔎',
+    field: 'Mathematics',
+    relatedCategory: 'Mathematics',
+    prerequisiteConceptIds: ['multiplicative-growth', 'doubling-time'],
+    recommendedLessonIds: ['exponential-growth-is-repeated-multiplication', 'time-changes-who-did-the-work'],
+    learningObjectives: [
+      'Interpret a logarithm as an inverse question about repeated multiplication.',
+      'Measure multiplicative distance with ratios rather than differences.',
+      'Use orders of magnitude to compare quantities across very different scales.',
+    ],
+    concepts: [
+      { id: 'logarithm-as-inverse', label: 'Logarithm as inverse', description: 'The number of equal multiplication steps needed to turn one amount into another.' },
+      { id: 'multiplicative-distance', label: 'Multiplicative distance', description: 'How many times larger one quantity is than another, expressed through ratios or repeated factors.' },
+      { id: 'order-of-magnitude', label: 'Order of magnitude', description: 'A scale comparison based on powers of a common base, usually ten.' },
+    ],
+    tutorBrief: 'Begin with repeated doubling and target finding before notation. Keep ratios distinct from differences. Treat logarithms as questions about scale and step count, not as a button on a calculator.',
+    blocks: [
+      {
+        id: 'reverse-question', type: 'explain', eyebrow: 'First principle', title: 'Change the unknown',
+        body: 'In the foundation lesson, the starting amount, multiplier, and number of steps produced a final amount. Now hold the start, multiplier, and target fixed. The unknown becomes the number of steps.',
+        bullets: ['Exponentiation moves forward from steps to result.', 'A logarithm moves backward from result to steps.', 'The relevant comparison is target divided by start, not target minus start.'],
+      },
+      {
+        id: 'reverse-growth-lab', type: 'interactive', eyebrow: 'Predict → manipulate', title: 'Search for a target',
+        body: 'Choose a starting amount and multiplier in the growth lab. Before moving the step control, predict how many steps are needed to cross a target such as 100, 1,000, or 1,000,000.',
+        visual: 'exponential-growth',
+        challenge: 'Start at 1 and double. Record the first step that exceeds 10, 100, 1,000, and 1,000,000. What remains nearly regular when the targets are viewed as powers of ten?',
+      },
+      {
+        id: 'difference-ratio', type: 'compare', eyebrow: 'Do not merge these', title: 'Additive distance versus multiplicative distance',
+        prompt: 'Two pairs can have the same difference but radically different scale relationships.',
+        left: { label: 'Difference', body: '100 and 200 differ by 100. So do 1,000,000 and 1,000,100. Difference measures an additive gap.' },
+        right: { label: 'Ratio', body: '200 is twice 100, while 1,000,100 is only slightly larger than 1,000,000. Ratio measures multiplicative distance.' },
+      },
+      {
+        id: 'inverse-check', type: 'checkpoint', eyebrow: 'Retrieval check', title: 'What question does the logarithm answer?',
+        prompt: 'Starting at 3 and multiplying by 2 each step, which question is logarithmic?',
+        options: ['What is the value after 8 steps?', 'How many doubling steps are needed to reach 96?', 'What is 96 minus 3?', 'What percentage of 96 is 3?'],
+        correctAnswer: 'How many doubling steps are needed to reach 96?',
+        explanation: 'The unknown is the exponent—the number of repeated multiplication steps.',
+        conceptIds: ['logarithm-as-inverse'],
+      },
+      {
+        id: 'scale-check', type: 'checkpoint', eyebrow: 'Transfer check', title: 'Compare scale, not only difference',
+        prompt: 'Which pair is separated by the greater multiplicative distance?',
+        options: ['10 and 1,000', '1,000,000 and 1,001,000', 'Both are equally separated', 'The comparison is impossible'],
+        correctAnswer: '10 and 1,000',
+        explanation: '1,000 is 100 times 10, while 1,001,000 is only 1.001 times 1,000,000.',
+        conceptIds: ['multiplicative-distance', 'order-of-magnitude'],
+      },
+      {
+        id: 'log-reflection', type: 'reflection', eyebrow: 'Explain it', title: 'Describe a logarithm without notation',
+        prompt: 'Explain to a younger learner what it means to ask “How many times must I multiply by ten to get from 1 to 100,000?”',
+        placeholder: 'The question is asking for…',
+      },
+      {
+        id: 'log-carry', type: 'takeaways', eyebrow: 'Carry forward', title: 'What should survive the lesson',
+        items: ['A logarithm asks for the missing multiplication count.', 'Ratios measure multiplicative distance; differences measure additive distance.', 'Equal orders of magnitude correspond to equal steps on a logarithmic scale.', 'Logs compress huge ranges because they record scale steps rather than raw size.'],
+      },
+    ],
+  },
+{
+    id: 'time-changes-who-did-the-work',
+    title: 'Time Changes Who Did the Work',
+    subtitle: 'Contributions early, compounding later',
+    description: 'Use the compound-growth model to separate how much of a final balance came from deposits, how much came from growth, and how timing changes their shares.',
+    coreQuestion: 'Why can two plans contribute similar cash yet finish with very different balances?',
+    firstPrinciple: 'A contribution made earlier participates in more future compounding periods; timing changes how long each deposited unit can influence later growth.',
+    durationMinutes: 18,
+    difficulty: 'advanced',
+    emoji: '⏳',
+    field: 'Finance',
+    relatedCategory: 'Finance',
+    prerequisiteConceptIds: ['compound-return', 'cash-contributions'],
+    recommendedLessonIds: ['compound-interest-is-time-multiplying', 'logarithms-run-growth-backward'],
+    learningObjectives: [
+      'Explain why earlier contributions receive a longer compounding horizon.',
+      'Distinguish final balance from the timing path that produced it.',
+      'Stress-test a projection by changing return, inflation, contribution, and horizon assumptions separately.',
+    ],
+    concepts: [
+      { id: 'contribution-timing', label: 'Contribution timing', description: 'When new principal enters a growing balance and begins participating in later returns.' },
+      { id: 'compounding-horizon', label: 'Compounding horizon', description: 'The number of future periods during which an amount can earn returns on prior returns.' },
+      { id: 'assumption-sensitivity', label: 'Assumption sensitivity', description: 'How strongly a projected outcome changes when one uncertain input is altered.' },
+    ],
+    tutorBrief: 'This is financial literacy, not personalized advice. Compare scenarios with the same total deposits where possible. Explicitly name volatility, fees, taxes, sequence risk, and uncertain inflation as omitted from the smooth model.',
+    blocks: [
+      {
+        id: 'dollars-have-ages', type: 'explain', eyebrow: 'First principle', title: 'Deposits enter at different ages',
+        body: 'An initial deposit is present for every modeled period. A deposit made near the end is present for only a few. Even when two plans contribute the same total cash, their deposits can have different average time inside the system.',
+        bullets: ['Earlier principal has more compounding periods.', 'Later deposits can raise contributions without receiving much time to grow.', 'The final balance alone hides the path and timing that created it.'],
+      },
+      {
+        id: 'timing-lab', type: 'interactive', eyebrow: 'Predict → manipulate', title: 'Change horizon before changing return',
+        body: 'Use the compound-growth lab to compare early principal, monthly contributions, and duration. Keep as many inputs equal as possible so the source of each difference remains visible.',
+        visual: 'compound-growth',
+        challenge: 'Construct two scenarios with roughly similar total contributions: one uses more starting principal and less monthly saving; the other uses less starting principal and more later saving. Which balance receives more time exposure?',
+      },
+      {
+        id: 'balance-path', type: 'compare', eyebrow: 'Same ending, different evidence', title: 'Final balance versus contribution path',
+        left: { label: 'Snapshot', body: 'A final account value tells you where the model ended, but not when cash entered or how much risk and time produced the result.' },
+        right: { label: 'Path', body: 'A contribution timeline separates deposited cash, accumulated return, and inflation-adjusted purchasing power across time.' },
+      },
+      {
+        id: 'horizon-check', type: 'checkpoint', eyebrow: 'Retrieval check', title: 'Which deposit compounds longer?',
+        prompt: 'With the same return assumptions, which contribution normally has the longest compounding horizon?',
+        options: ['The initial contribution', 'The final monthly contribution', 'Every contribution has the same horizon', 'The contribution made after the model ends'],
+        correctAnswer: 'The initial contribution',
+        explanation: 'It is present during every later modeled period.',
+        conceptIds: ['contribution-timing', 'compounding-horizon'],
+      },
+      {
+        id: 'sensitivity-check', type: 'checkpoint', eyebrow: 'Model check', title: 'What does sensitivity reveal?',
+        prompt: 'A small change in assumed annual return produces a large change after 35 years. What is the strongest interpretation?',
+        options: ['The higher result is guaranteed', 'The long-horizon projection is highly sensitive to that assumption', 'Annual return is known precisely', 'Inflation no longer matters'],
+        correctAnswer: 'The long-horizon projection is highly sensitive to that assumption',
+        explanation: 'Repeated compounding amplifies differences in uncertain inputs; it does not make the input certain.',
+        conceptIds: ['assumption-sensitivity', 'compounding-horizon'],
+      },
+      {
+        id: 'finance-reflection', type: 'reflection', eyebrow: 'Stress-test it', title: 'Name the fragile assumption',
+        prompt: 'Choose one smooth projection input—return, inflation, contribution, fees, or horizon—and explain why its uncertainty matters more over a long period.',
+        placeholder: 'The projection is sensitive to… because…',
+      },
+      {
+        id: 'finance-carry', type: 'takeaways', eyebrow: 'Carry forward', title: 'What should survive the lesson',
+        items: ['Contribution timing changes exposure to future compounding.', 'A final balance does not reveal the path that produced it.', 'Long horizons amplify both compounding and assumption error.', 'Scenario analysis reveals sensitivity; it does not create certainty.'],
+      },
+    ],
+  }
+];
