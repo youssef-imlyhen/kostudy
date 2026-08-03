@@ -1,0 +1,35 @@
+:root {
+  --app-bottom-nav-height: 4rem;
+  --app-bottom-nav-safe-area: env(safe-area-inset-bottom, 0px);
+  --app-bottom-nav-offset: 0rem;
+  --app-bottom-nav-clearance: 2rem;
+  --app-bottom-nav-reserved-space: calc(
+    var(--app-bottom-nav-height) +
+    var(--app-bottom-nav-safe-area) +
+    var(--app-bottom-nav-offset) +
+    var(--app-bottom-nav-clearance)
+  );
+}
+
+.app-main {
+  padding-bottom: var(--app-bottom-nav-reserved-space);
+  scroll-padding-bottom: var(--app-bottom-nav-reserved-space);
+}
+
+.app-bottom-nav {
+  padding-bottom: var(--app-bottom-nav-offset);
+}
+
+.app-bottom-nav-surface {
+  padding-bottom: var(--app-bottom-nav-safe-area);
+}
+
+.app-bottom-nav-content {
+  min-height: var(--app-bottom-nav-height);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --app-bottom-nav-offset: 1rem;
+  }
+}

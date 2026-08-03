@@ -27,5 +27,8 @@ jobs:
       - name: Install dependencies from package.json
         run: npm install --package-lock=false --ignore-scripts --no-audit --no-fund
 
+      - name: Validate lesson UX contracts
+        run: npm run validate:lesson-ux
+
       - name: Production build
         run: npm run build
