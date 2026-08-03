@@ -83,6 +83,21 @@ export const curriculumPaths: CurriculumPath[] = [
     lessonIds: ['color-is-relational', 'signals-hide-inside-noise', 'evidence-changes-belief', 'probability-is-not-a-decision'],
     outcome: 'Separate physical stimulus, noisy evidence, updated belief, response criterion, and action threshold.',
   },
+
+  {
+    id: 'uncertainty-information-networks',
+    title: 'Uncertainty, information, and networks',
+    description: 'Move from probability and surprise to noisy evidence, network paths, and belief updating.',
+    lessonIds: ['information-is-reduction-in-uncertainty', 'signals-hide-inside-noise', 'structure-shapes-how-things-spread', 'evidence-changes-belief'],
+    outcome: 'Separate source uncertainty, evidence overlap, network opportunity, and posterior belief as different layers of an information process.',
+  },
+  {
+    id: 'structure-invariants-and-release',
+    title: 'Structure, invariants, and release',
+    description: 'Compare geometric invariants, circuit constraints, network topology, and slow stress loading that ends in abrupt slip.',
+    lessonIds: ['transformations-reveal-what-stays-the-same', 'circuits-are-constraints-on-flow', 'structure-shapes-how-things-spread', 'earthquakes-are-sudden-release-after-slow-loading'],
+    outcome: 'Identify what a structure preserves, what it constrains, and how local connections or thresholds shape system-level behavior.',
+  },
   {
     id: 'local-rules-large-patterns',
     title: 'How local rules become large patterns',

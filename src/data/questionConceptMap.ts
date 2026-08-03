@@ -84,6 +84,21 @@ export const questionConceptMap: Record<string, string[]> = {
   game_repeat_1: ['payoff-structure'],
   game_repeat_2: ['repeated-interaction'],
   game_repeat_3: ['strategy-environment', 'repeated-interaction'],
+  info_entropy_1: ['self-information'],
+  info_entropy_2: ['source-entropy', 'symbol-probability'],
+  info_entropy_3: ['source-entropy', 'symbol-probability'],
+  network_diffusion_1: ['network-topology', 'hub-and-bridge'],
+  network_diffusion_2: ['hub-and-bridge', 'diffusion-path'],
+  network_diffusion_3: ['network-topology', 'diffusion-path'],
+  geology_slip_1: ['elastic-strain'],
+  geology_slip_2: ['stick-slip', 'friction-threshold'],
+  geology_slip_3: ['friction-threshold', 'stick-slip'],
+  geometry_transform_1: ['point-mapping', 'geometric-invariant'],
+  geometry_transform_2: ['dilation-scale'],
+  geometry_transform_3: ['geometric-invariant', 'dilation-scale'],
+  electric_circuit_1: ['current-continuity'],
+  electric_circuit_2: ['voltage-difference'],
+  electric_circuit_3: ['equivalent-resistance', 'voltage-difference'],
 };
 
 export const getQuestionIdsForConcept = (conceptId: string): string[] => Object.entries(questionConceptMap)

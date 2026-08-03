@@ -28,7 +28,12 @@ export type LessonVisualId =
   | 'signal-detection'
   | 'morphology-builder'
   | 'color-context'
-  | 'repeated-game';
+  | 'repeated-game'
+  | 'entropy-compression'
+  | 'network-diffusion'
+  | 'stick-slip'
+  | 'geometry-transform'
+  | 'electric-circuit';
 export type LessonSourceType = 'article' | 'youtube' | 'video' | 'audio' | 'pdf' | 'image' | 'book' | 'other';
 export type LessonMediaType = 'image' | 'audio' | 'video' | 'pdf';
 

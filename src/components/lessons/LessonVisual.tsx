@@ -24,6 +24,11 @@ const SignalDetectionLab = lazy(() => import('./SignalDetectionLab'));
 const MorphologyLab = lazy(() => import('./MorphologyLab'));
 const ColorContextLab = lazy(() => import('./ColorContextLab'));
 const RepeatedGameLab = lazy(() => import('./RepeatedGameLab'));
+const EntropyCompressionLab = lazy(() => import('./EntropyCompressionLab'));
+const NetworkDiffusionLab = lazy(() => import('./NetworkDiffusionLab'));
+const StickSlipLab = lazy(() => import('./StickSlipLab'));
+const GeometryTransformLab = lazy(() => import('./GeometryTransformLab'));
+const CircuitLab = lazy(() => import('./CircuitLab'));
 
 const visuals: Record<LessonVisualId, LazyExoticComponent<ComponentType>> = {
   'click-funnel': ClickFunnelLab,
@@ -48,6 +53,11 @@ const visuals: Record<LessonVisualId, LazyExoticComponent<ComponentType>> = {
   'morphology-builder': MorphologyLab,
   'color-context': ColorContextLab,
   'repeated-game': RepeatedGameLab,
+  'entropy-compression': EntropyCompressionLab,
+  'network-diffusion': NetworkDiffusionLab,
+  'stick-slip': StickSlipLab,
+  'geometry-transform': GeometryTransformLab,
+  'electric-circuit': CircuitLab,
 };
 
 interface LabNote {
