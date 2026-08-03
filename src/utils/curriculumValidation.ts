@@ -61,7 +61,7 @@ export const validateQuestionMappings = (
 
   Object.keys(mappings).forEach((questionId) => {
     if (!questionIds.has(questionId) && questionId.includes('_')) {
-      const isCrossDomain = /^(physics|chem|bio|stats|econ|cs|music|earth)_/.test(questionId);
+      const isCrossDomain = /^(physics|chem|bio|stats|econ|cs|music|earth|math|finance|astronomy|ecology|logic|demography|psych|ling|vision|game)_/.test(questionId);
       if (isCrossDomain) issues.push({ scope: 'mapping', id: questionId, message: 'Mapping points to a missing cross-domain question.' });
     }
   });

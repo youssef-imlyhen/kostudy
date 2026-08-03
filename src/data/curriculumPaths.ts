@@ -75,4 +75,19 @@ export const curriculumPaths: CurriculumPath[] = [
     ],
     outcome: 'Identify qualitative boundaries, construct decisive counterexamples, and compare how systems change as parameters or input size grow.',
   },
+
+  {
+    id: 'perception-evidence-action',
+    title: 'From perception to action',
+    description: 'Move from contextual appearance to noisy detection, probabilistic updating, and consequence-aware action thresholds.',
+    lessonIds: ['color-is-relational', 'signals-hide-inside-noise', 'evidence-changes-belief', 'probability-is-not-a-decision'],
+    outcome: 'Separate physical stimulus, noisy evidence, updated belief, response criterion, and action threshold.',
+  },
+  {
+    id: 'local-rules-large-patterns',
+    title: 'How local rules become large patterns',
+    description: 'Connect reusable word parts, formal rules, repeated interaction, cohort aging, and multiplicative growth.',
+    lessonIds: ['words-are-built-from-reusable-parts', 'truth-tables-expose-rule-structure', 'cooperation-depends-on-the-game-being-repeated', 'population-momentum-lives-in-age-structure', 'exponential-growth-is-repeated-multiplication'],
+    outcome: 'Recognize how composition, update rules, memory, age structure, and repeated multiplication generate large-scale outcomes.',
+  },
 ];

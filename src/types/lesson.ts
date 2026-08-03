@@ -23,7 +23,12 @@ export type LessonVisualId =
   | 'compound-growth'
   | 'orbit-motion'
   | 'predator-prey'
-  | 'truth-table';
+  | 'truth-table'
+  | 'population-pyramid'
+  | 'signal-detection'
+  | 'morphology-builder'
+  | 'color-context'
+  | 'repeated-game';
 export type LessonSourceType = 'article' | 'youtube' | 'video' | 'audio' | 'pdf' | 'image' | 'book' | 'other';
 export type LessonMediaType = 'image' | 'audio' | 'video' | 'pdf';
 
