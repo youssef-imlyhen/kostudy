@@ -19,6 +19,11 @@ const CompoundGrowthLab = lazy(() => import('./CompoundGrowthLab'));
 const OrbitLab = lazy(() => import('./OrbitLab'));
 const PredatorPreyLab = lazy(() => import('./PredatorPreyLab'));
 const TruthTableLab = lazy(() => import('./TruthTableLab'));
+const PopulationMomentumLab = lazy(() => import('./PopulationMomentumLab'));
+const SignalDetectionLab = lazy(() => import('./SignalDetectionLab'));
+const MorphologyLab = lazy(() => import('./MorphologyLab'));
+const ColorContextLab = lazy(() => import('./ColorContextLab'));
+const RepeatedGameLab = lazy(() => import('./RepeatedGameLab'));
 
 const visuals: Record<LessonVisualId, LazyExoticComponent<ComponentType>> = {
   'click-funnel': ClickFunnelLab,
@@ -38,6 +43,11 @@ const visuals: Record<LessonVisualId, LazyExoticComponent<ComponentType>> = {
   'orbit-motion': OrbitLab,
   'predator-prey': PredatorPreyLab,
   'truth-table': TruthTableLab,
+  'population-pyramid': PopulationMomentumLab,
+  'signal-detection': SignalDetectionLab,
+  'morphology-builder': MorphologyLab,
+  'color-context': ColorContextLab,
+  'repeated-game': RepeatedGameLab,
 };
 
 interface LabNote {

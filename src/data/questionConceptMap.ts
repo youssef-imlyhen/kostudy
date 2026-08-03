@@ -69,6 +69,21 @@ export const questionConceptMap: Record<string, string[]> = {
   cs_scale_1: ['input-size'],
   cs_scale_2: ['work-growth'],
   cs_scale_3: ['asymptotic-comparison', 'work-growth'],
+  demography_pm_1: ['age-structure'],
+  demography_pm_2: ['cohort-aging'],
+  demography_pm_3: ['population-momentum', 'age-structure'],
+  psych_sd_1: ['decision-criterion'],
+  psych_sd_2: ['sensitivity-vs-bias'],
+  psych_sd_3: ['signal-noise-overlap', 'decision-criterion'],
+  ling_morph_1: ['morpheme'],
+  ling_morph_2: ['compositional-meaning'],
+  ling_morph_3: ['productivity-constraint', 'compositional-meaning'],
+  vision_color_1: ['simultaneous-contrast'],
+  vision_color_2: ['physical-vs-perceived-color'],
+  vision_color_3: ['contextual-inference'],
+  game_repeat_1: ['payoff-structure'],
+  game_repeat_2: ['repeated-interaction'],
+  game_repeat_3: ['strategy-environment', 'repeated-interaction'],
 };
 
 export const getQuestionIdsForConcept = (conceptId: string): string[] => Object.entries(questionConceptMap)

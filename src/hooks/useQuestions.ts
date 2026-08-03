@@ -4,12 +4,13 @@ import defaultQuestions from '../data/questions';
 import { crossDomainQuestions } from '../data/crossDomainQuestions';
 import { expansionQuestions } from '../data/expansionQuestions';
 import { advancedQuestions } from '../data/advancedQuestions';
+import { humanSystemsQuestions } from '../data/humanSystemsQuestions';
 import { crossDomainLessons } from '../data/crossDomainLessons';
 import { questionConceptMap } from '../data/questionConceptMap';
 import { assertValidCurriculum, validateQuestionMappings } from '../utils/curriculumValidation';
 import { useCustomQuestions } from './useCustomQuestions';
 
-const curriculumQuestions = [...crossDomainQuestions, ...expansionQuestions, ...advancedQuestions];
+const curriculumQuestions = [...crossDomainQuestions, ...expansionQuestions, ...advancedQuestions, ...humanSystemsQuestions];
 
 assertValidCurriculum(
   validateQuestionMappings(crossDomainLessons, curriculumQuestions, questionConceptMap),
