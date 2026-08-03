@@ -53,7 +53,7 @@ for (const id of requiredRecentIds) {
 
 const contracts = [
   ['lesson loading state', source.loadingState, ['role="status"', 'aria-live="polite"', 'aria-busy="true"', 'data-lesson-loading-state', 'Loading interactive lesson lab']],
-  ['lesson visual shell', source.lessonVisual, ['LessonLoadingState', 'data-lesson-lab-shell', 'defaultOpen={hasNote}', 'min-h-11']],
+  ['lesson visual shell', source.lessonVisual, ['LessonLoadingState', 'data-lesson-lab-shell', 'open={isNotebookOpen}', 'onToggle=', 'min-h-11']],
   ['layout shell', source.layout, ['app-main', 'app-bottom-nav', 'min-w-0']],
   ['bottom navigation', source.bottomNav, ['aria-label="Primary navigation"', 'app-bottom-nav-surface', 'app-bottom-nav-content', 'focus-visible:ring-2', 'min-h-11']],
   ['safe-area CSS', source.shellCss, ['--app-bottom-nav-height', 'safe-area-inset-bottom', '--app-bottom-nav-reserved-space', '.app-main', '.app-bottom-nav-surface']],

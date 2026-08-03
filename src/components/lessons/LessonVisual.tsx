@@ -1,4 +1,4 @@
-import { lazy, Suspense, type ComponentType, type LazyExoticComponent } from 'react';
+import { lazy, Suspense, useEffect, useState, type ComponentType, type LazyExoticComponent } from 'react';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { LessonVisualId } from '../../types/lesson';
 import LessonLoadingState from './LessonLoadingState';
@@ -82,6 +82,11 @@ export default function LessonVisual({ visual }: { visual: LessonVisualId }) {
   };
 
   const hasNote = Boolean(note.prediction.trim() || note.observation.trim());
+  const [isNotebookOpen, setIsNotebookOpen] = useState(hasNote);
+
+  useEffect(() => {
+    if (hasNote) setIsNotebookOpen(true);
+  }, [hasNote]);
 
   return (
     <div className="min-w-0 max-w-full space-y-4" data-lesson-lab-shell={visual}>
@@ -93,7 +98,8 @@ export default function LessonVisual({ visual }: { visual: LessonVisualId }) {
 
       <details
         className="group rounded-2xl border border-base-300 bg-base-100"
-        defaultOpen={hasNote}
+        open={isNotebookOpen}
+        onToggle={(event) => setIsNotebookOpen(event.currentTarget.open)}
       >
         <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-2xl px-4 py-3 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
           <span>Experiment notebook</span>
