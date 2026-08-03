@@ -21,11 +21,17 @@ export default function LearningPathCard({ path, lessons, progress }: { path: Cu
       {pathLessons.map((lesson, index) => {
         const completion = getLessonCompletion(lesson, progress[lesson.id]);
         const complete = completion >= 100;
-        return <li key={lesson.id} className="flex items-center gap-3 rounded-2xl bg-base-200/45 px-3 py-2.5">
-          <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-black ${complete ? 'bg-success text-success-content' : 'bg-base-300 text-base-content/60'}`}>{complete ? <CheckCircleIcon className="h-4 w-4" /> : index + 1}</div>
-          <span className="text-base" aria-hidden>{lesson.emoji}</span>
-          <div className="min-w-0 flex-1"><div className="truncate text-sm font-semibold">{lesson.title}</div><div className="text-[11px] text-base-content/45">{lesson.field} · {lesson.durationMinutes} min</div></div>
-          {completion > 0 && !complete ? <span className="text-[11px] font-semibold text-primary">{completion}%</span> : null}
+        return <li key={lesson.id}>
+          <Link
+            to={`/lessons/${lesson.id}`}
+            aria-label={`Open ${lesson.title}`}
+            className="group flex items-center gap-3 rounded-2xl bg-base-200/45 px-3 py-2.5 transition hover:bg-secondary/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
+          >
+            <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-black ${complete ? 'bg-success text-success-content' : 'bg-base-300 text-base-content/60'}`}>{complete ? <CheckCircleIcon className="h-4 w-4" /> : index + 1}</div>
+            <span className="text-base" aria-hidden>{lesson.emoji}</span>
+            <div className="min-w-0 flex-1"><div className="truncate text-sm font-semibold group-hover:text-secondary">{lesson.title}</div><div className="text-[11px] text-base-content/45">{lesson.field} · {lesson.durationMinutes} min</div></div>
+            {completion > 0 && !complete ? <span className="text-[11px] font-semibold text-primary">{completion}%</span> : <ArrowRightIcon className="h-4 w-4 shrink-0 text-base-content/30 transition group-hover:translate-x-0.5 group-hover:text-secondary" />}
+          </Link>
         </li>;
       })}
     </ol>
