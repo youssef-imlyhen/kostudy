@@ -14,7 +14,7 @@ This is my attempt to reimagine what a learning app should be in the age of AI. 
 ## Live Demo
 
 - Watch on YouTube: https://youtu.be/VsXnGYEopW0?si=qPlHpDq75T32G-RJ
-- Try it at https://kostudy.netlify.app/
+- Try it at https://kostudyxcv.netlify.app/
 
 https://github.com/user-attachments/assets/6f3066c1-657b-4e5f-b002-2f2f06004002
 
