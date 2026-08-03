@@ -5,6 +5,7 @@ import { worldLessons } from './worldLessons';
 import { logicLessons } from './logicLessons';
 import { advancedLessons } from './advancedLessons';
 import { humanSystemsLessons } from './humanSystemsLessons';
+import { frontierFoundationsLessons } from './frontierFoundationsLessons';
 
 export const crossDomainLessons = [
   ...scienceLessons,
@@ -14,4 +15,5 @@ export const crossDomainLessons = [
   ...logicLessons,
   ...advancedLessons,
   ...humanSystemsLessons,
+  ...frontierFoundationsLessons,
 ];

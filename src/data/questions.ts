@@ -28,6 +28,11 @@ export const categoryEmojis: Record<string, string> = {
   'Linguistics': '🗣️',
   'Visual Perception': '🎨',
   'Game Theory': '♟️',
+  'Information Theory': '🗜️',
+  'Network Science': '🕸️',
+  'Geology': '🌋',
+  'Geometry': '📐',
+  'Electricity': '⚡',
 };
 
 // Word to emoji mapping for fallback mechanism (kept for robustness)

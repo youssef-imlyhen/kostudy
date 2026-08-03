@@ -12,6 +12,7 @@ const allowedVisualIds: LessonVisualId[] = [
   'supply-demand', 'sorting-algorithms', 'polyrhythm', 'energy-balance',
   'exponential-growth', 'compound-growth', 'orbit-motion', 'predator-prey', 'truth-table',
   'population-pyramid', 'signal-detection', 'morphology-builder', 'color-context', 'repeated-game',
+  'entropy-compression', 'network-diffusion', 'stick-slip', 'geometry-transform', 'electric-circuit',
 ];
 const allowedVisuals = new Set<LessonVisualId>(allowedVisualIds);
 const allowedBlockTypes = new Set(['explain', 'interactive', 'checkpoint', 'reflection', 'takeaways', 'compare', 'resources']);
