@@ -15,7 +15,7 @@ export default function EntropyCompressionLab() {
     const probabilities = weights.map((value) => value / total);
     const entropy = probabilities.reduce((sum, probability) => probability > 0 ? sum - probability * Math.log2(probability) : sum, 0);
     const fixedBitsPerSymbol = Math.ceil(Math.log2(symbols.length));
-    const cumulative = probabilities.reduce<number[]>((list, probability) => [...list, (list.at(-1) || 0) + probability], []);
+    const cumulative = probabilities.reduce<number[]>((list, probability) => [...list, (list.length ? list[list.length - 1] : 0) + probability], []);
     const sample = Array.from({ length: sampleSize }, (_, index) => {
       const value = deterministic(index + sampleSize * 7);
       return symbols[cumulative.findIndex((limit) => value <= limit)];
