@@ -2,11 +2,15 @@ import { readFile } from 'node:fs/promises';
 import process from 'node:process';
 
 const paths = {
-  app: 'src/App.tsx', indexCss: 'src/index.css', lessonType: 'src/types/lesson.ts', lessonVisual: 'src/components/lessons/LessonVisual.tsx', lessonCreator: 'src/screens/LessonCreatorScreen.tsx', entropy: 'src/components/lessons/EntropyCompressionLab.tsx', network: 'src/components/lessons/NetworkDiffusionLab.tsx', population: 'src/components/lessons/PopulationMomentumLab.tsx', signal: 'src/components/lessons/SignalDetectionLab.tsx', morphology: 'src/components/lessons/MorphologyLab.tsx', color: 'src/components/lessons/ColorContextLab.tsx', repeatedGame: 'src/components/lessons/RepeatedGameLab.tsx', stickSlip: 'src/components/lessons/StickSlipLab.tsx', geometry: 'src/components/lessons/GeometryTransformLab.tsx', circuit: 'src/components/lessons/CircuitLab.tsx',
+  app: 'src/App.tsx', indexCss: 'src/index.css', lessonType: 'src/types/lesson.ts', lessonVisual: 'src/components/lessons/LessonVisual.tsx', lessonCreator: 'src/screens/LessonCreatorScreen.tsx', actionButton: 'src/components/ActionButton.tsx', tabButton: 'src/components/TabButton.tsx', bayes: 'src/components/lessons/BayesLab.tsx', entropy: 'src/components/lessons/EntropyCompressionLab.tsx', network: 'src/components/lessons/NetworkDiffusionLab.tsx', population: 'src/components/lessons/PopulationMomentumLab.tsx', signal: 'src/components/lessons/SignalDetectionLab.tsx', morphology: 'src/components/lessons/MorphologyLab.tsx', color: 'src/components/lessons/ColorContextLab.tsx', repeatedGame: 'src/components/lessons/RepeatedGameLab.tsx', stickSlip: 'src/components/lessons/StickSlipLab.tsx', geometry: 'src/components/lessons/GeometryTransformLab.tsx', circuit: 'src/components/lessons/CircuitLab.tsx',
 };
-const recentLabPaths = ['PopulationMomentumLab.tsx','SignalDetectionLab.tsx','MorphologyLab.tsx','ColorContextLab.tsx','RepeatedGameLab.tsx','EntropyCompressionLab.tsx','NetworkDiffusionLab.tsx','StickSlipLab.tsx','GeometryTransformLab.tsx','CircuitLab.tsx'].map((name) => `src/components/lessons/${name}`);
+const recentLabNames = ['PopulationMomentumLab.tsx','SignalDetectionLab.tsx','MorphologyLab.tsx','ColorContextLab.tsx','RepeatedGameLab.tsx','EntropyCompressionLab.tsx','NetworkDiffusionLab.tsx','StickSlipLab.tsx','GeometryTransformLab.tsx','CircuitLab.tsx'];
+const legacyLabNames = ['BayesLab.tsx','ClickFunnelLab.tsx','CompoundGrowthLab.tsx','EnergyBalanceLab.tsx','EquilibriumLab.tsx','ExponentialGrowthLab.tsx','MemoryCurveLab.tsx','OrbitLab.tsx','PolyrhythmLab.tsx','PredatorPreyLab.tsx','ProjectileMotionLab.tsx','RetentionCurveLab.tsx','SelectionLab.tsx','SortingLab.tsx','SoundWaveLab.tsx','SupplyDemandLab.tsx','TruthTableLab.tsx'];
+const toLabPath = (name) => `src/components/lessons/${name}`;
+const allLabPaths = [...recentLabNames, ...legacyLabNames].map(toLabPath);
+const legacyLabPaths = legacyLabNames.map(toLabPath);
 const entries = await Promise.all(Object.entries(paths).map(async ([key, path]) => [key, await readFile(path, 'utf8')]));
-const recentLabs = await Promise.all(recentLabPaths.map(async (path) => ({ path, text: await readFile(path, 'utf8') })));
+const allLabs = await Promise.all(allLabPaths.map(async (path) => ({ path, text: await readFile(path, 'utf8') })));
 const source = Object.fromEntries(entries); const failures = [];
 const visualType = source.lessonType.match(/export type LessonVisualId =([\s\S]*?);/);
 const registry = source.lessonVisual.match(/const visuals:[\s\S]*?= \{([\s\S]*?)\n\};/);
@@ -17,8 +21,13 @@ const registeredIds = registry ? [...registry[1].matchAll(/^\s*'([^']+)':/gm)].m
 for (const id of declaredIds) { if (!registeredIds.includes(id)) failures.push(`Visual ID is missing from LessonVisual registry: ${id}`); if (!source.lessonCreator.includes(`'${id}'`)) failures.push(`Visual ID is missing from LessonCreator allowlist: ${id}`); }
 for (const id of registeredIds) if (!declaredIds.includes(id)) failures.push(`Registry contains undeclared visual ID: ${id}`);
 if (/\bw-screen\b/.test(source.app)) failures.push('App shell still uses w-screen and can overflow by scrollbar width.');
-for (const { path, text } of recentLabs) { if (!text.includes('min-w-0 max-w-full')) failures.push(`${path} is missing the mobile containment root.`); const unsafe=[...text.matchAll(/<button(?![^>]*\btype=)[^>]*>/g)]; if (unsafe.length) failures.push(`${path} has ${unsafe.length} button(s) without type="button".`); }
+for (const { path, text } of allLabs) { if (!text.includes('min-w-0 max-w-full')) failures.push(`${path} is missing the mobile containment root.`); const unsafe=[...text.matchAll(/<button(?![^>]*\btype=)[^>]*>/g)]; if (unsafe.length) failures.push(`${path} has ${unsafe.length} button(s) without type="button".`); }
+for (const path of legacyLabPaths) { const lab = allLabs.find((item) => item.path === path); if (!lab?.text.includes('lab-grid')) failures.push(`${path} is missing the container-responsive lab grid.`); }
 const contracts=[
+ ['reduced-motion baseline',source.indexCss,['@media (prefers-reduced-motion: reduce)','animation-duration: 0.01ms !important','transition-duration: 0.01ms !important']],
+ ['shared action button semantics',source.actionButton,['type="button"','aria-label={label}','aria-hidden="true"']],
+ ['shared tab button semantics',source.tabButton,['<button','type="button"','role="tab"','aria-selected={isActive}','aria-label={label}','focus-visible:ring-2']],
+ ['Bayes exact posterior and accessible outcome',source.bayes,['const positiveTotal=tp+fp;','positiveTotal>0?tp/positiveTotal*100:0','role="status"','aria-live="polite"','aria-pressed={positivesOnly}','Out of 1,000 people:']],
  ['shared responsive lab grid',source.indexCss,['.lab-grid {','repeat(auto-fit, minmax(min(100%, var(--lab-grid-min)), 1fr))','.lab-grid-wide','.lab-grid-medium','.lab-grid-compact']],
  ['signal posterior denominator',source.signal,['const positiveTotal = truePositive + falsePositive;','positiveTotal > 0 ? truePositive / positiveTotal : 0','strokeDasharray=\"4 2\"']],
  ['morphology spelling rules',source.morphology,['function buildSurfaceWord','Spelling adjustment:','rewriting</button>','recyclable</button>']],
@@ -35,4 +44,4 @@ const contracts=[
 ];
 for (const [name,text,markers] of contracts) for (const marker of markers) if (!text.includes(marker)) failures.push(`${name} is missing ${marker}`);
 if (failures.length) { console.error('Learning lab validation failed:'); failures.forEach((failure)=>console.error(`- ${failure}`)); process.exit(1); }
-console.log(`Learning lab validation passed: ${declaredIds.length} visual IDs and ${recentLabs.length} recent labs checked.`);
+console.log(`Learning lab validation passed: ${declaredIds.length} visual IDs and ${allLabs.length} interactive labs checked.`);
