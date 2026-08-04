@@ -39,6 +39,12 @@ const combinations: Record<string, string> = {
   unreadable: 'not capable of being read',
 };
 
+function buildSurfaceWord(prefix: string, root: string, suffix: string): string {
+  const dropsFinalE = (suffix === 'ing' || suffix === 'able') && root.endsWith('e');
+  const surfaceRoot = dropsFinalE ? root.slice(0, -1) : root;
+  return `${prefix}${surfaceRoot}${suffix}`;
+}
+
 export default function MorphologyLab() {
   const [prefixIndex, setPrefixIndex] = useState(2);
   const [rootIndex, setRootIndex] = useState(0);
@@ -48,11 +54,12 @@ export default function MorphologyLab() {
     const prefix = prefixes[prefixIndex];
     const root = roots[rootIndex];
     const suffix = suffixes[suffixIndex];
-    const rawWord = `${prefix.form}${root.form}${suffix.form}`;
+    const underlyingWord = `${prefix.form}${root.form}${suffix.form}`;
+    const rawWord = buildSurfaceWord(prefix.form, root.form, suffix.form);
     const conventionalMeaning = combinations[rawWord];
     const parts = [prefix, root, suffix].filter((part) => part.form);
     const composed = parts.map((part) => part.meaning).filter(Boolean).join(' + ');
-    return { prefix, root, suffix, rawWord, conventionalMeaning, composed };
+    return { prefix, root, suffix, rawWord, underlyingWord, conventionalMeaning, composed };
   }, [prefixIndex, rootIndex, suffixIndex]);
 
   const applyPreset = (prefix: string, root: string, suffix: string) => {
@@ -66,7 +73,8 @@ export default function MorphologyLab() {
       <div className="text-xs font-bold uppercase tracking-wider text-primary">Constructed form</div>
       <div className="mt-2 break-all text-4xl font-black tracking-tight sm:text-5xl">{result.rawWord}</div>
       <div className="mt-3 text-sm leading-6 text-base-content/70">{result.conventionalMeaning || `Literal composition: ${result.composed}. This combination may be understandable without being a conventional English word.`}</div>
-      <div className="mt-5 grid gap-3 sm:grid-cols-3">
+      {result.underlyingWord !== result.rawWord ? <div className="mt-2 text-xs font-semibold text-primary">Spelling adjustment: {result.underlyingWord} → {result.rawWord}</div> : null}
+      <div className="lab-grid lab-grid-medium mt-5">
         {[result.prefix, result.root, result.suffix].map((part, index) => <div key={`${part.role}-${index}`} className={`rounded-2xl border p-4 ${part.form ? 'border-primary/20 bg-base-100' : 'border-dashed border-base-300 bg-base-100/50'}`}>
           <div className="text-[10px] font-bold uppercase tracking-wider text-base-content/45">{part.role}</div>
           <div className="mt-1 text-xl font-black">{part.form || '∅'}</div>
@@ -75,13 +83,13 @@ export default function MorphologyLab() {
       </div>
     </div>
 
-    <div className="grid gap-4 sm:grid-cols-3">
+    <div className="lab-grid lab-grid-medium">
       <label className="space-y-2"><span className="text-sm font-semibold">Prefix</span><select className="select select-bordered w-full" value={prefixIndex} onChange={(event) => setPrefixIndex(Number(event.target.value))}>{prefixes.map((item, index) => <option key={`${item.form}-${index}`} value={index}>{item.form || '— none —'} · {item.meaning || 'no added meaning'}</option>)}</select></label>
       <label className="space-y-2"><span className="text-sm font-semibold">Root</span><select className="select select-bordered w-full" value={rootIndex} onChange={(event) => setRootIndex(Number(event.target.value))}>{roots.map((item, index) => <option key={item.form} value={index}>{item.form} · {item.meaning}</option>)}</select></label>
       <label className="space-y-2"><span className="text-sm font-semibold">Suffix</span><select className="select select-bordered w-full" value={suffixIndex} onChange={(event) => setSuffixIndex(Number(event.target.value))}>{suffixes.map((item, index) => <option key={`${item.form}-${index}`} value={index}>{item.form || '— none —'} · {item.meaning || 'no added meaning'}</option>)}</select></label>
     </div>
 
-    <div className="flex flex-wrap gap-2"><span className="self-center text-xs font-semibold text-base-content/55">Try conventional examples:</span><button type="button" className="btn btn-ghost btn-sm" onClick={() => applyPreset('re', 'view', 'er')}>reviewer</button><button type="button" className="btn btn-ghost btn-sm" onClick={() => applyPreset('pre', 'view', '')}>preview</button><button type="button" className="btn btn-ghost btn-sm" onClick={() => applyPreset('un', 'read', 'able')}>unreadable</button><button type="button" className="btn btn-ghost btn-sm" onClick={() => applyPreset('', 'form', 'less')}>formless</button></div>
+    <div className="flex flex-wrap gap-2"><span className="self-center text-xs font-semibold text-base-content/55">Try conventional examples:</span><button type="button" className="btn btn-ghost btn-sm" onClick={() => applyPreset('re', 'view', 'er')}>reviewer</button><button type="button" className="btn btn-ghost btn-sm" onClick={() => applyPreset('pre', 'view', '')}>preview</button><button type="button" className="btn btn-ghost btn-sm" onClick={() => applyPreset('un', 'read', 'able')}>unreadable</button><button type="button" className="btn btn-ghost btn-sm" onClick={() => applyPreset('', 'form', 'less')}>formless</button><button type="button" className="btn btn-ghost btn-sm" onClick={() => applyPreset('re', 'write', 'ing')}>rewriting</button><button type="button" className="btn btn-ghost btn-sm" onClick={() => applyPreset('re', 'cycle', 'able')}>recyclable</button></div>
     <p className="text-xs leading-5 text-base-content/55">Morphemes are reusable form–meaning units, but language is not free algebra. Sound changes, spelling rules, history, and convention can block or reshape otherwise understandable combinations.</p>
   </div>;
 }

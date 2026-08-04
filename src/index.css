@@ -304,3 +304,32 @@
     padding-bottom: max(1rem, env(safe-area-inset-bottom));
   }
 }
+
+
+/* Container-responsive layouts for embedded learning labs. */
+@layer components {
+  .lab-grid {
+    --lab-grid-min: 14rem;
+    display: grid;
+    min-width: 0;
+    max-width: 100%;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--lab-grid-min)), 1fr));
+  }
+
+  .lab-grid > * {
+    min-width: 0;
+  }
+
+  .lab-grid-wide {
+    --lab-grid-min: 20rem;
+  }
+
+  .lab-grid-medium {
+    --lab-grid-min: 14rem;
+  }
+
+  .lab-grid-compact {
+    --lab-grid-min: 10rem;
+  }
+}

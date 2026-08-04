@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import process from 'node:process';
 
 const paths = {
-  app: 'src/App.tsx', lessonType: 'src/types/lesson.ts', lessonVisual: 'src/components/lessons/LessonVisual.tsx', lessonCreator: 'src/screens/LessonCreatorScreen.tsx', entropy: 'src/components/lessons/EntropyCompressionLab.tsx', network: 'src/components/lessons/NetworkDiffusionLab.tsx', geometry: 'src/components/lessons/GeometryTransformLab.tsx',
+  app: 'src/App.tsx', indexCss: 'src/index.css', lessonType: 'src/types/lesson.ts', lessonVisual: 'src/components/lessons/LessonVisual.tsx', lessonCreator: 'src/screens/LessonCreatorScreen.tsx', entropy: 'src/components/lessons/EntropyCompressionLab.tsx', network: 'src/components/lessons/NetworkDiffusionLab.tsx', population: 'src/components/lessons/PopulationMomentumLab.tsx', signal: 'src/components/lessons/SignalDetectionLab.tsx', morphology: 'src/components/lessons/MorphologyLab.tsx', color: 'src/components/lessons/ColorContextLab.tsx', repeatedGame: 'src/components/lessons/RepeatedGameLab.tsx', stickSlip: 'src/components/lessons/StickSlipLab.tsx', geometry: 'src/components/lessons/GeometryTransformLab.tsx', circuit: 'src/components/lessons/CircuitLab.tsx',
 };
 const recentLabPaths = ['PopulationMomentumLab.tsx','SignalDetectionLab.tsx','MorphologyLab.tsx','ColorContextLab.tsx','RepeatedGameLab.tsx','EntropyCompressionLab.tsx','NetworkDiffusionLab.tsx','StickSlipLab.tsx','GeometryTransformLab.tsx','CircuitLab.tsx'].map((name) => `src/components/lessons/${name}`);
 const entries = await Promise.all(Object.entries(paths).map(async ([key, path]) => [key, await readFile(path, 'utf8')]));
@@ -19,6 +19,13 @@ for (const id of registeredIds) if (!declaredIds.includes(id)) failures.push(`Re
 if (/\bw-screen\b/.test(source.app)) failures.push('App shell still uses w-screen and can overflow by scrollbar width.');
 for (const { path, text } of recentLabs) { if (!text.includes('min-w-0 max-w-full')) failures.push(`${path} is missing the mobile containment root.`); const unsafe=[...text.matchAll(/<button(?![^>]*\btype=)[^>]*>/g)]; if (unsafe.length) failures.push(`${path} has ${unsafe.length} button(s) without type="button".`); }
 const contracts=[
+ ['shared responsive lab grid',source.indexCss,['.lab-grid {','repeat(auto-fit, minmax(min(100%, var(--lab-grid-min)), 1fr))','.lab-grid-wide','.lab-grid-medium','.lab-grid-compact']],
+ ['signal posterior denominator',source.signal,['const positiveTotal = truePositive + falsePositive;','positiveTotal > 0 ? truePositive / positiveTotal : 0','strokeDasharray=\"4 2\"']],
+ ['morphology spelling rules',source.morphology,['function buildSurfaceWord','Spelling adjustment:','rewriting</button>','recyclable</button>']],
+ ['independent random strategies',source.repeatedGame,['randomSeed: number','historyB, 91','historyA, 191']],
+ ['stick-slip cursor-scoped events',source.stickSlip,['eventsThroughCursor','Events through cursor','stick-slip-title','baseline threshold']],
+ ['geometry display translation disclosure',source.geometry,['For side-by-side comparison','geometry-title']],
+ ['circuit semantics and accessibility',source.circuit,["arrangement === 'series' ? 'R1 resistor' : 'R1 branch'",'circuit-title','circuit-description']],
  ['network container responsiveness',source.network,['max-w-xl','aspect-square','flex-wrap','basis-40','min-w-[12rem]','overflow-hidden']],
  ['network accessible graphic',source.network,['<title id="network-title">','<desc id="network-description">','aria-labelledby="network-title network-description"','preserveAspectRatio="xMidYMid meet"']],
  ['network non-color status',source.network,['Activation count by step','stepCounts','role="status"','aria-live="polite"','aria-valuetext']],
