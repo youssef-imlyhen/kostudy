@@ -29,6 +29,7 @@ export default function ActionButton({
     ghost: 'btn-ghost',
   };
   const sizeClasses = { sm: 'btn-sm', md: 'btn-md', lg: 'btn-lg' };
+  const canCollapseToIcon = responsive && Boolean(icon);
 
   return (
     <button
@@ -38,8 +39,12 @@ export default function ActionButton({
       aria-label={label}
       className={`btn rounded-2xl border-2 border-b-4 font-bold ${variantClasses[variant]} ${sizeClasses[size]} ${disabled ? 'btn-disabled' : ''} ${className}`}
     >
-      {icon ? <span aria-hidden="true" className={label ? 'mr-2' : ''}>{icon}</span> : null}
-      {responsive ? <span className="hidden sm:inline">{label}</span> : label}
+      {icon ? (
+        <span aria-hidden="true" className={canCollapseToIcon ? 'sm:mr-2' : 'mr-2'}>
+          {icon}
+        </span>
+      ) : null}
+      <span className={canCollapseToIcon ? 'hidden sm:inline' : undefined}>{label}</span>
     </button>
   );
 }
