@@ -19,7 +19,7 @@ for (const id of registeredIds) if (!declaredIds.includes(id)) failures.push(`Re
 if (/\bw-screen\b/.test(source.app)) failures.push('App shell still uses w-screen and can overflow by scrollbar width.');
 for (const { path, text } of recentLabs) { if (!text.includes('min-w-0 max-w-full')) failures.push(`${path} is missing the mobile containment root.`); const unsafe=[...text.matchAll(/<button(?![^>]*\btype=)[^>]*>/g)]; if (unsafe.length) failures.push(`${path} has ${unsafe.length} button(s) without type="button".`); }
 const contracts=[
- ['network mobile grid',source.network,['minmax(0,1.2fr)','minmax(0,.8fr)','max-w-full','overflow-hidden']],
+ ['network container responsiveness',source.network,['max-w-xl','aspect-square','flex-wrap','basis-40','min-w-[12rem]','overflow-hidden']],
  ['network accessible graphic',source.network,['<title id="network-title">','<desc id="network-description">','aria-labelledby="network-title network-description"','preserveAspectRatio="xMidYMid meet"']],
  ['network non-color status',source.network,['Activation count by step','stepCounts','role="status"','aria-live="polite"','aria-valuetext']],
  ['entropy zero-total fallback',source.entropy,['rawTotal > 0','symbols.map(() => 1 / symbols.length)']],
