@@ -42,10 +42,10 @@ function App() {
         <UserContext.Provider value={{ username, setUsername }}>
           <QuizContext.Provider value={{ currentQuiz, setCurrentQuiz }}>
             <BrowserRouter>
-              <div className="relative min-h-screen w-screen max-w-none overflow-x-hidden">
+              <div className="relative min-h-screen w-full max-w-full overflow-x-hidden">
                 <AchievementNotification />
                 <Routes>
-                  <Route path="/" element={<div className="w-screen max-w-none overflow-x-hidden"><LandingPage /></div>} />
+                  <Route path="/" element={<div className="w-full max-w-full overflow-x-hidden"><LandingPage /></div>} />
                   <Route path="/dashboard" element={<Layout><DashboardScreen /></Layout>} />
                   <Route path="/categories" element={<Layout><CategoriesScreen /></Layout>} />
                   <Route path="/categories/:categoryId" element={<Layout><CategoryScreen /></Layout>} />

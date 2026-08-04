@@ -12,7 +12,7 @@ export default function ColorContextLab() {
 
   const patch = hsl(hue, saturation, patchLightness);
 
-  return <div className="space-y-5">
+  return <div className="min-w-0 max-w-full space-y-5 overflow-x-hidden">
     <div className="grid gap-3 sm:grid-cols-2">
       {[leftBackground, rightBackground].map((background, index) => <div key={index} className="relative flex h-56 items-center justify-center overflow-hidden rounded-3xl border border-base-300" style={{ background: hsl(hue, Math.max(4, saturation * 0.25), background) }}>
         <div className="h-28 w-28 rounded-2xl border border-white/20 shadow-xl" style={{ background: patch }} />
@@ -30,7 +30,7 @@ export default function ColorContextLab() {
       <label className="space-y-2"><span className="flex justify-between text-sm"><span>Left field</span><span>{leftBackground}%</span></span><input className="range range-sm" type="range" min="2" max="95" value={leftBackground} onChange={(event) => setLeftBackground(Number(event.target.value))} /></label>
       <label className="space-y-2"><span className="flex justify-between text-sm"><span>Right field</span><span>{rightBackground}%</span></span><input className="range range-sm" type="range" min="2" max="95" value={rightBackground} onChange={(event) => setRightBackground(Number(event.target.value))} /></label>
     </div>
-    <div className="flex flex-wrap gap-2"><button className="btn btn-primary btn-sm" onClick={() => setReveal((value) => !value)}>{reveal ? 'Hide physical values' : 'Reveal identical values'}</button><button className="btn btn-ghost btn-sm" onClick={() => { setLeftBackground(18); setRightBackground(84); }}>Maximize contrast</button><button className="btn btn-ghost btn-sm" onClick={() => { setLeftBackground(50); setRightBackground(50); }}>Match contexts</button></div>
+    <div className="flex flex-wrap gap-2"><button type="button" className="btn btn-primary btn-sm" onClick={() => setReveal((value) => !value)}>{reveal ? 'Hide physical values' : 'Reveal identical values'}</button><button type="button" className="btn btn-ghost btn-sm" onClick={() => { setLeftBackground(18); setRightBackground(84); }}>Maximize contrast</button><button type="button" className="btn btn-ghost btn-sm" onClick={() => { setLeftBackground(50); setRightBackground(50); }}>Match contexts</button></div>
     <p className="text-xs leading-5 text-base-content/55">Screen color is an imperfect proxy for light in the world, and displays differ. The robust lesson is relational: perception depends on both the local stimulus and its context.</p>
   </div>;
 }

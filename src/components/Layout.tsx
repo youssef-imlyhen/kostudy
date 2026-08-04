@@ -12,7 +12,7 @@ export default function Layout({ children, hideNav = false }: LayoutProps) {
 
   return (
     <div
-      className="min-h-screen bg-base-200 flex flex-col"
+      className="flex min-h-screen w-full min-w-0 max-w-full flex-col overflow-x-hidden bg-base-200"
       style={{
         fontFamily: designTokens.typography.fontFamily,
         color: designTokens.colors.text,

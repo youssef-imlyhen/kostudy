@@ -34,7 +34,7 @@ export default function SignalDetectionLab() {
   }).join(' ');
   const criterionX = ((criterion + 4) / 8) * 100;
 
-  return <div className="space-y-5">
+  return <div className="min-w-0 max-w-full space-y-5 overflow-x-hidden">
     <div className="rounded-3xl bg-base-200/70 p-4 sm:p-5">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2"><div><div className="text-sm font-bold">Noise and signal overlap</div><div className="text-xs text-base-content/50">The vertical line is the current response criterion</div></div><div className="flex gap-3 text-xs"><span className="font-semibold text-primary">Noise</span><span className="font-semibold text-secondary">Signal</span></div></div>
       <svg viewBox="0 0 100 100" className="h-56 w-full overflow-visible rounded-2xl bg-base-100" role="img" aria-label="Overlapping noise and signal distributions with a movable decision criterion">

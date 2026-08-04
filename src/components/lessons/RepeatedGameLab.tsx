@@ -65,7 +65,7 @@ export default function RepeatedGameLab() {
 
   const strategyOptions = (Object.keys(labels) as Strategy[]).map((strategy) => <option key={strategy} value={strategy}>{labels[strategy]}</option>);
 
-  return <div className="space-y-5">
+  return <div className="min-w-0 max-w-full space-y-5 overflow-x-hidden">
     <div className="grid gap-4 sm:grid-cols-2">
       <div className="rounded-3xl border border-primary/20 bg-primary/5 p-5"><div className="text-xs font-bold uppercase tracking-wider text-primary">Player A</div><div className="mt-1 text-lg font-black">{labels[strategyA]}</div><div className="mt-3 text-4xl font-black">{game.totalA}</div><div className="text-xs text-base-content/50">total payoff</div></div>
       <div className="rounded-3xl border border-secondary/20 bg-secondary/5 p-5"><div className="text-xs font-bold uppercase tracking-wider text-secondary">Player B</div><div className="mt-1 text-lg font-black">{labels[strategyB]}</div><div className="mt-3 text-4xl font-black">{game.totalB}</div><div className="text-xs text-base-content/50">total payoff</div></div>

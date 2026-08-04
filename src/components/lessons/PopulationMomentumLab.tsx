@@ -47,7 +47,7 @@ export default function PopulationMomentumLab() {
   const maxValue = Math.max(...result.initial, ...result.projected, 1);
   const change = ((result.total / result.startTotal) - 1) * 100;
 
-  return <div className="space-y-5">
+  return <div className="min-w-0 max-w-full space-y-5 overflow-x-hidden">
     <div className="grid gap-4 lg:grid-cols-[1.2fr_.8fr]">
       <div className="rounded-3xl bg-base-200/70 p-4 sm:p-5">
         <div className="mb-4 flex items-center justify-between gap-3">

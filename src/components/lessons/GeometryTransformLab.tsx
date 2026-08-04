@@ -42,12 +42,12 @@ export default function GeometryTransformLab() {
   }, [angle, dx, dy, scale, transform]);
 
   const invariants = transform === 'scale'
-    ? ['Angles', 'Parallel lines', 'Shape similarity']
+    ? ['Angles', 'Parallel lines', 'Shape similarity', 'Orientation']
     : transform === 'reflect'
       ? ['Lengths', 'Angles', 'Area']
       : ['Lengths', 'Angles', 'Area', 'Orientation'];
 
-  return <div className="space-y-5">
+  return <div className="min-w-0 max-w-full space-y-5 overflow-x-hidden">
     <div className="rounded-3xl bg-base-200/70 p-4">
       <svg viewBox="0 0 100 70" className="h-72 w-full rounded-2xl bg-base-100" role="img" aria-label="Original and transformed polygons">
         <defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" strokeWidth="0.25" className="text-base-content/10" /></pattern></defs>

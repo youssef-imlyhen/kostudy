@@ -61,7 +61,7 @@ export default function MorphologyLab() {
     setSuffixIndex(suffixes.findIndex((item) => item.form === suffix));
   };
 
-  return <div className="space-y-5">
+  return <div className="min-w-0 max-w-full space-y-5 overflow-x-hidden">
     <div className="rounded-3xl border border-primary/15 bg-primary/5 p-5 sm:p-7">
       <div className="text-xs font-bold uppercase tracking-wider text-primary">Constructed form</div>
       <div className="mt-2 break-all text-4xl font-black tracking-tight sm:text-5xl">{result.rawWord}</div>
@@ -81,7 +81,7 @@ export default function MorphologyLab() {
       <label className="space-y-2"><span className="text-sm font-semibold">Suffix</span><select className="select select-bordered w-full" value={suffixIndex} onChange={(event) => setSuffixIndex(Number(event.target.value))}>{suffixes.map((item, index) => <option key={`${item.form}-${index}`} value={index}>{item.form || '— none —'} · {item.meaning || 'no added meaning'}</option>)}</select></label>
     </div>
 
-    <div className="flex flex-wrap gap-2"><span className="self-center text-xs font-semibold text-base-content/55">Try conventional examples:</span><button className="btn btn-ghost btn-sm" onClick={() => applyPreset('re', 'view', 'er')}>reviewer</button><button className="btn btn-ghost btn-sm" onClick={() => applyPreset('pre', 'view', '')}>preview</button><button className="btn btn-ghost btn-sm" onClick={() => applyPreset('un', 'read', 'able')}>unreadable</button><button className="btn btn-ghost btn-sm" onClick={() => applyPreset('', 'form', 'less')}>formless</button></div>
+    <div className="flex flex-wrap gap-2"><span className="self-center text-xs font-semibold text-base-content/55">Try conventional examples:</span><button type="button" className="btn btn-ghost btn-sm" onClick={() => applyPreset('re', 'view', 'er')}>reviewer</button><button type="button" className="btn btn-ghost btn-sm" onClick={() => applyPreset('pre', 'view', '')}>preview</button><button type="button" className="btn btn-ghost btn-sm" onClick={() => applyPreset('un', 'read', 'able')}>unreadable</button><button type="button" className="btn btn-ghost btn-sm" onClick={() => applyPreset('', 'form', 'less')}>formless</button></div>
     <p className="text-xs leading-5 text-base-content/55">Morphemes are reusable form–meaning units, but language is not free algebra. Sound changes, spelling rules, history, and convention can block or reshape otherwise understandable combinations.</p>
   </div>;
 }
