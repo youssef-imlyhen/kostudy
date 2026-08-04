@@ -48,13 +48,13 @@ export default function PopulationMomentumLab() {
   const change = ((result.total / result.startTotal) - 1) * 100;
 
   return <div className="min-w-0 max-w-full space-y-5 overflow-x-hidden">
-    <div className="grid gap-4 lg:grid-cols-[1.2fr_.8fr]">
+    <div className="lab-grid lab-grid-wide">
       <div className="rounded-3xl bg-base-200/70 p-4 sm:p-5">
         <div className="mb-4 flex items-center justify-between gap-3">
           <div><div className="text-sm font-bold">Age structure after {years} years</div><div className="text-xs text-base-content/50">Each bar is one ten-year cohort</div></div>
           <div className={`badge ${change >= 0 ? 'badge-success' : 'badge-warning'} badge-outline`}>{change >= 0 ? '+' : ''}{change.toFixed(0)}%</div>
         </div>
-        <div className="flex h-56 items-end gap-2 rounded-2xl bg-base-100 p-3 sm:gap-3">
+        <div className="flex h-56 items-end gap-2 rounded-2xl bg-base-100 p-3 sm:gap-3" role="img" aria-label={`Projected age structure after ${years} years. Cohort values: ${result.projected.map((value, index) => `${labels[index]} ${value.toFixed(1)}`).join(', ')}`}>
           {result.projected.map((value, index) => <div key={labels[index]} className="flex min-w-0 flex-1 flex-col items-center justify-end gap-2">
             <div className="text-[10px] font-semibold tabular-nums">{value.toFixed(1)}</div>
             <div className="w-full rounded-t-lg bg-primary/80 transition-all" style={{ height: `${Math.max(4, (value / maxValue) * 160)}px` }} />
@@ -62,19 +62,19 @@ export default function PopulationMomentumLab() {
           </div>)}
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-1">
+      <div className="lab-grid lab-grid-compact">
         {[['Projected size', result.total.toFixed(0)], ['Under 20', `${result.youthShare.toFixed(0)}%`], ['Age 60+', `${result.olderShare.toFixed(0)}%`], ['Starting size', result.startTotal.toFixed(0)]].map(([label, value]) => <div key={label} className="rounded-2xl border border-base-300 bg-base-100 p-4">
           <div className="text-xs text-base-content/55">{label}</div><div className="mt-1 text-2xl font-black">{value}</div>
         </div>)}
       </div>
     </div>
 
-    <div className="grid gap-4 sm:grid-cols-3">
+    <div className="lab-grid lab-grid-medium">
       <label className="space-y-2"><span className="text-sm font-semibold">Starting pyramid</span><select className="select select-bordered select-sm w-full" value={shape} onChange={(event) => setShape(event.target.value as Shape)}><option value="young">Young</option><option value="balanced">Balanced</option><option value="aging">Aging</option></select></label>
-      <label className="space-y-2"><span className="flex justify-between text-sm"><span>Birth intensity</span><span>{fertility.toFixed(1)}</span></span><input className="range range-primary range-sm" type="range" min="0.8" max="4.5" step="0.1" value={fertility} onChange={(event) => setFertility(Number(event.target.value))} /></label>
-      <label className="space-y-2"><span className="flex justify-between text-sm"><span>Survival</span><span>{Math.round(survival * 100)}%</span></span><input className="range range-secondary range-sm" type="range" min="0.72" max="0.98" step="0.01" value={survival} onChange={(event) => setSurvival(Number(event.target.value))} /></label>
+      <label className="space-y-2"><span className="flex justify-between text-sm"><span>Birth intensity</span><span>{fertility.toFixed(1)}</span></span><input className="range range-primary range-sm" type="range" min="0.8" max="4.5" step="0.1" value={fertility} aria-valuetext={`${fertility.toFixed(1)} birth-intensity units`} onChange={(event) => setFertility(Number(event.target.value))} /></label>
+      <label className="space-y-2"><span className="flex justify-between text-sm"><span>Survival</span><span>{Math.round(survival * 100)}%</span></span><input className="range range-secondary range-sm" type="range" min="0.72" max="0.98" step="0.01" value={survival} aria-valuetext={`${Math.round(survival * 100)} percent survival`} onChange={(event) => setSurvival(Number(event.target.value))} /></label>
     </div>
-    <label className="space-y-2"><span className="flex justify-between text-sm"><span>Projection horizon</span><span>{years} years</span></span><input className="range range-accent range-sm" type="range" min="0" max="70" step="10" value={years} onChange={(event) => setYears(Number(event.target.value))} /></label>
+    <label className="space-y-2"><span className="flex justify-between text-sm"><span>Projection horizon</span><span>{years} years</span></span><input className="range range-accent range-sm" type="range" min="0" max="70" step="10" value={years} aria-valuetext={`${years} years`} onChange={(event) => setYears(Number(event.target.value))} /></label>
     <p className="text-xs leading-5 text-base-content/55">Teaching model only: broad age bands, fixed rates, no migration, and simplified survival. Its purpose is to reveal cohort aging and population momentum—not forecast a real country.</p>
   </div>;
 }

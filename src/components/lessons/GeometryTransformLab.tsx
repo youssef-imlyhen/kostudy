@@ -49,7 +49,9 @@ export default function GeometryTransformLab() {
 
   return <div className="min-w-0 max-w-full space-y-5 overflow-x-hidden">
     <div className="rounded-3xl bg-base-200/70 p-4">
-      <svg viewBox="0 0 100 70" className="h-72 w-full rounded-2xl bg-base-100" role="img" aria-label="Original and transformed polygons">
+      <svg viewBox="0 0 100 70" className="h-72 w-full rounded-2xl bg-base-100" role="img" aria-labelledby="geometry-title geometry-description">
+        <title id="geometry-title">Original and transformed polygons</title>
+        <desc id="geometry-description">The primary polygon is the original. The secondary polygon is the image after the selected transformation.</desc>
         <defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" strokeWidth="0.25" className="text-base-content/10" /></pattern></defs>
         <rect width="100" height="70" fill="url(#grid)" />
         <polygon points={polygon(original)} className="fill-primary/20 stroke-primary" strokeWidth="1.2" />
@@ -57,9 +59,10 @@ export default function GeometryTransformLab() {
         <text x="18" y="62" fontSize="4" className="fill-primary">original</text>
         <text x="68" y="62" fontSize="4" className="fill-secondary">image</text>
       </svg>
+      {transform === 'rotate' || transform === 'scale' ? <p className="mt-3 text-xs leading-5 text-base-content/55">For side-by-side comparison, the rotated or dilated image is translated to the right after the selected transformation. That display translation does not change the listed invariants.</p> : null}
     </div>
 
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="lab-grid lab-grid-medium">
       <label className="space-y-2">
         <span className="text-sm font-semibold">Transformation</span>
         <select className="select select-bordered select-sm w-full" value={transform} onChange={(event) => setTransform(event.target.value as Transform)}>
@@ -83,7 +86,7 @@ export default function GeometryTransformLab() {
       </fieldset>
     </div>
 
-    <div className="grid gap-3 sm:grid-cols-3">
+    <div className="lab-grid lab-grid-medium">
       <div className="rounded-2xl border border-base-300 bg-base-100 p-4"><div className="text-xs text-base-content/55">Original area</div><div className="mt-1 text-2xl font-black">{result.originalArea.toFixed(0)}</div></div>
       <div className="rounded-2xl border border-base-300 bg-base-100 p-4"><div className="text-xs text-base-content/55">Image area</div><div className="mt-1 text-2xl font-black">{result.transformedArea.toFixed(0)}</div></div>
       <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4"><div className="text-xs text-base-content/55">Area ratio</div><div className="mt-1 text-2xl font-black">{result.areaRatio.toFixed(2)}×</div></div>
