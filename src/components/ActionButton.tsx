@@ -19,38 +19,26 @@ export default function ActionButton({
   size = 'md',
   disabled = false,
   className = '',
-  responsive = true
+  responsive = true,
 }: ActionButtonProps) {
   const variantClasses = {
     primary: 'btn-primary text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5',
     secondary: 'btn-secondary text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5',
     accent: 'btn-accent text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5',
     error: 'btn-error text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5',
-    ghost: 'btn-ghost'
+    ghost: 'btn-ghost',
   };
-
-  const sizeClasses = {
-    sm: 'btn-sm',
-    md: 'btn-md',
-    lg: 'btn-lg'
-  };
-
-  const baseClasses = 'btn rounded-2xl font-bold border-2 border-b-4';
-  const disabledClasses = disabled ? 'btn-disabled' : '';
+  const sizeClasses = { sm: 'btn-sm', md: 'btn-md', lg: 'btn-lg' };
 
   return (
     <button
+      type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`
-        ${baseClasses}
-        ${variantClasses[variant]}
-        ${sizeClasses[size]}
-        ${disabledClasses}
-        ${className}
-      `}
+      aria-label={label}
+      className={`btn rounded-2xl border-2 border-b-4 font-bold ${variantClasses[variant]} ${sizeClasses[size]} ${disabled ? 'btn-disabled' : ''} ${className}`}
     >
-      {icon && <span className={label ? 'mr-2' : ''}>{icon}</span>}
+      {icon ? <span aria-hidden="true" className={label ? 'mr-2' : ''}>{icon}</span> : null}
       {responsive ? <span className="hidden sm:inline">{label}</span> : label}
     </button>
   );
