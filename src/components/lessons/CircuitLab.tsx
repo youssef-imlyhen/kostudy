@@ -18,7 +18,7 @@ export default function CircuitLab() {
     return { equivalent, totalCurrent, branch1, branch2, v1, v2, power: voltage * totalCurrent };
   }, [arrangement, r1, r2, voltage]);
 
-  return <div className="space-y-5">
+  return <div className="min-w-0 max-w-full space-y-5 overflow-x-hidden">
     <div className="grid gap-4 lg:grid-cols-[1.2fr_.8fr]">
       <div className="rounded-3xl bg-base-200/70 p-4"><svg viewBox="0 0 120 70" className="h-64 w-full rounded-2xl bg-base-100" role="img" aria-label={`${arrangement} electric circuit`}>
         <line x1="15" y1="15" x2="105" y2="15" stroke="currentColor" strokeWidth="2" className="text-base-content/50" /><line x1="15" y1="55" x2="105" y2="55" stroke="currentColor" strokeWidth="2" className="text-base-content/50" /><line x1="15" y1="15" x2="15" y2="55" stroke="currentColor" strokeWidth="2" className="text-base-content/50" /><line x1="105" y1="15" x2="105" y2="55" stroke="currentColor" strokeWidth="2" className="text-base-content/50" />

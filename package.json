@@ -10,7 +10,9 @@
     "validate:lesson-ux": "node scripts/validate-lesson-ux.mjs",
     "preview": "vite preview",
     "generate-icons": "node scripts/generate-icons.js",
-    "build-pwa": "npm run generate-icons && tsc -b && vite build"
+    "build-pwa": "npm run generate-icons && tsc -b && vite build",
+    "validate:learning": "node scripts/validate-learning-labs.mjs",
+    "check": "npm run validate:lesson-ux && npm run validate:learning && npm run build"
   },
   "dependencies": {
     "@google/genai": "^2.0.1",

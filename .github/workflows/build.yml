@@ -30,5 +30,8 @@ jobs:
       - name: Validate lesson UX contracts
         run: npm run validate:lesson-ux
 
+      - name: Validate learning labs
+        run: npm run validate:learning
+
       - name: Production build
         run: npm run build

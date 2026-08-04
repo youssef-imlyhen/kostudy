@@ -1,1 +1,0 @@
-Branch initialized from main for the verified mobile and accessibility QA patch.

@@ -48,29 +48,52 @@ export default function NetworkDiffusionLab() {
         const trySpread = (source: number, target: number, salt: number) => {
           if (infectedAt[source] >= 0 && infectedAt[source] < step && infectedAt[target] < 0 && random(edgeIndex * 97 + step * 37 + salt + seed * 13) < transmission / 100) infectedAt[target] = step;
         };
-        trySpread(a, b, 11); trySpread(b, a, 53);
+        trySpread(a, b, 11);
+        trySpread(b, a, 53);
       });
     }
     const reached = infectedAt.filter((value) => value >= 0).length;
     const latest = Math.max(...infectedAt);
-    return { ...network, infectedAt, reached, latest };
+    const stepCounts = Array.from({ length: Math.max(1, latest + 1) }, (_, step) => infectedAt.filter((value) => value === step).length);
+    return { ...network, infectedAt, reached, latest, stepCounts };
   }, [seed, steps, topology, transmission]);
 
-  return <div className="space-y-5">
-    <div className="grid gap-4 lg:grid-cols-[1.2fr_.8fr]">
-      <div className="rounded-3xl bg-base-200/70 p-4"><svg viewBox="0 0 100 100" className="h-72 w-full rounded-2xl bg-base-100" role="img" aria-label="Network diffusion simulation">
-        {result.edges.map(([a, b], index) => <line key={`${a}-${b}-${index}`} x1={result.nodes[a].x} y1={result.nodes[a].y} x2={result.nodes[b].x} y2={result.nodes[b].y} stroke="currentColor" strokeWidth="0.7" className="text-base-content/20" />)}
-        {result.nodes.map((node, index) => { const time = result.infectedAt[index]; const active = time >= 0; return <g key={index}><circle cx={node.x} cy={node.y} r={index === seed ? 3.5 : 2.8} className={active ? 'fill-primary' : 'fill-base-300'} /><text x={node.x} y={node.y + 1.2} textAnchor="middle" fontSize="3" className={active ? 'fill-primary-content' : 'fill-base-content'}>{active ? time : ''}</text></g>; })}
-      </svg></div>
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-1"><div className="rounded-2xl border border-primary/20 bg-primary/5 p-4"><div className="text-xs text-base-content/55">Reached</div><div className="mt-1 text-3xl font-black">{result.reached}/{result.nodes.length}</div></div><div className="rounded-2xl border border-base-300 bg-base-100 p-4"><div className="text-xs text-base-content/55">Latest activation step</div><div className="mt-1 text-3xl font-black">{result.latest}</div></div><div className="rounded-2xl border border-base-300 bg-base-100 p-4"><div className="text-xs text-base-content/55">Edges</div><div className="mt-1 text-3xl font-black">{result.edges.length}</div></div></div>
+  return <div className="min-w-0 max-w-full space-y-5 overflow-x-hidden">
+    <div className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,.8fr)]">
+      <div className="min-w-0 max-w-full overflow-hidden rounded-3xl bg-base-200/70 p-3 sm:p-4">
+        <svg viewBox="0 0 100 100" className="h-56 w-full max-w-full rounded-2xl bg-base-100 sm:h-72" role="img" aria-labelledby="network-title network-description" preserveAspectRatio="xMidYMid meet">
+          <title id="network-title">Network diffusion simulation</title>
+          <desc id="network-description">Active nodes show the step when they first received the signal. The larger outlined node is the selected seed.</desc>
+          {result.edges.map(([a, b], index) => <line key={`${a}-${b}-${index}`} x1={result.nodes[a].x} y1={result.nodes[a].y} x2={result.nodes[b].x} y2={result.nodes[b].y} stroke="currentColor" strokeWidth="0.7" className="text-base-content/20" />)}
+          {result.nodes.map((node, index) => {
+            const time = result.infectedAt[index];
+            const active = time >= 0;
+            const selected = index === seed;
+            return <g key={index}>
+              {selected ? <circle cx={node.x} cy={node.y} r="4.6" fill="none" stroke="currentColor" strokeWidth="1.1" className="text-accent" /> : null}
+              <circle cx={node.x} cy={node.y} r={selected ? 3.5 : 3} className={active ? 'fill-primary' : 'fill-base-300'} />
+              <text x={node.x} y={node.y + 1.45} textAnchor="middle" fontSize="4.2" fontWeight="700" className={active ? 'fill-primary-content' : 'fill-base-content'}>{active ? time : ''}</text>
+            </g>;
+          })}
+        </svg>
+      </div>
+      <div className="grid min-w-0 grid-cols-2 gap-3 lg:grid-cols-1" role="status" aria-live="polite">
+        <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4"><div className="text-xs text-base-content/55">Reached</div><div className="mt-1 text-3xl font-black">{result.reached}/{result.nodes.length}</div></div>
+        <div className="rounded-2xl border border-base-300 bg-base-100 p-4"><div className="text-xs text-base-content/55">Latest activation step</div><div className="mt-1 text-3xl font-black">{result.latest}</div></div>
+        <div className="col-span-2 rounded-2xl border border-base-300 bg-base-100 p-4 lg:col-span-1"><div className="text-xs text-base-content/55">Edges</div><div className="mt-1 text-3xl font-black">{result.edges.length}</div></div>
+      </div>
     </div>
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <label className="space-y-2"><span className="text-sm font-semibold">Topology</span><select className="select select-bordered select-sm w-full" value={topology} onChange={(event) => { setTopology(event.target.value as Topology); setSeed(0); }}><option value="line">Line</option><option value="star">Hub and spokes</option><option value="clustered">Three clusters</option></select></label>
-      <label className="space-y-2"><span className="flex justify-between text-sm"><span>Transmission</span><span>{transmission}%</span></span><input className="range range-primary range-sm" type="range" min="5" max="100" value={transmission} onChange={(event) => setTransmission(Number(event.target.value))} /></label>
-      <label className="space-y-2"><span className="flex justify-between text-sm"><span>Steps</span><span>{steps}</span></span><input className="range range-secondary range-sm" type="range" min="0" max="12" value={steps} onChange={(event) => setSteps(Number(event.target.value))} /></label>
-      <label className="space-y-2"><span className="flex justify-between text-sm"><span>Seed node</span><span>{seed}</span></span><input className="range range-accent range-sm" type="range" min="0" max={result.nodes.length - 1} value={seed} onChange={(event) => setSeed(Number(event.target.value))} /></label>
+    <div className="flex min-w-0 flex-wrap gap-2" aria-label="Activation count by step">
+      {result.stepCounts.map((count, step) => <span key={step} className="badge badge-outline h-auto min-h-7 gap-1 whitespace-normal py-1.5"><span className="font-bold">Step {step}</span><span>{count} node{count === 1 ? '' : 's'}</span></span>)}
+      {result.reached < result.nodes.length ? <span className="badge badge-ghost h-auto min-h-7 whitespace-normal py-1.5">Not reached: {result.nodes.length - result.reached}</span> : null}
     </div>
-    <div className="rounded-2xl border border-base-300 bg-base-100 p-4 text-sm leading-6"><strong>Read the numbers inside active nodes as first activation time.</strong> A hub can spread quickly but also creates dependence on one node; clusters spread internally while narrow bridges slow movement between groups.</div>
+    <div className="grid min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <label className="min-w-0 space-y-2"><span className="text-sm font-semibold">Topology</span><select className="select select-bordered select-sm w-full min-w-0" value={topology} onChange={(event) => { setTopology(event.target.value as Topology); setSeed(0); }}><option value="line">Line</option><option value="star">Hub and spokes</option><option value="clustered">Three clusters</option></select></label>
+      <label className="min-w-0 space-y-2"><span className="flex justify-between gap-3 text-sm"><span>Transmission</span><span>{transmission}%</span></span><input className="range range-primary range-sm w-full" type="range" min="5" max="100" value={transmission} aria-valuetext={`${transmission}% transmission chance`} onChange={(event) => setTransmission(Number(event.target.value))} /></label>
+      <label className="min-w-0 space-y-2"><span className="flex justify-between gap-3 text-sm"><span>Steps</span><span>{steps}</span></span><input className="range range-secondary range-sm w-full" type="range" min="0" max="12" value={steps} aria-valuetext={`${steps} diffusion steps`} onChange={(event) => setSteps(Number(event.target.value))} /></label>
+      <label className="min-w-0 space-y-2"><span className="flex justify-between gap-3 text-sm"><span>Seed node</span><span>{seed}</span></span><input className="range range-accent range-sm w-full" type="range" min="0" max={result.nodes.length - 1} value={seed} aria-valuetext={`Node ${seed}`} onChange={(event) => setSeed(Number(event.target.value))} /></label>
+    </div>
+    <div className="rounded-2xl border border-base-300 bg-base-100 p-4 text-sm leading-6"><strong>Read each active node number as its first activation step.</strong> The step badges provide the same information without relying on tiny labels or color alone. A hub can spread quickly but also creates dependence on one node; clusters spread internally while narrow bridges slow movement between groups.</div>
     <p className="text-xs leading-5 text-base-content/55">Toy independent-cascade model with deterministic pseudo-random trials. Real information, disease, behavior, and innovation spread through different mechanisms and changing networks.</p>
   </div>;
 }
