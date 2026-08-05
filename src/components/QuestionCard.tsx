@@ -32,6 +32,7 @@ export default function QuestionCard({
         className="checkbox checkbox-primary mr-4 mt-1"
         checked={isSelected}
         onChange={() => onSelect(question.id)}
+        aria-label={`Select question: ${question.question}`}
       />
       <div className="flex-grow">
         <p className="font-semibold text-base-content text-sm sm:text-base">{question.question}</p>

@@ -87,7 +87,7 @@ export const FreeExplorationUI: React.FC<FreeExplorationUIProps> = ({ scene, eng
         
         {scene.stats && <StatsDisplay stats={scene.stats} />}
         
-        <button onClick={() => setDashboardOpen(true)} className="absolute top-4 right-4 bg-black/60 p-3 rounded-full text-white hover:bg-black/80 transition-colors" aria-label={translate('sagaLearnScreen.freeExplorationUI.openDashboard')}>
+        <button type="button" onClick={() => setDashboardOpen(true)} className="absolute top-4 right-4 bg-black/60 p-3 rounded-full text-white hover:bg-black/80 transition-colors" aria-label={translate('sagaLearnScreen.freeExplorationUI.openDashboard')} aria-haspopup="dialog" aria-expanded={isDashboardOpen} aria-controls="player-dashboard-dialog">
             <BackpackIcon />
         </button>
 
@@ -112,7 +112,7 @@ export const FreeExplorationUI: React.FC<FreeExplorationUIProps> = ({ scene, eng
           <p className="text-sm text-gray-400 mb-3">{isDialogueMode ? translate('sagaLearnScreen.freeExplorationUI.suggestedReplies') : translate('sagaLearnScreen.freeExplorationUI.suggestions')}</p>
           <div className="flex flex-wrap gap-3">
             {scene.choices.map((choice, idx) => (
-              <button key={idx} onClick={() => handleAction(choice)} disabled={loading}
+              <button type="button" key={idx} onClick={() => handleAction(choice)} disabled={loading}
                 className="flex items-center bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-full text-sm text-white transition-colors disabled:bg-gray-800 disabled:text-gray-500 font-sans">
                 {getActionIcon(choice)}
                 {choice}
@@ -136,7 +136,7 @@ export const FreeExplorationUI: React.FC<FreeExplorationUIProps> = ({ scene, eng
           disabled={loading}
           className="w-full bg-gray-700 border border-gray-600 rounded-lg pl-10 pr-28 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 transition font-sans"
         />
-        <button
+        <button type="button"
           onClick={() => handleAction(inputText)}
           disabled={loading || !inputText.trim()}
           className="absolute inset-y-0 right-0 m-1.5 px-6 bg-teal-600 hover:bg-teal-700 disabled:bg-gray-600 rounded-md text-white font-semibold transition-colors font-sans">
