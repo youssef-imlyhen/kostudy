@@ -33,5 +33,8 @@ jobs:
       - name: Validate learning labs
         run: npm run validate:learning
 
+      - name: Validate interaction accessibility
+        run: npm run validate:interactions
+
       - name: Production build
         run: npm run build

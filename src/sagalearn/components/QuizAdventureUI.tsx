@@ -97,7 +97,7 @@ export const QuizAdventureUI: React.FC<QuizAdventureUIProps> = ({ scene, engine,
                     {scene.gameOver.isVictory ? translate('sagaLearnScreen.quizAdventureUI.victory') : translate('sagaLearnScreen.quizAdventureUI.gameOver')}
                 </h2>
                 <p className="text-lg text-white mt-4 max-w-md">{scene.gameOver.message}</p>
-                <button onClick={resetToStart} className="mt-8 bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg text-white font-semibold transition transform hover:scale-105">
+                <button type="button" onClick={resetToStart} className="mt-8 bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg text-white font-semibold transition transform hover:scale-105">
                     {translate('sagaLearnScreen.quizAdventureUI.playAgain')}
                 </button>
             </div>
@@ -129,7 +129,7 @@ export const QuizAdventureUI: React.FC<QuizAdventureUIProps> = ({ scene, engine,
         
         {scene.stats && <StatsDisplay stats={scene.stats} />}
 
-        <button onClick={() => setDashboardOpen(true)} className="absolute top-4 right-4 bg-black/60 p-3 rounded-full text-white hover:bg-black/80 transition-colors" aria-label={translate('sagaLearnScreen.quizAdventureUI.openDashboard')}>
+        <button type="button" onClick={() => setDashboardOpen(true)} className="absolute top-4 right-4 bg-black/60 p-3 rounded-full text-white hover:bg-black/80 transition-colors" aria-label={translate('sagaLearnScreen.quizAdventureUI.openDashboard')} aria-haspopup="dialog" aria-expanded={isDashboardOpen} aria-controls="player-dashboard-dialog">
             <BackpackIcon />
         </button>
 
@@ -166,7 +166,7 @@ export const QuizAdventureUI: React.FC<QuizAdventureUIProps> = ({ scene, engine,
                         }
 
                         return (
-                            <button key={idx} onClick={() => handleChoice(option)} disabled={loading || !!feedback}
+                            <button type="button" key={idx} onClick={() => handleChoice(option)} disabled={loading || !!feedback}
                                 className={`p-4 rounded-lg text-white font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-wait ${buttonClass}`}>
                                 {option}
                             </button>
@@ -179,7 +179,7 @@ export const QuizAdventureUI: React.FC<QuizAdventureUIProps> = ({ scene, engine,
         {!scene.isQuiz && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {scene.choices.map((choice, idx) => (
-                <button key={idx} onClick={() => handleChoice(choice)} disabled={loading}
+                <button type="button" key={idx} onClick={() => handleChoice(choice)} disabled={loading}
                     className="flex items-center p-4 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white font-semibold transition-colors text-left">
                     {getActionIcon(choice)}
                     {choice}
