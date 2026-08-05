@@ -1,4 +1,3 @@
-import { useEffect, useId, useRef } from 'react';
 import ActionButton from './ActionButton';
 import { TrashIcon } from '@heroicons/react/24/outline';
 
@@ -23,29 +22,18 @@ export default function SearchAndSelectBar({
   totalItems,
   placeholder = "Search..."
 }: SearchAndSelectBarProps) {
-  const searchInputId = useId();
-  const selectAllId = useId();
-  const selectAllRef = useRef<HTMLInputElement>(null);
-  const isPartiallySelected = selectedCount > 0 && selectedCount < totalItems;
-
-  useEffect(() => {
-    if (selectAllRef.current) selectAllRef.current.indeterminate = isPartiallySelected;
-  }, [isPartiallySelected]);
-
   return (
     <div className="px-4 mb-4 flex flex-col sm:flex-row items-stretch sm:items-center sm:justify-between gap-4">
       <div className="flex-grow">
         <div className="relative">
-          <label htmlFor={searchInputId} className="sr-only">{placeholder}</label>
           <input
-            id={searchInputId}
-            type="search"
+            type="text"
             placeholder={placeholder}
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
             className="input input-bordered w-full pl-10 pr-4 py-2 hover:shadow-lg transition-shadow duration-300 rounded-2xl border-2 border-b-4"
           />
-          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-base-content/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-base-content/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </div>
@@ -53,16 +41,14 @@ export default function SearchAndSelectBar({
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <input
-            ref={selectAllRef}
             type="checkbox"
-            aria-checked={isPartiallySelected ? 'mixed' : isAllSelected}
             className="checkbox"
             checked={isAllSelected}
             onChange={onSelectAll}
             disabled={totalItems === 0}
-            id={selectAllId}
+            id="select-all-checkbox"
           />
-          <label htmlFor={selectAllId} className="ml-2 cursor-pointer text-sm font-medium text-base-content hover:text-primary transition-colors duration-200">Select All</label>
+          <label htmlFor="select-all-checkbox" className="ml-2 cursor-pointer text-sm font-medium text-base-content hover:text-primary transition-colors duration-200">Select All</label>
         </div>
         {selectedCount > 0 && (
           <ActionButton

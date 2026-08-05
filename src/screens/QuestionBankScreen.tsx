@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCustomQuestions } from '../hooks/useCustomQuestions';
 import { useLanguage } from '../context/LanguageContext';
@@ -34,6 +34,9 @@ export default function QuestionBankScreen() {
   const [questionToDelete, setQuestionToDelete] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('manual');
   const [selectedQuestions, setSelectedQuestions] = useState<string[]>([]);
+  const searchInputId = useId();
+  const selectAllId = useId();
+  const selectAllRef = useRef<HTMLInputElement>(null);
 
   const handleImport = (data: string, format: 'json' | 'csv') => {
     setImportError(null);
@@ -119,10 +122,24 @@ export default function QuestionBankScreen() {
     linkElement.click();
   };
 
-  const filteredQuestions = customQuestions.filter(q =>
-    q.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    q.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredQuestions = useMemo(() => {
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+    return customQuestions.filter((question) =>
+      question.question.toLowerCase().includes(normalizedSearch) ||
+      question.category.toLowerCase().includes(normalizedSearch)
+    );
+  }, [customQuestions, searchTerm]);
+
+  const selectedFilteredCount = useMemo(() => {
+    const filteredIds = new Set(filteredQuestions.map((question) => question.id));
+    return selectedQuestions.filter((id) => filteredIds.has(id)).length;
+  }, [filteredQuestions, selectedQuestions]);
+  const isAllSelected = filteredQuestions.length > 0 && selectedFilteredCount === filteredQuestions.length;
+  const isPartiallySelected = selectedFilteredCount > 0 && !isAllSelected;
+
+  useEffect(() => {
+    if (selectAllRef.current) selectAllRef.current.indeterminate = isPartiallySelected;
+  }, [isPartiallySelected]);
 
   const handleAiQuestionsGenerated = (questions: Question[]) => {
     addBulkQuestions(questions);
@@ -136,21 +153,22 @@ export default function QuestionBankScreen() {
   };
 
   const handleSelectAll = () => {
-    if (selectedQuestions.length === filteredQuestions.length) {
-      setSelectedQuestions([]);
-    } else {
-      setSelectedQuestions(filteredQuestions.map(q => q.id));
-    }
+    setSelectedQuestions((current) => {
+      const filteredIds = new Set(filteredQuestions.map((question) => question.id));
+      const everyFilteredQuestionIsSelected = filteredQuestions.every((question) => current.includes(question.id));
+
+      if (everyFilteredQuestionIsSelected) {
+        return current.filter((id) => !filteredIds.has(id));
+      }
+
+      return [...new Set([...current, ...filteredQuestions.map((question) => question.id)])];
+    });
   };
 
   const handleDeleteSelected = () => {
     bulkDeleteQuestions(selectedQuestions);
     setSelectedQuestions([]);
   };
-
-  const isAllSelected = useMemo(() => {
-    return filteredQuestions.length > 0 && selectedQuestions.length === filteredQuestions.length;
-  }, [selectedQuestions, filteredQuestions]);
 
   return (
     <div className="pb-20">
@@ -160,14 +178,14 @@ export default function QuestionBankScreen() {
       {config.aiFeatures?.enableAIGeneration && (
         <div className="px-4 mb-4">
           <div className="tabs tabs-boxed bg-base-200/50">
-            <a className={`tab tab-lg flex-1 ${viewMode === 'manual' ? 'tab-active !bg-primary !text-primary-content' : ''}`} onClick={() => setViewMode('manual')}>
+            <button type="button" aria-pressed={viewMode === 'manual'} className={`tab tab-lg flex-1 ${viewMode === 'manual' ? 'tab-active !bg-primary !text-primary-content' : ''}`} onClick={() => setViewMode('manual')}>
               <Bars3Icon className="w-5 h-5 mr-2" />
               {t('questionBankScreen.manual')}
-            </a>
-            <a className={`tab tab-lg flex-1 ${viewMode === 'ai' ? 'tab-active !bg-primary !text-primary-content' : ''}`} onClick={() => setViewMode('ai')}>
+            </button>
+            <button type="button" aria-pressed={viewMode === 'ai'} className={`tab tab-lg flex-1 ${viewMode === 'ai' ? 'tab-active !bg-primary !text-primary-content' : ''}`} onClick={() => setViewMode('ai')}>
               <CpuChipIcon className="w-5 h-5 mr-2" />
               {t('questionBankScreen.aiMode')}
-            </a>
+            </button>
           </div>
         </div>
       )}
@@ -176,28 +194,28 @@ export default function QuestionBankScreen() {
       {viewMode === 'manual' && (
         <div className="px-4 mb-4">
           <div className="flex gap-2 justify-center items-center mb-2">
-            <button onClick={() => navigate('/questions/new')} className="btn btn-primary">
+            <button type="button" onClick={() => navigate('/questions/new')} className="btn btn-primary">
               <DocumentPlusIcon className="w-5 h-5" />
               {t('questionBankScreen.addNew')}
             </button>
 
             <div className="dropdown dropdown-end">
-              <label tabIndex={0} className="btn btn-outline">
+              <button type="button" className="btn btn-outline">
                 {t('questionBankScreen.options')}
                 <ChevronDownIcon className="w-5 h-5" />
-              </label>
+              </button>
               <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 z-[1]">
                 <li>
-                  <a onClick={() => setImportModalOpen(true)}>
+                  <button type="button" className="w-full" onClick={() => setImportModalOpen(true)}>
                     <ArrowUpTrayIcon className="w-5 h-5" />
                     {t('questionBankScreen.import')}
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a onClick={handleExport}>
+                  <button type="button" className="w-full" onClick={handleExport}>
                     <ArrowDownTrayIcon className="w-5 h-5" />
                     {t('questionBankScreen.export')}
-                  </a>
+                  </button>
                 </li>
               </ul>
             </div>
@@ -215,9 +233,11 @@ export default function QuestionBankScreen() {
             {/* Search and Select All */}
             <div className="px-4 mb-4 flex flex-col sm:flex-row items-stretch sm:items-center sm:justify-between gap-4">
               <div className="relative flex-grow">
-                <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-base-content/40" />
+                <label htmlFor={searchInputId} className="sr-only">{t('questionBankScreen.searchPlaceholder')}</label>
+                <MagnifyingGlassIcon aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-base-content/40" />
                 <input
-                  type="text"
+                  id={searchInputId}
+                  type="search"
                   placeholder={t('questionBankScreen.searchPlaceholder')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -227,17 +247,19 @@ export default function QuestionBankScreen() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <input
+                    ref={selectAllRef}
                     type="checkbox"
+                    aria-checked={isPartiallySelected ? 'mixed' : isAllSelected}
                     className="checkbox"
                     checked={isAllSelected}
                     onChange={handleSelectAll}
                     disabled={filteredQuestions.length === 0}
-                    id="select-all-checkbox"
+                    id={selectAllId}
                   />
-                  <label htmlFor="select-all-checkbox" className="ml-2 cursor-pointer">{t('questionBankScreen.selectAll')}</label>
+                  <label htmlFor={selectAllId} className="ml-2 cursor-pointer">{t('questionBankScreen.selectAll')}</label>
                 </div>
                 {selectedQuestions.length > 0 && (
-                  <button onClick={handleDeleteSelected} className="btn btn-error ml-4">
+                  <button type="button" onClick={handleDeleteSelected} className="btn btn-error ml-4">
                     <TrashIcon className="w-5 h-5 mr-2" />
                     {t('questionBankScreen.delete')} ({selectedQuestions.length})
                   </button>
@@ -255,21 +277,22 @@ export default function QuestionBankScreen() {
                       className="checkbox checkbox-primary mr-4 mt-1"
                       checked={selectedQuestions.includes(question.id)}
                       onChange={() => handleSelectQuestion(question.id)}
+                      aria-labelledby={`question-${question.id}-label`}
                     />
                     <div className="flex-grow">
-                      <p className="font-semibold text-base-content">{question.question}</p>
+                      <p id={`question-${question.id}-label`} className="font-semibold text-base-content">{question.question}</p>
                       <div className="flex flex-wrap gap-2 items-center mt-2 text-sm text-base-content/80">
                         <span className="badge badge-ghost">{question.category}</span>
                         <span className="badge badge-outline">{question.difficulty}</span>
                       </div>
                       <div className="flex justify-end items-center mt-3 space-x-2 border-t border-base-200/50 pt-3">
-                        <button
+                        <button type="button"
                           onClick={() => navigate(`/questions/edit/${question.id}`)}
                           className="btn btn-sm btn-ghost text-primary"
                         >
                           {t('questionBankScreen.edit')}
                         </button>
-                        <button
+                        <button type="button"
                           onClick={() => {
                             setQuestionToDelete(question.id);
                             setDeleteModalOpen(true);
@@ -289,7 +312,7 @@ export default function QuestionBankScreen() {
                     {searchTerm ? t('questionBankScreen.noResults', { searchTerm: searchTerm }) : t('questionBankScreen.emptyBank')}
                   </p>
                   {!searchTerm && (
-                    <button onClick={() => navigate('/questions/new')} className="btn btn-primary mt-6">
+                    <button type="button" onClick={() => navigate('/questions/new')} className="btn btn-primary mt-6">
                       <PlusIcon className="w-5 h-5 mr-2" />
                       {t('questionBankScreen.addFirstQuestion')}
                     </button>

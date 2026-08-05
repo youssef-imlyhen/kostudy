@@ -5,8 +5,7 @@ const paths = {
   playerDashboard: 'src/sagalearn/components/PlayerDashboard.tsx',
   quizAdventure: 'src/sagalearn/components/QuizAdventureUI.tsx',
   freeExploration: 'src/sagalearn/components/FreeExplorationUI.tsx',
-  questionCard: 'src/components/QuestionCard.tsx',
-  searchAndSelect: 'src/components/SearchAndSelectBar.tsx',
+  questionBank: 'src/screens/QuestionBankScreen.tsx',
 };
 
 const entries = await Promise.all(
@@ -45,22 +44,21 @@ const contracts = [
     'aria-expanded={isDashboardOpen}',
     'aria-controls="player-dashboard-dialog"',
   ]],
-  ['question selection label', source.questionCard, [
-    'aria-label={`Select question: ${question.question}`}',
-  ]],
-  ['search control label', source.searchAndSelect, [
+  ['question-bank search and selection semantics', source.questionBank, [
     'const searchInputId = useId();',
-    '<label htmlFor={searchInputId} className="sr-only">{placeholder}</label>',
+    '<label htmlFor={searchInputId} className="sr-only">',
     'id={searchInputId}',
     'type="search"',
-    'aria-hidden="true" focusable="false"',
-  ]],
-  ['mixed select-all state', source.searchAndSelect, [
-    'const isPartiallySelected = selectedCount > 0 && selectedCount < totalItems;',
+    'aria-hidden="true"',
+    'aria-labelledby={`question-${question.id}-label`}',
+    'id={`question-${question.id}-label`}',
+    'const selectedFilteredCount = useMemo',
+    'const isPartiallySelected = selectedFilteredCount > 0 && !isAllSelected;',
     'selectAllRef.current.indeterminate = isPartiallySelected',
     "aria-checked={isPartiallySelected ? 'mixed' : isAllSelected}",
     'id={selectAllId}',
     'htmlFor={selectAllId}',
+    'return current.filter((id) => !filteredIds.has(id));',
   ]],
 ];
 
@@ -74,7 +72,7 @@ if (source.playerDashboard.includes('if (!isOpen) return null;')) {
   failures.push('PlayerDashboard still conditionally returns before its stateful interaction tree.');
 }
 
-for (const key of ['playerDashboard', 'quizAdventure', 'freeExploration']) {
+for (const key of ['playerDashboard', 'quizAdventure', 'freeExploration', 'questionBank']) {
   const unsafeButtons = [...source[key].matchAll(/<button(?![^>]*\btype=)[^>]*>/g)];
   if (unsafeButtons.length) failures.push(`${paths[key]} has ${unsafeButtons.length} button(s) without type="button".`);
 }
