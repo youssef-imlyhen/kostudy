@@ -10,6 +10,9 @@ const paths = {
   shellCss: 'src/styles/appShell.css',
   main: 'src/main.tsx',
   geometry: 'src/components/lessons/GeometryTransformLab.tsx',
+  lessonScreen: 'src/screens/LessonScreen.tsx',
+  lessonBlockView: 'src/components/lessons/LessonBlockView.tsx',
+  lessonProgress: 'src/utils/lessonProgress.ts',
 };
 
 const entries = await Promise.all(
@@ -59,6 +62,9 @@ const contracts = [
   ['safe-area CSS', source.shellCss, ['--app-bottom-nav-height', 'safe-area-inset-bottom', '--app-bottom-nav-reserved-space', '.app-main', '.app-bottom-nav-surface']],
   ['CSS import', source.main, ["import './styles/appShell.css';"]],
   ['geometry labels', source.geometry, ['aria-label="Horizontal translation"', 'aria-label="Vertical translation"']],
+  ['checkpoint retry UI', source.lessonBlockView, ['setIsRetrying', 'Try again', 'aria-live="polite"', 'Attempt {attemptCount + 1}']],
+  ['checkpoint progression gate', source.lessonScreen, ['checkpointResult?.correct === true']],
+  ['checkpoint attempt persistence', source.lessonProgress, ['attempts?: LessonCheckpointAttempt[]', 'correct ? completeLessonBlock', 'attempts: [...previousAttempts, attempt]']],
 ];
 
 for (const [name, text, markers] of contracts) {
