@@ -4,6 +4,13 @@ export interface LessonCheckpointResult {
   selectedAnswer: string;
   correct: boolean;
   answeredAt: number;
+  attempts?: LessonCheckpointAttempt[];
+}
+
+export interface LessonCheckpointAttempt {
+  selectedAnswer: string;
+  correct: boolean;
+  answeredAt: number;
 }
 
 export interface LessonProgressEntry {
@@ -32,9 +39,12 @@ export const completeLessonBlock = (state: LessonProgressState, lessonId: string
 };
 
 export const recordLessonCheckpoint = (state: LessonProgressState, lessonId: string, blockId: string, selectedAnswer: string, correct: boolean, now = Date.now()): LessonProgressState => {
-  const base = completeLessonBlock(state, lessonId, blockId, now);
+  const previous = state[lessonId]?.checkpointResults[blockId];
+  const previousAttempts = previous?.attempts || (previous ? [{ selectedAnswer: previous.selectedAnswer, correct: previous.correct, answeredAt: previous.answeredAt }] : []);
+  const attempt = { selectedAnswer, correct, answeredAt: now };
+  const base = correct ? completeLessonBlock(state, lessonId, blockId, now) : touchLesson(state, lessonId, blockId, now);
   const current = base[lessonId];
-  return { ...base, [lessonId]: { ...current, checkpointResults: { ...current.checkpointResults, [blockId]: { selectedAnswer, correct, answeredAt: now } } } };
+  return { ...base, [lessonId]: { ...current, checkpointResults: { ...current.checkpointResults, [blockId]: { ...attempt, attempts: [...previousAttempts, attempt] } } } };
 };
 
 export const saveLessonReflection = (state: LessonProgressState, lessonId: string, blockId: string, text: string, now = Date.now()): LessonProgressState => {
