@@ -4,6 +4,10 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 const config = defineConfig({
+  // Allow the Lightsprint preview host (<port>-<sandbox>.lightsprint.ai) to reach the
+  // dev server; Vite otherwise rejects unknown Host headers with a 403 outside localhost.
+  server: { host: true, allowedHosts: ['.lightsprint.ai', '.e2b.app'] },
+  preview: { host: true, allowedHosts: ['.lightsprint.ai', '.e2b.app'] },
   plugins: [
     react(),
     VitePWA({
