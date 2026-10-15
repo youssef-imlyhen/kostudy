@@ -48,7 +48,7 @@ export default function QuestionBankScreen() {
         // Check if the imported data has the new format with customEmojis
         if (parsedData.questions && parsedData.customEmojis) {
           // Handle new format
-          const { validQuestions, errors } = parseAndValidate(JSON.stringify(parsedData.questions), 'json');
+          const { validQuestions, questionIds, errors } = parseAndValidate(JSON.stringify(parsedData.questions), 'json');
           
           if (errors.length > 0) {
             // Format the error message for better readability
@@ -61,11 +61,11 @@ export default function QuestionBankScreen() {
           localStorage.setItem('customCategoryEmojis', JSON.stringify(parsedData.customEmojis));
           
           if (validQuestions.length > 0) {
-            addBulkQuestions(validQuestions);
+            addBulkQuestions(validQuestions, questionIds);
           }
         } else {
           // Handle old format (only questions)
-          const { validQuestions, errors } = parseAndValidate(data, 'json');
+          const { validQuestions, questionIds, errors } = parseAndValidate(data, 'json');
           
           if (errors.length > 0) {
             // Format the error message for better readability
@@ -75,7 +75,7 @@ export default function QuestionBankScreen() {
           }
           
           if (validQuestions.length > 0) {
-            addBulkQuestions(validQuestions);
+            addBulkQuestions(validQuestions, questionIds);
           }
         }
       } catch (e) {
@@ -84,7 +84,7 @@ export default function QuestionBankScreen() {
       }
     } else {
       // For CSV, use the existing logic
-      const { validQuestions, errors } = parseAndValidate(data, format);
+      const { validQuestions, questionIds, errors } = parseAndValidate(data, format);
       
       if (errors.length > 0) {
         // Format the error message for better readability
@@ -94,7 +94,7 @@ export default function QuestionBankScreen() {
       }
       
       if (validQuestions.length > 0) {
-        addBulkQuestions(validQuestions);
+        addBulkQuestions(validQuestions, questionIds);
       }
     }
     
