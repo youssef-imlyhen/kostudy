@@ -139,8 +139,10 @@ export default function SettingsScreen() {
         const text = await file.text();
         const data: UserData = JSON.parse(text);
 
+        const is_set = (variable: any) => variable != undefined && variable != null
+
         // Validate minimal data structure
-        if (!data.username || !data.progress || !data.mistakes || !data.customQuestions || !data.timestamp) {
+        if (!is_set(data.username) || !is_set(data.progress) || !is_set(data.mistakes) || !is_set(data.customQuestions) || !is_set(data.timestamp)) {
           throw new Error('Invalid data format');
         }
 

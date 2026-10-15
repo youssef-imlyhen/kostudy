@@ -34,10 +34,14 @@ function getQuestionValidationErrors(q: any, index: number): string[] {
         errors.push(`${prefix} 'options' must be an array with at least 2 items.`);
       } else {
         if (q.options.some((opt: any) => typeof opt !== 'string')) errors.push(`${prefix} All 'options' must be strings.`);
-        if (typeof q.correctAnswer !== 'string') {
+        if (typeof q.correctAnswer !== 'string' && !Array.isArray(q.correctAnswer)) {
           errors.push(`${prefix} 'correctAnswer' is missing for multiple-choice.`);
-        } else if (!q.options.includes(q.correctAnswer)) {
+        } else if (Array.isArray(q.correctAnswer) && (q.correctAnswer.length < 1 || q.correctAnswer.some((answer: any) => typeof answer !== 'string'))) {
+          errors.push(`${prefix} 'correctAnswer' must be an array of strings with at least 1 item for multiple-choice.`);
+        } else if (typeof q.correctAnswer == 'string' && !q.options.includes(q.correctAnswer)) {
           errors.push(`${prefix} 'correctAnswer' must match one of the 'options'.`);
+        } else if (Array.isArray(q.correctAnswer) && q.correctAnswer.some((answer: any) => !q.options.includes(answer))) {
+          errors.push(`${prefix} all items in 'correctAnswer' must match one of the 'options'.`);
         }
       }
       break;
